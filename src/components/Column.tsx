@@ -56,16 +56,16 @@ export const Column = ({
   const data = DATA_MAP[col.type];
 
   return (
-    <div className={`column ${styles[col.type]}`}>
-      <div className="col-header">
-        <div className="col-header-left">
-          <span className="col-icon">{cfg.icon}</span>
-          <h2 className="col-title">{col.title}</h2>
-          <div className="col-badge">{data.length}</div>
+    <div className={`${styles.column} ${styles[col.type]}`}>
+      <div className={styles.colHeader}>
+        <div className={styles.colHeaderLeft}>
+          <span className={styles.colIcon}>{cfg.icon}</span>
+          <h2 className={styles.colTitle}>{col.title}</h2>
+          <div className={styles.colBadge}>{data.length}</div>
         </div>
-        <div className="col-controls">
+        <div className={styles.colControls}>
           <button
-            className="btn-icon"
+            className={styles.btnIcon}
             onClick={() => onMoveLeft(col.id)}
             disabled={isFirst}
             title="Move left"
@@ -73,25 +73,25 @@ export const Column = ({
             ←
           </button>
           <button
-            className="btn-icon"
+            className={styles.btnIcon}
             onClick={() => onMoveRight(col.id)}
             disabled={isLast}
             title="Move right"
           >
             →
           </button>
-          <button className="btn-icon" onClick={() => setConfirming(true)} title="Remove column">
+          <button className={styles.btnIcon} onClick={() => setConfirming(true)} title="Remove column">
             ✕
           </button>
         </div>
       </div>
 
       {confirming && (
-        <div className="col-confirmation">
-          <span className="col-confirmation-text">Remove "{col.title}"?</span>
-          <div className="col-confirmation-buttons">
+        <div className={styles.colConfirmation}>
+          <span className={styles.colConfirmationText}>Remove "{col.title}"?</span>
+          <div className={styles.colConfirmationButtons}>
             <button
-              className="btn"
+              className={styles.btn}
               onClick={() => setConfirming(false)}
               style={{
                 fontSize: "10px",
@@ -102,7 +102,7 @@ export const Column = ({
               No
             </button>
             <button
-              className="btn"
+              className={styles.btn}
               onClick={() => {
                 onRemove(col.id);
               }}
@@ -118,7 +118,7 @@ export const Column = ({
         </div>
       )}
 
-      <div className="col-body">{data.map((item) => renderCard(item))}</div>
+      <div className={styles.colBody}>{data.map((item) => renderCard(item))}</div>
     </div>
   );
 };

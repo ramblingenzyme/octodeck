@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { ColumnType } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
-import styles from "./Column.module.css";
+import colStyles from "./Column.module.css";
+import styles from "./AddColumnModal.module.css";
 
 interface AddColumnModalProps {
   onAdd: (type: ColumnType, title: string) => void;
@@ -23,31 +24,31 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 className="modal-title">Add Column</h2>
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Add Column</h2>
         </div>
-        <div className="modal-body">
-          <div className="modal-types">
+        <div className={styles.modalBody}>
+          <div className={styles.modalTypes}>
             {(Object.keys(COLUMN_TYPES) as ColumnType[]).map((type) => {
               const cfg = COLUMN_TYPES[type];
               return (
                 <button
                   key={type}
-                  className={`type-btn ${styles[type]} ${selectedType === type ? "active" : ""}`}
+                  className={`${styles.typeBtn} ${colStyles[type]} ${selectedType === type ? styles.active : ""}`}
                   onClick={() => handleTypeChange(type)}
                 >
-                  <span className="col-icon">{cfg.icon}</span>
+                  <span className={styles.colIcon}>{cfg.icon}</span>
                   <span>{cfg.label}</span>
                 </button>
               );
             })}
           </div>
-          <div className="modal-field">
-            <label className="modal-field-label">Column Title</label>
+          <div className={styles.modalField}>
+            <label className={styles.modalFieldLabel}>Column Title</label>
             <input
-              className="field-input"
+              className={styles.fieldInput}
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -55,11 +56,11 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
             />
           </div>
         </div>
-        <div className="modal-footer">
-          <button className="btn-modal" onClick={onClose}>
+        <div className={styles.modalFooter}>
+          <button className={styles.btnModal} onClick={onClose}>
             Cancel
           </button>
-          <button className="btn-modal btn-modal-primary" onClick={handleAdd}>
+          <button className={`${styles.btnModal} ${styles.btnModalPrimary}`} onClick={handleAdd}>
             Add Column
           </button>
         </div>

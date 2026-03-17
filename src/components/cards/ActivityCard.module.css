@@ -1,0 +1,12 @@
+.activityIcon {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.activitySha {
+  color: var(--ci-success);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  margin-top: 4px;
+  display: block;
+}

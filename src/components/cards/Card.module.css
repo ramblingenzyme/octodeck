@@ -1,0 +1,54 @@
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  cursor: default;
+  transition: border-color 0.15s;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.cardRepo {
+  color: var(--text-faint);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cardAge {
+  color: var(--text-ghost);
+  font-size: 9px;
+}
+
+.cardTitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+}
+
+.cardAuthor {
+  color: var(--text-muted);
+}
+
+.cardStats {
+  display: flex;
+  gap: 8px;
+}
+
+.cardStat {
+  color: var(--text-muted);
+}

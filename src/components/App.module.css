@@ -1,0 +1,8 @@
+.appRoot {
+  background: var(--bg-root);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}

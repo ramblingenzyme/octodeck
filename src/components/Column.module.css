@@ -3,3 +3,124 @@
 .ci            { --color-accent: #fbbf24; }
 .notifications { --color-accent: #4ade80; }
 .activity      { --color-accent: #c4b5fd; }
+
+.column {
+  width: 300px;
+  min-width: 300px;
+  background: var(--bg-column);
+  border: 1px solid var(--border-structural);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 96px);
+  flex-shrink: 0;
+}
+
+.colHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-topbar);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 13%, transparent);
+}
+
+.colHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.colIcon {
+  font-size: 14px;
+  color: var(--color-accent);
+}
+
+.colTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.colBadge {
+  background: var(--bg-card);
+  color: var(--text-ghost);
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  min-width: 20px;
+  text-align: center;
+}
+
+.colControls {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.colBody {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.colConfirmation {
+  padding: 8px;
+  background: var(--bg-topbar);
+  border-top: 1px solid var(--border-structural);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.colConfirmationText {
+  flex: 1;
+}
+
+.colConfirmationButtons {
+  display: flex;
+  gap: 4px;
+}
+
+.btnIcon {
+  all: unset;
+  box-sizing: border-box;
+  color: var(--text-ghost);
+  font-size: 11px;
+  padding: 3px 5px;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btnIcon:hover {
+  color: var(--text-muted);
+}
+
+.btnIcon:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+
+.btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}

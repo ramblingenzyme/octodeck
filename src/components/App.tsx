@@ -10,6 +10,7 @@ import {
 import { Topbar } from "./Topbar";
 import { Board } from "./Board";
 import { AddColumnModal } from "./AddColumnModal";
+import styles from "./App.module.css";
 
 export const App = () => {
   const { data: columns = [] } = useGetLayoutQuery();
@@ -25,7 +26,7 @@ export const App = () => {
   };
 
   return (
-    <div className="app-root">
+    <div className={styles.appRoot}>
       <Topbar onAddColumn={() => setShowModal(true)} />
       <Board
         columns={columns}

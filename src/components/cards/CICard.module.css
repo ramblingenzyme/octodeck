@@ -1,3 +1,18 @@
 .success { --ci-color: #4ade80; --ci-bg: #0f2d1f; }
 .failure { --ci-color: #f87171; --ci-bg: #3d1414; }
 .running { --ci-color: #fbbf24; --ci-bg: #2d1f0a; }
+
+.ciCard {
+  border-left: 2px solid var(--ci-color, var(--border-card));
+}
+
+.ciBadge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  display: inline-block;
+  background: var(--ci-bg, var(--border-card));
+  color: var(--ci-color, var(--text-muted));
+}

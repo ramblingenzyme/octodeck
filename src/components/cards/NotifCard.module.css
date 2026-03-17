@@ -1,0 +1,12 @@
+.notifIcon {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.notifRef {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 9px;
+  margin-top: 4px;
+  display: block;
+}

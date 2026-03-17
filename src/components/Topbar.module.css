@@ -1,0 +1,51 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 48px;
+  border-bottom: 1px solid var(--border-structural);
+  background: var(--bg-topbar);
+  flex-shrink: 0;
+}
+
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbarLogo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.topbarStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+}
+
+.btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+
+.btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
