@@ -35,18 +35,24 @@ src/
 ├── types/index.ts        # ColumnType, PRItem, CIItem, etc.
 ├── constants/index.ts    # LABEL_COLORS, CI_STATUS, COLUMN_TYPES
 ├── data/mock.ts          # Mock data arrays (MOCK_PRS, MOCK_ISSUES, etc.)
-├── hooks/useColumns.ts   # Column state management
+├── store/
+│   ├── index.ts          # Redux store configuration
+│   ├── configApi.ts      # RTK Query API (add/remove/move column mutations)
+│   └── layoutStorage.ts  # localStorage persistence ("gh-deck:layout")
 └── components/
     ├── App.tsx           # Top-level state & modal
     ├── Topbar.tsx        # Header with logo + "Add Column"
     ├── Board.tsx         # Scrollable column grid
     ├── Column.tsx        # Column container + card rendering
     ├── AddColumnModal.tsx # Type/title picker
+    ├── Icon.tsx          # Emoji/unicode icon utility
     └── cards/
-        ├── PRCard.tsx    # Pull request card
-        ├── IssueCard.tsx # Issue card
-        ├── CICard.tsx    # CI/CD run card
-        ├── NotifCard.tsx # Notification card
+        ├── CardParts.tsx    # Shared card sub-components
+        ├── LabelList.tsx    # Label badge list
+        ├── PRCard.tsx       # Pull request card
+        ├── IssueCard.tsx    # Issue card
+        ├── CICard.tsx       # CI/CD run card
+        ├── NotifCard.tsx    # Notification card
         └── ActivityCard.tsx # Activity event card
 ```
 
@@ -54,8 +60,7 @@ src/
 
 **CSS Architecture**
 - All tokens in CSS custom properties (`:root`)
-- No CSS-in-JS library
-- Data-driven inline styles only for label colors and CI status (per-item values)
+- No CSS-in-JS, no inline styles
 - `.btn { all: unset }` for universal button reset
 - `--color-accent` pattern: Column sets it on root, header/title consume it
 
@@ -65,10 +70,10 @@ src/
 - Discriminated union in `Column.renderCard()` for type-safe card rendering
 
 **State Management**
-- `useColumns` hook owns: columns array, add/remove/moveLeft/moveRight operations
+- Redux Toolkit with RTK Query (`configApi.ts`) handles column mutations (add/remove/moveLeft/moveRight)
+- Column layout persisted to `localStorage` under `"gh-deck:layout"`; falls back to `DEFAULT_COLUMNS`
 - `Column` owns: `confirming` flag for removal confirmation
 - `AddColumnModal` owns: selectedType and title form state
-- No global state or context needed (mock data)
 
 **Mock Data**
 - Named exports per type (`MOCK_PRS`, `MOCK_ISSUES`, etc.)
@@ -97,7 +102,6 @@ src/
 - Real API calls (currently 100% mock data)
 - Per-column filter/search config UI
 - Drag-to-reorder columns
-- Column layout persistence (localStorage)
 
 ## Development
 

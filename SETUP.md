@@ -36,15 +36,20 @@ src/
 ├── types/index.ts              # TypeScript type definitions
 ├── constants/index.ts          # Design system & column configs
 ├── data/mock.ts                # Typed mock data
-├── hooks/
-│   └── useColumns.ts           # Column state management
+├── store/
+│   ├── index.ts                # Redux store
+│   ├── configApi.ts            # RTK Query column mutations
+│   └── layoutStorage.ts        # localStorage persistence
 └── components/
     ├── App.tsx                 # Top-level component
     ├── Topbar.tsx              # Header bar
     ├── Board.tsx               # Column grid
     ├── Column.tsx              # Single column container
-    ├── AddColumnModal.tsx       # Add column dialog
+    ├── AddColumnModal.tsx      # Add column dialog
+    ├── Icon.tsx                # Icon utility
     └── cards/
+        ├── CardParts.tsx       # Shared card sub-components
+        ├── LabelList.tsx       # Label badges
         ├── PRCard.tsx
         ├── IssueCard.tsx
         ├── CICard.tsx
@@ -74,7 +79,6 @@ All visual design is driven by CSS custom properties in `globals.css`:
 - Column accents: `--color-accent` set per-column on `.column` root
 - Fonts: `--font-mono` (JetBrains Mono), `--font-display` (Syne)
 
-Label colors and CI status borders remain as inline `style` props (data-driven).
 
 ## Next Steps (Deferred)
 
@@ -82,4 +86,3 @@ Label colors and CI status borders remain as inline `style` props (data-driven).
 - Real API calls to GitHub
 - Per-column filter/search configuration
 - Drag-to-reorder columns
-- Column layout persistence (localStorage)
