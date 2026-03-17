@@ -18,8 +18,8 @@
 .topbarLogo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.2em;
+  font-size: var(--text-lg);
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -28,7 +28,7 @@
   align-items: center;
   gap: 6px;
   color: var(--text-faint);
-  font-size: 10px;
+  font-size: var(--text-md);
 }
 
 .statusDot {
@@ -39,5 +39,15 @@
 }
 
 .btnAdd {
-  font-size: 12px;
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: #000;
+  background: var(--text-primary);
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  transition: opacity 0.15s;
+}
+
+.btnAdd:hover {
+  opacity: 0.85;
 }

@@ -25,10 +25,10 @@
 }
 
 .boardEmptyText {
-  font-size: 12px;
+  font-size: var(--text-md);
   margin-bottom: 16px;
 }
 
 .boardEmptyBtn {
-  font-size: 11px;
+  font-size: var(--text-md);
 }

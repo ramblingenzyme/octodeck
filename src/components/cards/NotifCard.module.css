@@ -1,7 +1,7 @@
 .notifRef {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 9px;
+  font-size: var(--text-md);
   margin-top: 4px;
   display: block;
 }

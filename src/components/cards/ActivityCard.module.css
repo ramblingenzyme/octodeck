@@ -1,7 +1,7 @@
 .activitySha {
   color: var(--ci-success);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-md);
   margin-top: 4px;
   display: block;
 }

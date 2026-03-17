@@ -35,15 +35,15 @@
 }
 
 .colIcon {
-  font-size: 14px;
+  font-size: var(--text-lg);
   color: var(--color-accent);
 }
 
 .colTitle {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: var(--text-md);
+  /* letter-spacing: 0.04em; */
   text-transform: uppercase;
   color: var(--color-accent);
 }
@@ -51,7 +51,7 @@
 .colBadge {
   background: var(--bg-card);
   color: var(--text-ghost);
-  font-size: 9px;
+  font-size: var(--text-sm);
   padding: 2px 4px;
   border-radius: var(--radius-sm);
   min-width: 20px;
@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--text-md);
   color: var(--text-secondary);
 }
 
@@ -95,24 +95,44 @@
 
 .btnIcon {
   color: var(--text-ghost);
-  font-size: 11px;
+  font-size: var(--text-md);
   padding: 3px 5px;
   border-radius: var(--radius-sm);
   line-height: 1;
+  transition: color 0.15s, background 0.15s;
 }
 
 .btnIcon:hover {
-  color: var(--text-muted);
+  color: var(--text-primary);
+  background: var(--border-mid);
 }
 
 .btnConfirmCancel {
-  font-size: 10px;
+  font-size: var(--text-sm);
+  font-weight: 500;
   color: var(--text-muted);
-  padding: 2px 6px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-mid);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btnConfirmCancel:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .btnConfirmDanger {
-  font-size: 10px;
+  font-size: var(--text-sm);
+  font-weight: 500;
   color: var(--ci-failure);
-  padding: 2px 6px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--ci-failure) 30%, transparent);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.btnConfirmDanger:hover {
+  border-color: var(--ci-failure);
+  background: color-mix(in srgb, var(--ci-failure) 10%, transparent);
 }

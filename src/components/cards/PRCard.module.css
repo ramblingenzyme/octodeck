@@ -1,11 +1,11 @@
 .draftBadge {
   background: #1f2937;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: var(--text-sm);
   padding: 1px 5px;
   border-radius: var(--radius-sm);
   margin-right: 4px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.03em;
   display: inline-block;
 }
 

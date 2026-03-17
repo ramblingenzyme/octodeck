@@ -7,10 +7,10 @@
 }
 
 .ciBadge {
-  font-size: 9px;
+  font-size: var(--text-md);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   font-family: var(--font-mono);
   display: inline-block;
   background: var(--ci-bg, var(--border-card));

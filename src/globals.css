@@ -24,8 +24,12 @@
   --ci-failure: #f87171;
   --ci-running: #fbbf24;
 
-  --font-mono: "JetBrains Mono", monospace;
-  --font-display: "Syne", sans-serif;
+  --font-mono: "Space Grotesk", sans-serif;
+  --font-display: "Outfit", sans-serif;
+
+  --text-sm: 10px;
+  --text-md: 12px;
+  --text-lg: 14px;
 
   --radius-sm: 2px;
   --radius-md: 3px;
