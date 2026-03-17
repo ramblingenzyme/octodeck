@@ -15,7 +15,11 @@ export const CICard = ({ item }: CICardProps) => {
   return (
     <article className={`${cardStyles.card} ${styles[item.status]}`}>
       <CardTop repo={item.repo} age={item.age} />
-      <p className={cardStyles.cardTitle}>{item.name}</p>
+      <p className={cardStyles.cardTitle}>
+        <a href={item.url} target="_blank" rel="noreferrer" className={cardStyles.cardTitleLink}>
+          {item.name}
+        </a>
+      </p>
       <footer className={cardStyles.cardMeta}>
         <span className={cardStyles.cardAuthor}>{item.branch} · {item.duration}</span>
         <span className={styles.ciBadge}>

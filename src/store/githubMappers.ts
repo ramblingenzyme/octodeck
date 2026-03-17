@@ -20,6 +20,7 @@ export function mapSearchItemToPR(item: GHSearchItem): PRItem {
     draft: item.draft ?? false,
     age: formatAge(item.updated_at),
     labels: item.labels.map((l) => l.name),
+    url: item.html_url,
   };
 }
 
@@ -34,6 +35,7 @@ export function mapSearchItemToIssue(item: GHSearchItem): IssueItem {
     comments: item.comments,
     age: formatAge(item.updated_at),
     state: item.state as 'open' | 'closed',
+    url: item.html_url,
   };
 }
 
@@ -45,6 +47,14 @@ const REASON_TO_NOTIF: Record<string, NotifType> = {
   comment: 'comment',
 };
 
+function apiUrlToHtmlUrl(apiUrl: string): string {
+  // https://api.github.com/repos/owner/repo/pulls/123 → https://github.com/owner/repo/pull/123
+  // https://api.github.com/repos/owner/repo/issues/123 → https://github.com/owner/repo/issues/123
+  return apiUrl
+    .replace('https://api.github.com/repos/', 'https://github.com/')
+    .replace(/\/pulls\/(\d+)$/, '/pull/$1');
+}
+
 export function mapNotification(n: GHNotification): NotifItem {
   const type: NotifType = REASON_TO_NOTIF[n.reason] ?? 'comment';
   return {
@@ -54,6 +64,7 @@ export function mapNotification(n: GHNotification): NotifItem {
     repo: n.repository.full_name,
     ref: n.subject.type,
     age: formatAge(n.updated_at),
+    url: apiUrlToHtmlUrl(n.subject.url),
   };
 }
 
@@ -91,6 +102,7 @@ export function mapWorkflowRun(run: GHWorkflowRun, repoFullName: string): CIItem
     duration,
     age: formatAge(run.created_at),
     triggered: triggerMap[run.event] ?? 'push',
+    url: run.html_url,
   };
 }
 
@@ -98,17 +110,21 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
   const repo = event.repo.name;
   const age = formatAge(event.created_at);
 
+  const ghBase = `https://github.com/${repo}`;
+
   switch (event.type) {
     case 'PushEvent': {
       const count = event.payload.size ?? event.payload.commits?.length ?? 1;
       const branch = 'ref' in event.payload ? (event.payload as { ref?: string }).ref?.replace('refs/heads/', '') ?? 'unknown' : 'unknown';
+      const sha = event.payload.commits?.[0]?.sha.slice(0, 7);
       return {
         id: parseInt(event.id, 10) || Math.random() * 1e9,
         type: 'commit' as ActivityType,
         text: `Pushed ${count} commit${count !== 1 ? 's' : ''} to ${branch}`,
         repo,
         age,
-        ref: event.payload.commits?.[0]?.sha.slice(0, 7),
+        ref: sha,
+        url: sha ? `${ghBase}/commit/${sha}` : `${ghBase}/commits/${branch}`,
       };
     }
     case 'PullRequestEvent':
@@ -120,6 +136,7 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
           repo,
           age,
           ref: `PR #${event.payload.pull_request?.number}`,
+          url: event.payload.pull_request?.html_url ?? `${ghBase}/pulls`,
         };
       }
       return null;
@@ -131,6 +148,7 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
         text: `Commented on ${event.payload.issue ? `Issue #${event.payload.issue.number}` : 'a PR'}`,
         repo,
         age,
+        url: event.payload.comment?.html_url ?? event.payload.issue?.html_url ?? ghBase,
       };
     case 'PullRequestReviewEvent':
       return {
@@ -140,6 +158,7 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
         repo,
         age,
         ref: `PR #${event.payload.pull_request?.number}`,
+        url: event.payload.pull_request?.html_url ?? `${ghBase}/pulls`,
       };
     case 'IssuesEvent':
       if (event.payload.action === 'closed') {
@@ -150,6 +169,7 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
           repo,
           age,
           ref: `Issue #${event.payload.issue?.number}`,
+          url: event.payload.issue?.html_url ?? `${ghBase}/issues`,
         };
       }
       return null;

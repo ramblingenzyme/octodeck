@@ -14,7 +14,11 @@ export const PRCard = ({ item }: PRCardProps) => {
   return (
     <article className={cardStyles.card}>
       <CardTop repo={item.repo} age={item.age} />
-      <p className={cardStyles.cardTitle}>#{item.number} {item.title}</p>
+      <p className={cardStyles.cardTitle}>
+        <a href={item.url} target="_blank" rel="noreferrer" className={cardStyles.cardTitleLink}>
+          #{item.number} {item.title}
+        </a>
+      </p>
       <footer className={cardStyles.cardMeta}>
         <span className={cardStyles.cardAuthor}>@{item.author}</span>
         <div className={cardStyles.cardStats}>

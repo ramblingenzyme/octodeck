@@ -12,6 +12,7 @@ export const MOCK_PRS: PRItem[] = [
     draft: false,
     age: "2h",
     labels: ["enhancement", "perf"],
+    url: "https://github.com/acme/ml-core/pull/847",
   },
   {
     id: 2,
@@ -24,6 +25,7 @@ export const MOCK_PRS: PRItem[] = [
     draft: false,
     age: "5h",
     labels: ["bug", "urgent"],
+    url: "https://github.com/acme/worker/pull/231",
   },
   {
     id: 3,
@@ -36,6 +38,7 @@ export const MOCK_PRS: PRItem[] = [
     draft: true,
     age: "1d",
     labels: ["refactor"],
+    url: "https://github.com/acme/api/pull/419",
   },
   {
     id: 4,
@@ -48,6 +51,7 @@ export const MOCK_PRS: PRItem[] = [
     draft: false,
     age: "3h",
     labels: ["dependencies"],
+    url: "https://github.com/acme/frontend/pull/1102",
   },
   {
     id: 5,
@@ -60,6 +64,7 @@ export const MOCK_PRS: PRItem[] = [
     draft: false,
     age: "6h",
     labels: ["documentation"],
+    url: "https://github.com/acme/ml-core/pull/848",
   },
 ];
 
@@ -74,6 +79,7 @@ export const MOCK_ISSUES: IssueItem[] = [
     comments: 8,
     age: "1d",
     state: "open",
+    url: "https://github.com/acme/ml-core/issues/901",
   },
   {
     id: 2,
@@ -85,6 +91,7 @@ export const MOCK_ISSUES: IssueItem[] = [
     comments: 3,
     age: "3d",
     state: "open",
+    url: "https://github.com/acme/api/issues/503",
   },
   {
     id: 3,
@@ -96,6 +103,7 @@ export const MOCK_ISSUES: IssueItem[] = [
     comments: 11,
     age: "12h",
     state: "open",
+    url: "https://github.com/acme/cli/issues/78",
   },
   {
     id: 4,
@@ -107,6 +115,7 @@ export const MOCK_ISSUES: IssueItem[] = [
     comments: 4,
     age: "5d",
     state: "open",
+    url: "https://github.com/acme/worker/issues/245",
   },
   {
     id: 5,
@@ -118,6 +127,7 @@ export const MOCK_ISSUES: IssueItem[] = [
     comments: 7,
     age: "2d",
     state: "open",
+    url: "https://github.com/acme/api/issues/501",
   },
 ];
 
@@ -131,6 +141,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "4m 12s",
     age: "2h",
     triggered: "push",
+    url: "https://github.com/acme/ml-core/actions/runs/1001",
   },
   {
     id: 2,
@@ -141,6 +152,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "1m 58s",
     age: "3h",
     triggered: "push",
+    url: "https://github.com/acme/api/actions/runs/1002",
   },
   {
     id: 3,
@@ -151,6 +163,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "—",
     age: "12m",
     triggered: "push",
+    url: "https://github.com/acme/frontend/actions/runs/1003",
   },
   {
     id: 4,
@@ -161,6 +174,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "48s",
     age: "5h",
     triggered: "pull_request",
+    url: "https://github.com/acme/worker/actions/runs/1004",
   },
   {
     id: 5,
@@ -171,6 +185,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "8m 03s",
     age: "1d",
     triggered: "release",
+    url: "https://github.com/acme/api/actions/runs/1005",
   },
   {
     id: 6,
@@ -181,6 +196,7 @@ export const MOCK_CI: CIItem[] = [
     duration: "2m 11s",
     age: "1d",
     triggered: "pull_request",
+    url: "https://github.com/acme/frontend/actions/runs/1006",
   },
 ];
 
@@ -192,6 +208,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/worker",
     ref: "PR #231",
     age: "5h",
+    url: "https://github.com/acme/worker/pull/231",
   },
   {
     id: 2,
@@ -200,6 +217,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/ml-core",
     ref: "Issue #901",
     age: "1d",
+    url: "https://github.com/acme/ml-core/issues/901",
   },
   {
     id: 3,
@@ -208,6 +226,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/cli",
     ref: "Issue #78",
     age: "12h",
+    url: "https://github.com/acme/cli/issues/78",
   },
   {
     id: 4,
@@ -216,6 +235,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/ml-core",
     ref: "PR #848",
     age: "6h",
+    url: "https://github.com/acme/ml-core/pull/848",
   },
   {
     id: 5,
@@ -224,6 +244,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/api",
     ref: "PR #419",
     age: "2h",
+    url: "https://github.com/acme/api/pull/419",
   },
   {
     id: 6,
@@ -232,6 +253,7 @@ export const MOCK_NOTIFS: NotifItem[] = [
     repo: "acme/api",
     ref: "PR #419",
     age: "1d",
+    url: "https://github.com/acme/api/pull/419",
   },
 ];
 
@@ -243,6 +265,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/ml-core",
     age: "2h",
     ref: "a3f9c12",
+    url: "https://github.com/acme/ml-core/commit/a3f9c12",
   },
   {
     id: 2,
@@ -251,6 +274,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/ml-core",
     age: "3h",
     ref: "Issue #901",
+    url: "https://github.com/acme/ml-core/issues/901",
   },
   {
     id: 3,
@@ -259,6 +283,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/ml-core",
     age: "6h",
     ref: "PR #848",
+    url: "https://github.com/acme/ml-core/pull/848",
   },
   {
     id: 4,
@@ -267,6 +292,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/worker",
     age: "5h",
     ref: "PR #231",
+    url: "https://github.com/acme/worker/pull/231",
   },
   {
     id: 5,
@@ -275,6 +301,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/api",
     age: "1d",
     ref: "7bd2e41",
+    url: "https://github.com/acme/api/commit/7bd2e41",
   },
   {
     id: 6,
@@ -283,5 +310,6 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     repo: "acme/api",
     age: "1d",
     ref: "Issue #497",
+    url: "https://github.com/acme/api/issues/497",
   },
 ];

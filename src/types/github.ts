@@ -47,6 +47,7 @@ export interface GHRepo {
 export interface GHWorkflowRun {
   id: number;
   name: string;
+  html_url: string;
   head_branch: string;
   status: string;
   conclusion: string | null;
@@ -68,9 +69,9 @@ export interface GHEvent {
   payload: {
     action?: string;
     commits?: Array<{ sha: string; message: string }>;
-    pull_request?: { number: number; title: string };
-    issue?: { number: number; title: string };
-    comment?: { body: string };
+    pull_request?: { number: number; title: string; html_url: string };
+    issue?: { number: number; title: string; html_url: string };
+    comment?: { body: string; html_url: string };
     size?: number;
   };
   created_at: string;

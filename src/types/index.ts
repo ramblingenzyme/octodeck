@@ -21,6 +21,7 @@ export interface PRItem {
   draft: boolean;
   age: string;
   labels: string[];
+  url: string;
 }
 
 export interface IssueItem {
@@ -33,6 +34,7 @@ export interface IssueItem {
   comments: number;
   age: string;
   state: "open" | "closed";
+  url: string;
 }
 
 export interface CIItem {
@@ -44,6 +46,7 @@ export interface CIItem {
   duration: string;
   age: string;
   triggered: "push" | "pull_request" | "release";
+  url: string;
 }
 
 export interface NotifItem {
@@ -53,6 +56,7 @@ export interface NotifItem {
   repo: string;
   ref: string;
   age: string;
+  url: string;
 }
 
 export interface ActivityItem {
@@ -62,4 +66,5 @@ export interface ActivityItem {
   repo: string;
   age: string;
   ref?: string;
+  url: string;
 }
