@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 afterEach(cleanup);
 import userEvent from '@testing-library/user-event';
@@ -15,7 +17,7 @@ const SAMPLE_COLUMNS: ColumnConfig[] = [
 
 describe('Board', () => {
   it('shows empty state with "Add your first column" button when columns is empty', () => {
-    render(<Board columns={[]} onAddColumn={noop} onRemove={noop} onMoveLeft={noop} onMoveRight={noop} />);
+    render(<Provider store={store}><Board columns={[]} onAddColumn={noop} onRemove={noop} onMoveLeft={noop} onMoveRight={noop} /></Provider>);
     expect(screen.getByText(/no columns yet/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: /add your first column/i })).toBeTruthy();
   });
@@ -29,7 +31,7 @@ describe('Board', () => {
   });
 
   it('renders one <section> (column) per entry in columns', () => {
-    render(<Board columns={SAMPLE_COLUMNS} onAddColumn={noop} onRemove={noop} onMoveLeft={noop} onMoveRight={noop} />);
+    render(<Provider store={store}><Board columns={SAMPLE_COLUMNS} onAddColumn={noop} onRemove={noop} onMoveLeft={noop} onMoveRight={noop} /></Provider>);
     // Each Column renders as a <section> with aria-label = col.title
     expect(screen.getByRole('region', { name: 'PRs' })).toBeTruthy();
     expect(screen.getByRole('region', { name: 'Issues' })).toBeTruthy();

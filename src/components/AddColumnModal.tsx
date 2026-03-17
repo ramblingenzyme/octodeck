@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
-import type { ColumnType } from "@/types";
-import { COLUMN_TYPES } from "@/constants";
-import colStyles from "./Column.module.css";
-import { Icon } from "./Icon";
-import styles from "./AddColumnModal.module.css";
+import { useEffect, useState } from 'react';
+import type { ColumnType } from '@/types';
+import { COLUMN_TYPES } from '@/constants';
+import colStyles from './Column.module.css';
+import { Icon } from './Icon';
+import styles from './AddColumnModal.module.css';
 
 interface AddColumnModalProps {
-  onAdd: (type: ColumnType, title: string) => void;
+  onAdd: (type: ColumnType, title: string, repos?: string[]) => void;
   onClose: () => void;
 }
 
 export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
-  const [selectedType, setSelectedType] = useState<ColumnType>("prs");
+  const [selectedType, setSelectedType] = useState<ColumnType>('prs');
   const [title, setTitle] = useState(COLUMN_TYPES[selectedType].label);
+  const [reposText, setReposText] = useState('');
 
   const handleTypeChange = (type: ColumnType) => {
     setSelectedType(type);
@@ -21,16 +22,27 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd(selectedType, title);
+    const repos =
+      selectedType === 'ci'
+        ? reposText
+            .split('\n')
+            .map((r) => r.trim())
+            .filter(Boolean)
+        : undefined;
+    if (repos !== undefined) {
+      onAdd(selectedType, title, repos);
+    } else {
+      onAdd(selectedType, title);
+    }
     onClose();
   };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
   return (
@@ -54,7 +66,7 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
                   <button
                     key={type}
                     type="button"
-                    className={`${styles.typeBtn} ${colStyles[type]} ${selectedType === type ? styles.active : ""}`}
+                    className={`${styles.typeBtn} ${colStyles[type]} ${selectedType === type ? styles.active : ''}`}
                     onClick={() => handleTypeChange(type)}
                     aria-pressed={selectedType === type}
                   >
@@ -75,6 +87,21 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
                 placeholder="Enter title..."
               />
             </div>
+            {selectedType === 'ci' && (
+              <div className={styles.modalField}>
+                <label htmlFor="ci-repos-input" className={styles.modalFieldLabel}>
+                  Repos to watch (one per line, e.g. owner/repo)
+                </label>
+                <textarea
+                  id="ci-repos-input"
+                  className={styles.fieldInput}
+                  value={reposText}
+                  onChange={(e) => setReposText(e.target.value)}
+                  placeholder="owner/repo&#10;owner/another-repo"
+                  rows={4}
+                />
+              </div>
+            )}
           </div>
           <div className={styles.modalFooter}>
             <button type="button" className={styles.btnModal} onClick={onClose}>

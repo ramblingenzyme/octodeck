@@ -1,0 +1,142 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--bg-column);
+  border: 1px solid var(--border-structural);
+  border-radius: var(--radius-lg);
+  width: 400px;
+  max-width: calc(100vw - 32px);
+}
+
+.modalHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-structural);
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+}
+
+.modalBody {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.modalFooter {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-structural);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.description {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.btnGitHub {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: #000;
+  background: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  width: 100%;
+  transition: opacity 0.15s;
+}
+
+.btnGitHub:hover {
+  opacity: 0.85;
+}
+
+.demoLink {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.demoLink:hover {
+  color: var(--text-muted);
+}
+
+.userCodeBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  padding: 16px 24px;
+  font-family: var(--font-mono, monospace);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.verifyLink {
+  font-size: var(--text-md);
+  color: var(--color-accent, #818cf8);
+  text-decoration: underline;
+}
+
+.countdown {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+}
+
+.btnCancel {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 6px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-mid);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btnCancel:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.errorText {
+  font-size: var(--text-md);
+  color: var(--ci-failure);
+  text-align: center;
+}
+
+.btnModal {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-mid);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btnModal:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}

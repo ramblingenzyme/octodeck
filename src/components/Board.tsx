@@ -5,9 +5,9 @@ import styles from "./Board.module.css";
 interface BoardProps {
   columns: ColumnConfig[];
   onAddColumn: () => void;
-  onRemove: (id: number) => void;
-  onMoveLeft: (id: number) => void;
-  onMoveRight: (id: number) => void;
+  onRemove: (id: string) => void;
+  onMoveLeft: (id: string) => void;
+  onMoveRight: (id: string) => void;
 }
 
 export const Board = ({ columns, onAddColumn, onRemove, onMoveLeft, onMoveRight }: BoardProps) => {

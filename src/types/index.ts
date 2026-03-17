@@ -4,9 +4,10 @@ export type NotifType = "review_requested" | "mention" | "assigned" | "approved"
 export type ActivityType = "commit" | "comment" | "pr_opened" | "review" | "issue_closed";
 
 export interface ColumnConfig {
-  id: number;
+  id: string;
   type: ColumnType;
   title: string;
+  repos?: string[];
 }
 
 export interface PRItem {

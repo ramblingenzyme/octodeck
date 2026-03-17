@@ -2,17 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { mkId } from './index';
 
 describe('mkId', () => {
-  it('returns an integer', () => {
+  it('returns a non-empty string', () => {
     const id = mkId();
-    expect(Number.isInteger(id)).toBe(true);
-  });
-
-  it('is monotonically increasing', () => {
-    const a = mkId();
-    const b = mkId();
-    const c = mkId();
-    expect(b).toBeGreaterThan(a);
-    expect(c).toBeGreaterThan(b);
+    expect(typeof id).toBe('string');
+    expect(id.length).toBeGreaterThan(0);
   });
 
   it('produces no duplicates across many calls', () => {

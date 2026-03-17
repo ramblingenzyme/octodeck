@@ -1,60 +1,43 @@
-import { useState } from "react";
-import type { ColumnConfig } from "@/types";
-import { COLUMN_TYPES } from "@/constants";
-import styles from "./Column.module.css";
-import { MOCK_PRS, MOCK_ISSUES, MOCK_CI, MOCK_NOTIFS, MOCK_ACTIVITY } from "@/data/mock";
-import { Icon } from "./Icon";
-import { PRCard } from "./cards/PRCard";
-import { IssueCard } from "./cards/IssueCard";
-import { CICard } from "./cards/CICard";
-import { NotifCard } from "./cards/NotifCard";
-import { ActivityCard } from "./cards/ActivityCard";
+import { useState } from 'react';
+import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from '@/types';
+import { COLUMN_TYPES } from '@/constants';
+import { useColumnData } from '@/hooks/useColumnData';
+import styles from './Column.module.css';
+import { Icon } from './Icon';
+import { PRCard } from './cards/PRCard';
+import { IssueCard } from './cards/IssueCard';
+import { CICard } from './cards/CICard';
+import { NotifCard } from './cards/NotifCard';
+import { ActivityCard } from './cards/ActivityCard';
 
 interface ColumnProps {
   col: ColumnConfig;
-  onRemove: (id: number) => void;
-  onMoveLeft: (id: number) => void;
-  onMoveRight: (id: number) => void;
+  onRemove: (id: string) => void;
+  onMoveLeft: (id: string) => void;
+  onMoveRight: (id: string) => void;
   isFirst: boolean;
   isLast: boolean;
 }
 
-const DATA_MAP = {
-  prs: MOCK_PRS,
-  issues: MOCK_ISSUES,
-  ci: MOCK_CI,
-  notifications: MOCK_NOTIFS,
-  activity: MOCK_ACTIVITY,
-};
-
-export const Column = ({
-  col,
-  onRemove,
-  onMoveLeft,
-  onMoveRight,
-  isFirst,
-  isLast,
-}: ColumnProps) => {
+export const Column = ({ col, onRemove, onMoveLeft, onMoveRight, isFirst, isLast }: ColumnProps) => {
   const [confirming, setConfirming] = useState(false);
   const cfg = COLUMN_TYPES[col.type];
+  const { data, isLoading, error } = useColumnData(col);
 
-  // Type-safe card rendering by discriminated union
-  const renderCard = (item: (typeof DATA_MAP)[typeof col.type][number]) => {
+  const renderCard = (item: PRItem | IssueItem | CIItem | NotifItem | ActivityItem) => {
     switch (col.type) {
-      case "prs":
-        return <PRCard key={item.id} item={item as (typeof MOCK_PRS)[number]} />;
-      case "issues":
-        return <IssueCard key={item.id} item={item as (typeof MOCK_ISSUES)[number]} />;
-      case "ci":
-        return <CICard key={item.id} item={item as (typeof MOCK_CI)[number]} />;
-      case "notifications":
-        return <NotifCard key={item.id} item={item as (typeof MOCK_NOTIFS)[number]} />;
-      case "activity":
-        return <ActivityCard key={item.id} item={item as (typeof MOCK_ACTIVITY)[number]} />;
+      case 'prs':
+        return <PRCard key={item.id} item={item as PRItem} />;
+      case 'issues':
+        return <IssueCard key={item.id} item={item as IssueItem} />;
+      case 'ci':
+        return <CICard key={item.id} item={item as CIItem} />;
+      case 'notifications':
+        return <NotifCard key={item.id} item={item as NotifItem} />;
+      case 'activity':
+        return <ActivityCard key={item.id} item={item as ActivityItem} />;
     }
   };
-
-  const data = DATA_MAP[col.type];
 
   return (
     <section className={`${styles.column} ${styles[col.type]}`} aria-label={col.title}>
@@ -91,25 +74,31 @@ export const Column = ({
         <div className={styles.colConfirmation} role="alert">
           <span className={styles.colConfirmationText}>Remove "{col.title}"?</span>
           <div className={styles.colConfirmationButtons}>
-            <button
-              className={styles.btnConfirmCancel}
-              onClick={() => setConfirming(false)}
-            >
+            <button className={styles.btnConfirmCancel} onClick={() => setConfirming(false)}>
               No
             </button>
-            <button
-              className={styles.btnConfirmDanger}
-              onClick={() => {
-                onRemove(col.id);
-              }}
-            >
+            <button className={styles.btnConfirmDanger} onClick={() => onRemove(col.id)}>
               Yes, remove
             </button>
           </div>
         </div>
       )}
 
-      <div className={styles.colBody}>{data.map((item) => renderCard(item))}</div>
+      <div className={styles.colBody}>
+        {isLoading && (
+          <div className={styles.skeletonWrapper} aria-busy="true">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className={styles.skeletonCard} />
+            ))}
+          </div>
+        )}
+        {error && !isLoading && (
+          <div className={styles.errorState} role="alert">
+            {error}
+          </div>
+        )}
+        {!isLoading && !error && data.map((item) => renderCard(item as PRItem & IssueItem & CIItem & NotifItem & ActivityItem))}
+      </div>
     </section>
   );
 };

@@ -30,13 +30,12 @@ export const COLUMN_TYPES: Record<ColumnType, { label: string; icon: string }> =
   activity: { label: "My Activity", icon: "●" },
 };
 
-let _nextId = 100;
-export const mkId = (): number => ++_nextId;
+export const mkId = (): string => crypto.randomUUID();
 
 export const DEFAULT_COLUMNS: ColumnConfig[] = [
-  { id: 1, type: "notifications", title: "Inbox" },
-  { id: 2, type: "prs", title: "Open PRs" },
-  { id: 3, type: "issues", title: "Issues" },
-  { id: 4, type: "ci", title: "CI / CD" },
-  { id: 5, type: "activity", title: "Activity" },
+  { id: "col-notifications", type: "notifications", title: "Inbox" },
+  { id: "col-prs", type: "prs", title: "Open PRs" },
+  { id: "col-issues", type: "issues", title: "Issues" },
+  { id: "col-ci", type: "ci", title: "CI / CD" },
+  { id: "col-activity", type: "activity", title: "Activity" },
 ];

@@ -19,19 +19,19 @@ export const configApi = createApi({
       queryFn: () => ({ data: loadLayout() }),
       providesTags: ["Layout"],
     }),
-    addColumn: build.mutation<ColumnConfig[], { type: ColumnType; title: string }>({
-      queryFn: ({ type, title }) => ({
-        data: mutateLayout((d) => { d.push({ id: mkId(), type, title }); }),
+    addColumn: build.mutation<ColumnConfig[], { type: ColumnType; title: string; repos?: string[] }>({
+      queryFn: ({ type, title, repos }) => ({
+        data: mutateLayout((d) => { d.push({ id: mkId(), type, title, ...(repos?.length ? { repos } : {}) }); }),
       }),
       invalidatesTags: ["Layout"],
     }),
-    removeColumn: build.mutation<ColumnConfig[], number>({
+    removeColumn: build.mutation<ColumnConfig[], string>({
       queryFn: (id) => ({
         data: mutateLayout((d) => { d.splice(d.findIndex((c) => c.id === id), 1); }),
       }),
       invalidatesTags: ["Layout"],
     }),
-    moveLeft: build.mutation<ColumnConfig[], number>({
+    moveLeft: build.mutation<ColumnConfig[], string>({
       queryFn: (id) => ({
         data: mutateLayout((d) => {
           const i = d.findIndex((c) => c.id === id);
@@ -40,7 +40,7 @@ export const configApi = createApi({
       }),
       invalidatesTags: ["Layout"],
     }),
-    moveRight: build.mutation<ColumnConfig[], number>({
+    moveRight: build.mutation<ColumnConfig[], string>({
       queryFn: (id) => ({
         data: mutateLayout((d) => {
           const i = d.findIndex((c) => c.id === id);

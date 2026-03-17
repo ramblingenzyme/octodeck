@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 afterEach(cleanup);
 import userEvent from '@testing-library/user-event';
@@ -9,23 +11,25 @@ import type { ColumnConfig } from '@/types';
 const noop = () => {};
 
 function makeCol(type: ColumnConfig['type'], title = 'Test Column'): ColumnConfig {
-  return { id: 1, type, title };
+  return { id: "col-1", type, title };
 }
 
 function renderColumn(col: ColumnConfig, overrides: Partial<{
-  onRemove: (id: number) => void;
+  onRemove: (id: string) => void;
   isFirst: boolean;
   isLast: boolean;
 }> = {}) {
   return render(
-    <Column
-      col={col}
-      onRemove={overrides.onRemove ?? noop}
-      onMoveLeft={noop}
-      onMoveRight={noop}
-      isFirst={overrides.isFirst ?? false}
-      isLast={overrides.isLast ?? false}
-    />
+    <Provider store={store}>
+      <Column
+        col={col}
+        onRemove={overrides.onRemove ?? noop}
+        onMoveLeft={noop}
+        onMoveRight={noop}
+        isFirst={overrides.isFirst ?? false}
+        isLast={overrides.isLast ?? false}
+      />
+    </Provider>
   );
 }
 
@@ -88,6 +92,6 @@ describe('Column remove confirmation', () => {
     expect(screen.getByRole('alert')).toBeTruthy();
 
     await user.click(screen.getByRole('button', { name: /yes, remove/i }));
-    expect(onRemove).toHaveBeenCalledWith(1);
+    expect(onRemove).toHaveBeenCalledWith("col-1");
   });
 });

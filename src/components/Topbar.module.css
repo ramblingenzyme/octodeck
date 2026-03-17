@@ -51,3 +51,66 @@
 .btnAdd:hover {
   opacity: 0.85;
 }
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userLogin {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+}
+
+.demoBadge {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-mid);
+}
+
+.btnSignIn {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-mid);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btnSignIn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.btnSignOut {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-mid);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btnSignOut:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
