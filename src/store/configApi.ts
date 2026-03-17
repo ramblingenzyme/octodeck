@@ -19,9 +19,9 @@ export const configApi = createApi({
       queryFn: () => ({ data: loadLayout() }),
       providesTags: ["Layout"],
     }),
-    addColumn: build.mutation<ColumnConfig[], { type: ColumnType; title: string; repos?: string[] }>({
-      queryFn: ({ type, title, repos }) => ({
-        data: mutateLayout((d) => { d.push({ id: mkId(), type, title, ...(repos?.length ? { repos } : {}) }); }),
+    addColumn: build.mutation<ColumnConfig[], { type: ColumnType; title: string; query?: string }>({
+      queryFn: ({ type, title, query }) => ({
+        data: mutateLayout((d) => { d.push({ id: mkId(), type, title, ...(query ? { query } : {}) }); }),
       }),
       invalidatesTags: ["Layout"],
     }),
@@ -49,6 +49,15 @@ export const configApi = createApi({
       }),
       invalidatesTags: ["Layout"],
     }),
+    updateColumnQuery: build.mutation<ColumnConfig[], { id: string; query: string }>({
+      queryFn: ({ id, query }) => ({
+        data: mutateLayout((d) => {
+          const col = d.find((c) => c.id === id);
+          if (col) col.query = query || undefined;
+        }),
+      }),
+      invalidatesTags: ["Layout"],
+    }),
   }),
 });
 
@@ -58,4 +67,5 @@ export const {
   useRemoveColumnMutation,
   useMoveLeftMutation,
   useMoveRightMutation,
+  useUpdateColumnQueryMutation,
 } = configApi;

@@ -9,6 +9,7 @@ import { IssueCard } from './cards/IssueCard';
 import { CICard } from './cards/CICard';
 import { NotifCard } from './cards/NotifCard';
 import { ActivityCard } from './cards/ActivityCard';
+import { ColumnSettingsModal } from './ColumnSettingsModal';
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -21,6 +22,7 @@ interface ColumnProps {
 
 export const Column = ({ col, onRemove, onMoveLeft, onMoveRight, isFirst, isLast }: ColumnProps) => {
   const [confirming, setConfirming] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const cfg = COLUMN_TYPES[col.type];
   const { data, isLoading, error } = useColumnData(col);
 
@@ -49,6 +51,14 @@ export const Column = ({ col, onRemove, onMoveLeft, onMoveRight, isFirst, isLast
         </div>
         <div className={styles.colControls}>
           <button
+            className={`${styles.btnIcon} ${col.query ? styles.btnIconActive : ''}`}
+            onClick={() => setShowSettings(true)}
+            aria-label="Column filters"
+            title="Column filters"
+          >
+            <Icon>⚙</Icon>
+          </button>
+          <button
             className={styles.btnIcon}
             onClick={() => onMoveLeft(col.id)}
             disabled={isFirst}
@@ -69,6 +79,19 @@ export const Column = ({ col, onRemove, onMoveLeft, onMoveRight, isFirst, isLast
           </button>
         </div>
       </header>
+
+      {col.query && (
+        <div className={styles.colQuery} title={col.query}>
+          <span className={styles.colQueryText}>{col.query}</span>
+          <button
+            className={styles.colQueryEdit}
+            onClick={() => setShowSettings(true)}
+            aria-label="Edit filter query"
+          >
+            edit
+          </button>
+        </div>
+      )}
 
       {confirming && (
         <div className={styles.colConfirmation} role="alert">
@@ -99,6 +122,8 @@ export const Column = ({ col, onRemove, onMoveLeft, onMoveRight, isFirst, isLast
         )}
         {!isLoading && !error && data.map((item) => renderCard(item as PRItem & IssueItem & CIItem & NotifItem & ActivityItem))}
       </div>
+
+      {showSettings && <ColumnSettingsModal col={col} onClose={() => setShowSettings(false)} />}
     </section>
   );
 };

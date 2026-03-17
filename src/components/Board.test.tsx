@@ -11,8 +11,8 @@ import type { ColumnConfig } from '@/types';
 const noop = () => {};
 
 const SAMPLE_COLUMNS: ColumnConfig[] = [
-  { id: 1, type: 'prs', title: 'PRs' },
-  { id: 2, type: 'issues', title: 'Issues' },
+  { id: 'col-1', type: 'prs', title: 'PRs' },
+  { id: 'col-2', type: 'issues', title: 'Issues' },
 ];
 
 describe('Board', () => {

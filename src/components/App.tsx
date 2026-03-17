@@ -44,8 +44,8 @@ export const App = () => {
     if (auth.status === 'authed') setShowAuthModal(false);
   }, [auth.status]);
 
-  const handleAddColumn = (type: ColumnType, title: string, repos?: string[]) => {
-    addColumn({ type, title, repos });
+  const handleAddColumn = (type: ColumnType, title: string, query?: string) => {
+    addColumn({ type, title, query });
     setShowModal(false);
   };
 

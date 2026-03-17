@@ -42,7 +42,7 @@ describe('AddColumnModal', () => {
     const onAdd = vi.fn();
     render(<AddColumnModal onAdd={onAdd} onClose={noop} />);
     await user.click(screen.getByRole('button', { name: /add column/i }));
-    expect(onAdd).toHaveBeenCalledWith('prs', COLUMN_TYPES['prs'].label);
+    expect(onAdd).toHaveBeenCalledWith('prs', COLUMN_TYPES['prs'].label, undefined);
   });
 
   it('ESC keydown calls onClose', async () => {

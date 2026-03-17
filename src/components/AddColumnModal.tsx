@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { ColumnType } from '@/types';
 import { COLUMN_TYPES } from '@/constants';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import colStyles from './Column.module.css';
 import { Icon } from './Icon';
 import styles from './AddColumnModal.module.css';
 
 interface AddColumnModalProps {
-  onAdd: (type: ColumnType, title: string, repos?: string[]) => void;
+  onAdd: (type: ColumnType, title: string, query?: string) => void;
   onClose: () => void;
 }
 
 export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
   const [selectedType, setSelectedType] = useState<ColumnType>('prs');
   const [title, setTitle] = useState(COLUMN_TYPES[selectedType].label);
-  const [reposText, setReposText] = useState('');
+  const [query, setQuery] = useState('');
 
   const handleTypeChange = (type: ColumnType) => {
     setSelectedType(type);
@@ -22,28 +23,11 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const repos =
-      selectedType === 'ci'
-        ? reposText
-            .split('\n')
-            .map((r) => r.trim())
-            .filter(Boolean)
-        : undefined;
-    if (repos !== undefined) {
-      onAdd(selectedType, title, repos);
-    } else {
-      onAdd(selectedType, title);
-    }
+    onAdd(selectedType, title, query.trim() || undefined);
     onClose();
   };
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  useEscapeKey(onClose);
 
   return (
     <div
@@ -87,21 +71,19 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
                 placeholder="Enter title..."
               />
             </div>
-            {selectedType === 'ci' && (
-              <div className={styles.modalField}>
-                <label htmlFor="ci-repos-input" className={styles.modalFieldLabel}>
-                  Repos to watch (one per line, e.g. owner/repo)
-                </label>
-                <textarea
-                  id="ci-repos-input"
-                  className={styles.fieldInput}
-                  value={reposText}
-                  onChange={(e) => setReposText(e.target.value)}
-                  placeholder="owner/repo&#10;owner/another-repo"
-                  rows={4}
-                />
-              </div>
-            )}
+            <div className={styles.modalField}>
+              <label htmlFor="column-query-input" className={styles.modalFieldLabel}>
+                Filter Query
+              </label>
+              <input
+                id="column-query-input"
+                className={styles.fieldInput}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="repo:owner/repo label:bug is:open"
+              />
+            </div>
           </div>
           <div className={styles.modalFooter}>
             <button type="button" className={styles.btnModal} onClick={onClose}>

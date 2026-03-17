@@ -20,25 +20,33 @@ describe('loadLayout', () => {
   });
 
   it('returns stored columns when valid JSON is present', () => {
-    const cols: ColumnConfig[] = [{ id: 42, type: 'prs', title: 'My PRs' }];
+    const cols: ColumnConfig[] = [{ id: 'col-1', type: 'prs', title: 'My PRs' }];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cols));
     expect(loadLayout()).toEqual(cols);
+  });
+
+  it('migrates old repos field to query string', () => {
+    const old = [{ id: 'col-1', type: 'ci', title: 'CI', repos: ['acme/api', 'acme/worker'] }];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
+    expect(loadLayout()).toEqual([
+      { id: 'col-1', type: 'ci', title: 'CI', query: 'repo:acme/api repo:acme/worker' },
+    ]);
   });
 });
 
 describe('saveLayout + loadLayout round-trip', () => {
   it('persists and restores a custom layout', () => {
     const cols: ColumnConfig[] = [
-      { id: 10, type: 'ci', title: 'Build' },
-      { id: 11, type: 'issues', title: 'Bugs' },
+      { id: 'col-10', type: 'ci', title: 'Build' },
+      { id: 'col-11', type: 'issues', title: 'Bugs' },
     ];
     saveLayout(cols);
     expect(loadLayout()).toEqual(cols);
   });
 
   it('last saveLayout call wins', () => {
-    const first: ColumnConfig[] = [{ id: 1, type: 'prs', title: 'First' }];
-    const second: ColumnConfig[] = [{ id: 2, type: 'activity', title: 'Second' }];
+    const first: ColumnConfig[] = [{ id: 'col-1', type: 'prs', title: 'First' }];
+    const second: ColumnConfig[] = [{ id: 'col-2', type: 'activity', title: 'Second' }];
     saveLayout(first);
     saveLayout(second);
     expect(loadLayout()).toEqual(second);

@@ -107,6 +107,46 @@
   background: var(--border-mid);
 }
 
+.btnIconActive {
+  color: var(--color-accent);
+}
+
+.colQuery {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 15%, transparent);
+  min-width: 0;
+}
+
+.colQueryText {
+  flex: 1;
+  font-size: var(--text-xs, 11px);
+  color: var(--text-muted);
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.colQueryEdit {
+  flex-shrink: 0;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-accent);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.colQueryEdit:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
 .btnConfirmCancel {
   font-size: var(--text-sm);
   font-weight: 500;
