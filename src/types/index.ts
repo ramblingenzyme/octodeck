@@ -60,5 +60,5 @@ export interface ActivityItem {
   text: string;
   repo: string;
   age: string;
-  sha?: string;
+  ref?: string;
 }

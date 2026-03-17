@@ -11,12 +11,12 @@ export const NOTIF_ICONS: Record<NotifType, string> = {
   mention: "@",
   assigned: "→",
   approved: "✓",
-  comment: "💬",
+  comment: "◈",
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, string> = {
   commit: "●",
-  comment: "💬",
+  comment: "◈",
   pr_opened: "⟳",
   review: "◈",
   issue_closed: "✗",

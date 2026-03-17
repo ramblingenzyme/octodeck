@@ -1,4 +1,6 @@
-import styles from "./Card.module.css";
+import { Icon } from '../Icon';
+import { CommentIcon } from './CommentIcon';
+import styles from './Card.module.css';
 
 interface CardTopProps {
   repo: string;
@@ -11,3 +13,11 @@ export const CardTop = ({ repo, age }: CardTopProps) => (
     <span className={styles.cardAge}>{age}</span>
   </header>
 );
+
+interface CardTypeIconProps {
+  type: string;
+  icon: string;
+}
+
+export const CardTypeIcon = ({ type, icon }: CardTypeIconProps) =>
+  type === 'comment' ? <CommentIcon /> : <Icon className={styles.cardIcon}>{icon}</Icon>;

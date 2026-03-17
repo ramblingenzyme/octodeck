@@ -242,7 +242,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Pushed 3 commits to feat/streaming",
     repo: "acme/ml-core",
     age: "2h",
-    sha: "a3f9c12",
+    ref: "a3f9c12",
   },
   {
     id: 2,
@@ -250,6 +250,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Commented on Issue #901",
     repo: "acme/ml-core",
     age: "3h",
+    ref: "Issue #901",
   },
   {
     id: 3,
@@ -257,6 +258,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Opened PR #848",
     repo: "acme/ml-core",
     age: "6h",
+    ref: "PR #848",
   },
   {
     id: 4,
@@ -264,6 +266,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Reviewed PR #231 — requested changes",
     repo: "acme/worker",
     age: "5h",
+    ref: "PR #231",
   },
   {
     id: 5,
@@ -271,7 +274,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Pushed 1 commit to main",
     repo: "acme/api",
     age: "1d",
-    sha: "7bd2e41",
+    ref: "7bd2e41",
   },
   {
     id: 6,
@@ -279,5 +282,6 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     text: "Closed Issue #497",
     repo: "acme/api",
     age: "1d",
+    ref: "Issue #497",
   },
 ];

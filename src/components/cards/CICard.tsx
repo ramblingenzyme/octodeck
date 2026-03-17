@@ -13,7 +13,7 @@ export const CICard = ({ item }: CICardProps) => {
   const status = CI_STATUS[item.status];
 
   return (
-    <article className={`${cardStyles.card} ${styles.ciCard} ${styles[item.status]}`}>
+    <article className={`${cardStyles.card} ${styles[item.status]}`}>
       <CardTop repo={item.repo} age={item.age} />
       <p className={cardStyles.cardTitle}>{item.name}</p>
       <footer className={cardStyles.cardMeta}>

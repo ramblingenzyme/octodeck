@@ -2,10 +2,6 @@
 .failure { --ci-color: #f87171; --ci-bg: #3d1414; }
 .running { --ci-color: #fbbf24; --ci-bg: #2d1f0a; }
 
-.ciCard {
-  border-left: 2px solid var(--ci-color, var(--border-card));
-}
-
 .ciBadge {
   font-size: var(--text-md);
   padding: 2px 6px;

@@ -1,7 +1,7 @@
 import type { IssueItem } from "@/types";
 import cardStyles from "./Card.module.css";
 import { CardTop } from "./CardParts";
-import { Icon } from "../Icon";
+import { CommentIcon } from "./CommentIcon";
 import { LabelList } from "./LabelList";
 
 interface IssueCardProps {
@@ -18,7 +18,7 @@ export const IssueCard = ({ item }: IssueCardProps) => {
       <footer className={cardStyles.cardMeta}>
         <span className={cardStyles.cardAuthor}>{item.assignee ? `→ ${item.assignee}` : "unassigned"}</span>
         <span className={cardStyles.cardStat} aria-label={`${item.comments} comments`}>
-          <Icon>💬</Icon>{item.comments}
+          <CommentIcon />{item.comments}
         </span>
       </footer>
       <LabelList labels={item.labels} />

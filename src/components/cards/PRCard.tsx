@@ -2,6 +2,7 @@ import type { PRItem } from "@/types";
 import cardStyles from "./Card.module.css";
 import { CardTop } from "./CardParts";
 import { Icon } from "../Icon";
+import { CommentIcon } from "./CommentIcon";
 import { LabelList } from "./LabelList";
 import styles from "./PRCard.module.css";
 
@@ -13,12 +14,11 @@ export const PRCard = ({ item }: PRCardProps) => {
   return (
     <article className={cardStyles.card}>
       <CardTop repo={item.repo} age={item.age} />
-      <p className={cardStyles.cardTitle}>
-        {item.draft && <span className={styles.draftBadge}>DRAFT</span>}#{item.number} {item.title}
-      </p>
+      <p className={cardStyles.cardTitle}>#{item.number} {item.title}</p>
       <footer className={cardStyles.cardMeta}>
         <span className={cardStyles.cardAuthor}>@{item.author}</span>
         <div className={cardStyles.cardStats}>
+          {item.draft && <span className={styles.draftBadge}>DRAFT</span>}
           <span
             className={item.reviews.approved > 0 ? cardStyles.cardStatApproved : cardStyles.cardStat}
             aria-label={`${item.reviews.approved} approvals`}
@@ -31,7 +31,7 @@ export const PRCard = ({ item }: PRCardProps) => {
             </span>
           )}
           <span className={cardStyles.cardStat} aria-label={`${item.comments} comments`}>
-            <Icon>💬</Icon>{item.comments}
+            <CommentIcon />{item.comments}
           </span>
         </div>
       </footer>

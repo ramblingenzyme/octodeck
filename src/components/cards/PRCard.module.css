@@ -4,7 +4,6 @@
   font-size: var(--text-sm);
   padding: 1px 5px;
   border-radius: var(--radius-sm);
-  margin-right: 4px;
   letter-spacing: 0.03em;
   display: inline-block;
 }

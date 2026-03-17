@@ -40,6 +40,13 @@
   font-size: var(--text-md);
 }
 
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-md);
+}
+
 .cardAuthor {
   color: var(--text-muted);
 }
@@ -50,18 +57,27 @@
 }
 
 .cardStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   color: var(--text-muted);
 }
 
 .cardIcon {
   color: var(--text-muted);
-  margin-right: 4px;
+  flex-shrink: 0;
 }
 
 .cardStatApproved {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   color: var(--ci-success);
 }
 
 .cardStatPending {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   color: var(--ci-running);
 }
