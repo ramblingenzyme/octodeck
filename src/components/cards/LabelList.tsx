@@ -7,12 +7,14 @@ interface LabelListProps {
 export const LabelList = ({ labels }: LabelListProps) => {
   if (labels.length === 0) return null;
   return (
-    <div className={labelStyles.labelList}>
+    <ul className={labelStyles.labelList}>
       {labels.map((l) => (
-        <span key={l} className={`${labelStyles.label} ${labelStyles[l] ?? labelStyles.fallback}`}>
-          {l}
-        </span>
+        <li key={l}>
+          <span className={`${labelStyles.label} ${labelStyles[l] ?? labelStyles.fallback}`}>
+            {l}
+          </span>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

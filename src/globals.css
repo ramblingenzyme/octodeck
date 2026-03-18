@@ -34,6 +34,10 @@
   --radius-sm: 2px;
   --radius-md: 3px;
   --radius-lg: 4px;
+
+  --text-on-light: #000;
+  --bg-hover: #161616;
+  --border-hover: #3a3a3a;
 }
 
 /* ── Reset ────────────────────────────────────────────────────────────────── */
@@ -43,6 +47,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-mid) var(--bg-column);
 }
 
 button {
@@ -53,6 +59,11 @@ button {
 button:disabled {
   opacity: 0.25;
   cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 :focus-visible {
@@ -89,5 +100,5 @@ body {
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: var(--border-hover);
 }

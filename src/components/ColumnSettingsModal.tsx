@@ -1,7 +1,6 @@
-import { useCallback, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ColumnConfig } from "@/types";
 import { useUpdateColumnQueryMutation } from "@/store/configApi";
-import { useEscapeKey } from "@/hooks/useEscapeKey";
 import styles from "./AddColumnModal.module.css";
 
 interface ColumnSettingsModalProps {
@@ -13,6 +12,11 @@ export const ColumnSettingsModal = ({ col, onClose }: ColumnSettingsModalProps) 
   const [query, setQuery] = useState(col.query ?? "");
   const [confirmingClear, setConfirmingClear] = useState(false);
   const [updateQuery] = useUpdateColumnQueryMutation();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.showModal();
+  }, []);
 
   const handleSave = () => {
     updateQuery({ id: col.id, query: query.trim() });
@@ -24,19 +28,14 @@ export const ColumnSettingsModal = ({ col, onClose }: ColumnSettingsModalProps) 
     setConfirmingClear(false);
   };
 
-  useEscapeKey(
-    useCallback(() => {
-      if (confirmingClear) setConfirmingClear(false);
-      else onClose();
-    }, [confirmingClear, onClose]),
-  );
-
   return (
-    <div
-      className={styles.modalOverlay}
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
+      className={styles.dialog}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
       aria-labelledby="col-settings-modal-title"
     >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -108,6 +107,6 @@ export const ColumnSettingsModal = ({ col, onClose }: ColumnSettingsModalProps) 
           </div>
         )}
       </div>
-    </div>
+    </dialog>
   );
 };

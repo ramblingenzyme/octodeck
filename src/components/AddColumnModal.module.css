@@ -1,11 +1,15 @@
-.modalOverlay {
-  position: fixed;
-  inset: 0;
+.dialog {
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  max-height: 100dvh;
+  overflow: visible;
+}
+
+.dialog::backdrop {
   background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
   backdrop-filter: blur(4px);
 }
 
@@ -85,7 +89,7 @@
 
 .btnModalPrimary {
   background: var(--accent-prs);
-  color: #000;
+  color: var(--text-on-light);
   border-color: var(--accent-prs);
 }
 
@@ -150,12 +154,12 @@
 
 .typeBtn:hover {
   border-color: var(--border-mid);
-  background: #161616;
+  background: var(--bg-hover);
 }
 
 .typeBtn.active {
   border-color: var(--accent-prs);
-  background: #13131f;
+  background: color-mix(in srgb, var(--accent-prs) 8%, var(--bg-card));
 }
 
 .fieldInput {

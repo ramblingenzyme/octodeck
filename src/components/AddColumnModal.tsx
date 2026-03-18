@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ColumnType } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
-import { useEscapeKey } from "@/hooks/useEscapeKey";
 import colStyles from "./Column.module.css";
 import { Icon } from "./Icon";
 import styles from "./AddColumnModal.module.css";
@@ -15,6 +14,11 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
   const [selectedType, setSelectedType] = useState<ColumnType>("prs");
   const [title, setTitle] = useState(COLUMN_TYPES[selectedType].label);
   const [query, setQuery] = useState("");
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.showModal();
+  }, []);
 
   const handleTypeChange = (type: ColumnType) => {
     setSelectedType(type);
@@ -27,14 +31,14 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
     onClose();
   };
 
-  useEscapeKey(onClose);
-
   return (
-    <div
-      className={styles.modalOverlay}
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
+      className={styles.dialog}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
       aria-labelledby="add-column-modal-title"
     >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -99,6 +103,6 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
           </div>
         </form>
       </div>
-    </div>
+    </dialog>
   );
 };

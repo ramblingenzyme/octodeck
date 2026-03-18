@@ -1,5 +1,5 @@
 .draftBadge {
-  background: #1f2937;
+  background: var(--border-card);
   color: var(--text-muted);
   font-size: var(--text-sm);
   padding: 1px 5px;

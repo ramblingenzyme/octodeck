@@ -54,9 +54,9 @@ export const Column = ({
         <div className={styles.colHeaderLeft}>
           <Icon className={styles.colIcon}>{cfg.icon}</Icon>
           <h2 className={styles.colTitle}>{col.title}</h2>
-          <div className={styles.colBadge} aria-label={`${data.length} items`}>
+          <output className={styles.colBadge} aria-label={`${data.length} items`}>
             {data.length}
-          </div>
+          </output>
         </div>
         <div className={styles.colControls}>
           <button

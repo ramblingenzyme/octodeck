@@ -41,7 +41,7 @@
 .btnAdd {
   font-size: var(--text-md);
   font-weight: 500;
-  color: #000;
+  color: var(--text-on-light);
   background: var(--text-primary);
   padding: 6px 14px;
   border-radius: var(--radius-md);
@@ -85,23 +85,7 @@
   border: 1px solid var(--border-mid);
 }
 
-.btnSignIn {
-  font-size: var(--text-md);
-  font-weight: 500;
-  color: var(--text-muted);
-  padding: 4px 10px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-mid);
-  transition:
-    border-color 0.15s,
-    color 0.15s;
-}
-
-.btnSignIn:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
-}
-
+.btnSignIn,
 .btnSignOut {
   font-size: var(--text-md);
   font-weight: 500;
@@ -114,6 +98,7 @@
     color 0.15s;
 }
 
+.btnSignIn:hover,
 .btnSignOut:hover {
   border-color: var(--text-muted);
   color: var(--text-primary);
