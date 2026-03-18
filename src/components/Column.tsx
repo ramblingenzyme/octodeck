@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
 import { useColumnData } from "@/hooks/useColumnData";
@@ -15,25 +16,16 @@ import { ColumnSettingsModal } from "./ColumnSettingsModal";
 interface ColumnProps {
   col: ColumnConfig;
   onRemove: (id: string) => void;
-  onMoveLeft: (id: string) => void;
-  onMoveRight: (id: string) => void;
-  isFirst: boolean;
-  isLast: boolean;
 }
 
-export const Column = ({
-  col,
-  onRemove,
-  onMoveLeft,
-  onMoveRight,
-  isFirst,
-  isLast,
-}: ColumnProps) => {
+export const Column = ({ col, onRemove }: ColumnProps) => {
   const [confirming, setConfirming] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [, setTick] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const ref = useRef<HTMLElement>(null);
   const cfg = COLUMN_TYPES[col.type];
   const { data, isLoading, isFetching, error, refetch } = useColumnData(col);
   const prevFetching = useRef(false);
@@ -50,6 +42,25 @@ export const Column = ({
     const id = setInterval(() => setTick((t) => t + 1), 60_000);
     return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const cleanupDraggable = draggable({
+      element: el,
+      getInitialData: () => ({ columnId: col.id }),
+      onDragStart: () => setIsDragging(true),
+      onDrop: () => setIsDragging(false),
+    });
+    const cleanupDropTarget = dropTargetForElements({
+      element: el,
+      getData: () => ({ columnId: col.id }),
+    });
+    return () => {
+      cleanupDraggable();
+      cleanupDropTarget();
+    };
+  }, [col.id]);
 
   const handleRefresh = () => {
     refetch();
@@ -80,7 +91,12 @@ export const Column = ({
   };
 
   return (
-    <section className={`${styles.column} ${styles[col.type]}`} aria-label={col.title}>
+    <section
+      ref={ref}
+      className={`${styles.column} ${styles[col.type]}`}
+      aria-label={col.title}
+      style={isDragging ? { opacity: 0.5 } : undefined}
+    >
       <header className={styles.colHeader}>
         <div className={styles.colHeaderLeft}>
           <Icon className={styles.colIcon}>{cfg.icon}</Icon>
@@ -115,26 +131,6 @@ export const Column = ({
               aria-label="Column filters"
             >
               <Icon>⚙</Icon>
-            </button>
-          </Tooltip>
-          <Tooltip text="Move left" position="below">
-            <button
-              className={styles.btnIcon}
-              onClick={() => onMoveLeft(col.id)}
-              disabled={isFirst}
-              aria-label="Move left"
-            >
-              <Icon>←</Icon>
-            </button>
-          </Tooltip>
-          <Tooltip text="Move right" position="below">
-            <button
-              className={styles.btnIcon}
-              onClick={() => onMoveRight(col.id)}
-              disabled={isLast}
-              aria-label="Move right"
-            >
-              <Icon>→</Icon>
             </button>
           </Tooltip>
           <Tooltip text="Remove column" position="below">

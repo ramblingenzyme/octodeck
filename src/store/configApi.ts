@@ -6,8 +6,7 @@ import { loadLayout, saveLayout } from "./layoutStorage";
 import {
   applyAdd,
   applyRemove,
-  applyMoveLeft,
-  applyMoveRight,
+  applyReorder,
   applyUpdateQuery,
 } from "./layoutMutations";
 
@@ -38,15 +37,9 @@ export const configApi = createApi({
       }),
       invalidatesTags: ["Layout"],
     }),
-    moveLeft: build.mutation<ColumnConfig[], string>({
-      queryFn: (id) => ({
-        data: mutateLayout((d) => applyMoveLeft(d, id)),
-      }),
-      invalidatesTags: ["Layout"],
-    }),
-    moveRight: build.mutation<ColumnConfig[], string>({
-      queryFn: (id) => ({
-        data: mutateLayout((d) => applyMoveRight(d, id)),
+    reorder: build.mutation<ColumnConfig[], { from: number; to: number }>({
+      queryFn: ({ from, to }) => ({
+        data: mutateLayout((d) => applyReorder(d, from, to)),
       }),
       invalidatesTags: ["Layout"],
     }),
@@ -63,7 +56,6 @@ export const {
   useGetLayoutQuery,
   useAddColumnMutation,
   useRemoveColumnMutation,
-  useMoveLeftMutation,
-  useMoveRightMutation,
+  useReorderMutation,
   useUpdateColumnQueryMutation,
 } = configApi;

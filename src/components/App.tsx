@@ -4,8 +4,6 @@ import {
   useGetLayoutQuery,
   useAddColumnMutation,
   useRemoveColumnMutation,
-  useMoveLeftMutation,
-  useMoveRightMutation,
 } from "@/store/configApi";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { logOut, userLoaded } from "@/store/authSlice";
@@ -20,8 +18,6 @@ export const App = () => {
   const { data: columns = [] } = useGetLayoutQuery();
   const [addColumn] = useAddColumnMutation();
   const [removeColumn] = useRemoveColumnMutation();
-  const [moveLeft] = useMoveLeftMutation();
-  const [moveRight] = useMoveRightMutation();
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -63,8 +59,6 @@ export const App = () => {
         columns={columns}
         onAddColumn={() => setShowModal(true)}
         onRemove={(id) => removeColumn(id)}
-        onMoveLeft={(id) => moveLeft(id)}
-        onMoveRight={(id) => moveRight(id)}
       />
       {showModal && <AddColumnModal onAdd={handleAddColumn} onClose={() => setShowModal(false)} />}
       {showAuthModal && (

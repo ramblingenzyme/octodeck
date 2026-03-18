@@ -15,14 +15,9 @@ export function applyRemove(d: ColumnConfig[], id: string): void {
   if (i >= 0) d.splice(i, 1);
 }
 
-export function applyMoveLeft(d: ColumnConfig[], id: string): void {
-  const i = d.findIndex((c) => c.id === id);
-  if (i > 0) [d[i - 1], d[i]] = [d[i]!, d[i - 1]!];
-}
-
-export function applyMoveRight(d: ColumnConfig[], id: string): void {
-  const i = d.findIndex((c) => c.id === id);
-  if (i >= 0 && i < d.length - 1) [d[i], d[i + 1]] = [d[i + 1]!, d[i]!];
+export function applyReorder(d: ColumnConfig[], from: number, to: number): void {
+  const [item] = d.splice(from, 1);
+  d.splice(to, 0, item!);
 }
 
 export function applyUpdateQuery(d: ColumnConfig[], id: string, query: string): void {

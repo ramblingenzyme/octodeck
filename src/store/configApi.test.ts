@@ -4,8 +4,7 @@ import type { ColumnConfig } from "@/types";
 import {
   applyAdd,
   applyRemove,
-  applyMoveLeft,
-  applyMoveRight,
+  applyReorder,
   applyUpdateQuery,
 } from "./layoutMutations";
 
@@ -59,49 +58,30 @@ describe("applyRemove", () => {
   });
 });
 
-describe("applyMoveLeft", () => {
-  it("moves a column one position to the left", () => {
-    const result = apply(cols, (d) => applyMoveLeft(d, "b"));
-    expect(result.map((c) => c.id)).toEqual(["b", "a", "c"]);
+describe("applyReorder", () => {
+  it("moves forward (from < to)", () => {
+    const result = apply(cols, (d) => applyReorder(d, 0, 2));
+    expect(result.map((c) => c.id)).toEqual(["b", "c", "a"]);
   });
 
-  it("does not move the first column", () => {
-    const result = apply(cols, (d) => applyMoveLeft(d, "a"));
+  it("moves backward (from > to)", () => {
+    const result = apply(cols, (d) => applyReorder(d, 2, 0));
+    expect(result.map((c) => c.id)).toEqual(["c", "a", "b"]);
+  });
+
+  it("is a no-op when same index", () => {
+    const result = apply(cols, (d) => applyReorder(d, 1, 1));
     expect(result.map((c) => c.id)).toEqual(["a", "b", "c"]);
   });
 
-  it("preserves all column data after move", () => {
-    const result = apply(cols, (d) => applyMoveLeft(d, "b"));
+  it("preserves column data", () => {
+    const result = apply(cols, (d) => applyReorder(d, 1, 0));
     expect(result[0]).toEqual({ id: "b", type: "prs", title: "PRs" });
     expect(result[1]).toEqual({ id: "a", type: "notifications", title: "Inbox" });
   });
 
   it("produces no duplicate ids", () => {
-    const result = apply(cols, (d) => applyMoveLeft(d, "b"));
-    const ids = result.map((c) => c.id);
-    expect(new Set(ids).size).toBe(ids.length);
-  });
-});
-
-describe("applyMoveRight", () => {
-  it("moves a column one position to the right", () => {
-    const result = apply(cols, (d) => applyMoveRight(d, "b"));
-    expect(result.map((c) => c.id)).toEqual(["a", "c", "b"]);
-  });
-
-  it("does not move the last column", () => {
-    const result = apply(cols, (d) => applyMoveRight(d, "c"));
-    expect(result.map((c) => c.id)).toEqual(["a", "b", "c"]);
-  });
-
-  it("preserves all column data after move", () => {
-    const result = apply(cols, (d) => applyMoveRight(d, "b"));
-    expect(result[1]).toEqual({ id: "c", type: "ci", title: "CI" });
-    expect(result[2]).toEqual({ id: "b", type: "prs", title: "PRs" });
-  });
-
-  it("produces no duplicate ids", () => {
-    const result = apply(cols, (d) => applyMoveRight(d, "b"));
+    const result = apply(cols, (d) => applyReorder(d, 0, 2));
     const ids = result.map((c) => c.id);
     expect(new Set(ids).size).toBe(ids.length);
   });

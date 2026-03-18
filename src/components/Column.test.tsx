@@ -18,20 +18,11 @@ function renderColumn(
   col: ColumnConfig,
   overrides: Partial<{
     onRemove: (id: string) => void;
-    isFirst: boolean;
-    isLast: boolean;
   }> = {},
 ) {
   return render(
     <Provider store={store}>
-      <Column
-        col={col}
-        onRemove={overrides.onRemove ?? noop}
-        onMoveLeft={noop}
-        onMoveRight={noop}
-        isFirst={overrides.isFirst ?? false}
-        isLast={overrides.isLast ?? false}
-      />
+      <Column col={col} onRemove={overrides.onRemove ?? noop} />
     </Provider>,
   );
 }
@@ -39,7 +30,6 @@ function renderColumn(
 describe("Column card type switching", () => {
   it("renders PR cards for prs type", () => {
     renderColumn(makeCol("prs", "PRs"));
-    // PR cards contain a draft/review structure; check for review label
     expect(screen.getAllByRole("article").length).toBeGreaterThan(0);
   });
 
@@ -67,21 +57,7 @@ describe("Column card type switching", () => {
 describe("Column header", () => {
   it("shows the column title", () => {
     renderColumn(makeCol("prs", "My Pull Requests"));
-    expect(screen.getByText("My Pull Requests")).toBeTruthy();
-  });
-});
-
-describe("Column move buttons", () => {
-  it("move-left button is disabled when isFirst is true", () => {
-    renderColumn(makeCol("prs"), { isFirst: true });
-    const btn = screen.getByRole("button", { name: /move left/i });
-    expect((btn as HTMLButtonElement).disabled).toBe(true);
-  });
-
-  it("move-right button is disabled when isLast is true", () => {
-    renderColumn(makeCol("prs"), { isLast: true });
-    const btn = screen.getByRole("button", { name: /move right/i });
-    expect((btn as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getAllByText("My Pull Requests").length).toBeGreaterThan(0);
   });
 });
 

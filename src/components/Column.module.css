@@ -27,6 +27,7 @@
 }
 
 .colHeader {
+  cursor: grab;
   user-select: none;
   display: flex;
   justify-content: space-between;
