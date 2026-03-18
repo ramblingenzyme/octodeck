@@ -1,4 +1,4 @@
-import { Icon } from "../Icon";
+import { Icon } from '../ui/Icon';
 import { CommentIcon } from "./CommentIcon";
 import styles from "./Card.module.css";
 

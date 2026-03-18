@@ -1,9 +1,9 @@
-import type { CIItem } from "@/types";
-import { CI_STATUS } from "@/constants";
-import cardStyles from "./Card.module.css";
-import { CardTop } from "./CardParts";
-import { Icon } from "../Icon";
-import styles from "./CICard.module.css";
+import type { CIItem } from '@/types';
+import { CI_STATUS } from '@/constants';
+import { Card, CardTitle, CardMeta } from '../ui/Card';
+import { Icon } from '../ui/Icon';
+import cardStyles from './Card.module.css';
+import styles from './CICard.module.css';
 
 interface CICardProps {
   item: CIItem;
@@ -13,21 +13,16 @@ export const CICard = ({ item }: CICardProps) => {
   const status = CI_STATUS[item.status];
 
   return (
-    <article className={`${cardStyles.card} ${styles[item.status]}`}>
-      <CardTop repo={item.repo} age={item.age} />
-      <p className={cardStyles.cardTitle}>
-        <a href={item.url} target="_blank" rel="noreferrer" className={cardStyles.cardTitleLink}>
-          {item.name}
-        </a>
-      </p>
-      <footer className={cardStyles.cardMeta}>
+    <Card repo={item.repo} age={item.age} className={styles[item.status]}>
+      <CardTitle href={item.url}>{item.name}</CardTitle>
+      <CardMeta>
         <span className={cardStyles.cardAuthor}>
           {item.branch} · {item.duration}
         </span>
         <span className={styles.ciBadge}>
           <Icon>{status.icon}</Icon> {status.label}
         </span>
-      </footer>
-    </article>
+      </CardMeta>
+    </Card>
   );
 };

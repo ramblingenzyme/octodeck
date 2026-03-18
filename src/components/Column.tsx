@@ -3,7 +3,7 @@ import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem }
 import { COLUMN_TYPES } from "@/constants";
 import { useColumnData } from "@/hooks/useColumnData";
 import styles from "./Column.module.css";
-import { Icon } from "./Icon";
+import { Icon } from './ui/Icon';
 import { PRCard } from "./cards/PRCard";
 import { IssueCard } from "./cards/IssueCard";
 import { CICard } from "./cards/CICard";

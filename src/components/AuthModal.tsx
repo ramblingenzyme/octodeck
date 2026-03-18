@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useDeviceFlow } from "@/auth/useDeviceFlow";
-import { useAppDispatch } from "@/store";
-import { clearError } from "@/store/authSlice";
-import styles from "./AuthModal.module.css";
+import { useEffect, useState } from 'react';
+import { useDeviceFlow } from '@/auth/useDeviceFlow';
+import { useAppDispatch } from '@/store';
+import { clearError } from '@/store/authSlice';
+import { Modal } from './ui/Modal';
+import styles from './AuthModal.module.css';
 
 interface AuthModalProps {
   onDemoMode: () => void;
@@ -13,14 +14,9 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
   const dispatch = useAppDispatch();
   const { userCode, verificationUri, expiresAt, status, error, start } = useDeviceFlow();
   const [secondsLeft, setSecondsLeft] = useState(0);
-  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    dialogRef.current?.showModal();
-  }, []);
-
-  useEffect(() => {
-    if (status === "authed") onClose();
+    if (status === 'authed') onClose();
   }, [status, onClose]);
 
   useEffect(() => {
@@ -33,10 +29,10 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && status === "idle") onDemoMode();
+      if (e.key === 'Escape' && status === 'idle') onDemoMode();
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [status, onDemoMode]);
 
   const handleCancel = () => {
@@ -45,69 +41,56 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
   };
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.dialog}
-      onCancel={(e) => e.preventDefault()}
-      aria-labelledby="auth-modal-title"
-    >
-      <div className={styles.modal}>
-        <div className={styles.modalHeader}>
-          <h2 id="auth-modal-title" className={styles.modalTitle}>
-            Sign In
-          </h2>
-        </div>
+    <Modal title="Sign In" titleId="auth-modal-title" onClose={onClose} preventCancel>
+      <div className={styles.modalBody}>
+        {(status === 'idle' || status === 'error') && (
+          <>
+            {status === 'error' && error && <p className={styles.errorText}>{error}</p>}
+            <p className={styles.description}>
+              Connect to GitHub to load your real pull requests, issues, notifications, and
+              activity.
+            </p>
+            <button
+              className={styles.btnGitHub}
+              onClick={
+                status === 'error'
+                  ? () => {
+                      dispatch(clearError());
+                      void start();
+                    }
+                  : () => void start()
+              }
+            >
+              Sign in with GitHub
+            </button>
+            <button className={styles.demoLink} onClick={onDemoMode}>
+              Continue in Demo Mode
+            </button>
+          </>
+        )}
 
-        <div className={styles.modalBody}>
-          {(status === "idle" || status === "error") && (
-            <>
-              {status === "error" && error && <p className={styles.errorText}>{error}</p>}
-              <p className={styles.description}>
-                Connect to GitHub to load your real pull requests, issues, notifications, and
-                activity.
-              </p>
-              <button
-                className={styles.btnGitHub}
-                onClick={
-                  status === "error"
-                    ? () => {
-                        dispatch(clearError());
-                        void start();
-                      }
-                    : () => void start()
-                }
+        {status === 'polling' && userCode && (
+          <>
+            <p className={styles.description}>
+              Visit{' '}
+              <a
+                href={verificationUri ?? 'https://github.com/login/device'}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.verifyLink}
               >
-                Sign in with GitHub
-              </button>
-              <button className={styles.demoLink} onClick={onDemoMode}>
-                Continue in Demo Mode
-              </button>
-            </>
-          )}
-
-          {status === "polling" && userCode && (
-            <>
-              <p className={styles.description}>
-                Visit{" "}
-                <a
-                  href={verificationUri ?? "https://github.com/login/device"}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.verifyLink}
-                >
-                  github.com/login/device
-                </a>{" "}
-                and enter this code:
-              </p>
-              <div className={styles.userCodeBox}>{userCode}</div>
-              {secondsLeft > 0 && <p className={styles.countdown}>Expires in {secondsLeft}s</p>}
-              <button className={styles.btnCancel} onClick={handleCancel}>
-                Cancel
-              </button>
-            </>
-          )}
-        </div>
+                github.com/login/device
+              </a>{' '}
+              and enter this code:
+            </p>
+            <div className={styles.userCodeBox}>{userCode}</div>
+            {secondsLeft > 0 && <p className={styles.countdown}>Expires in {secondsLeft}s</p>}
+            <button className={styles.btnCancel} onClick={handleCancel}>
+              Cancel
+            </button>
+          </>
+        )}
       </div>
-    </dialog>
+    </Modal>
   );
 };

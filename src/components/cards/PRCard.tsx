@@ -1,10 +1,10 @@
-import type { PRItem } from "@/types";
-import cardStyles from "./Card.module.css";
-import { CardTop } from "./CardParts";
-import { Icon } from "../Icon";
-import { CommentIcon } from "./CommentIcon";
-import { LabelList } from "./LabelList";
-import styles from "./PRCard.module.css";
+import type { PRItem } from '@/types';
+import { Card, CardTitle, CardMeta } from '../ui/Card';
+import { Icon } from '../ui/Icon';
+import { CommentIcon } from './CommentIcon';
+import { LabelList } from './LabelList';
+import cardStyles from './Card.module.css';
+import styles from './PRCard.module.css';
 
 interface PRCardProps {
   item: PRItem;
@@ -12,14 +12,9 @@ interface PRCardProps {
 
 export const PRCard = ({ item }: PRCardProps) => {
   return (
-    <article className={cardStyles.card}>
-      <CardTop repo={item.repo} age={item.age} />
-      <p className={cardStyles.cardTitle}>
-        <a href={item.url} target="_blank" rel="noreferrer" className={cardStyles.cardTitleLink}>
-          #{item.number} {item.title}
-        </a>
-      </p>
-      <footer className={cardStyles.cardMeta}>
+    <Card repo={item.repo} age={item.age}>
+      <CardTitle href={item.url} prefix={`#${item.number}`}>{item.title}</CardTitle>
+      <CardMeta>
         <span className={cardStyles.cardAuthor}>@{item.author}</span>
         <div className={cardStyles.cardStats}>
           {item.draft && <span className={styles.draftBadge}>DRAFT</span>}
@@ -46,8 +41,8 @@ export const PRCard = ({ item }: PRCardProps) => {
             {item.comments}
           </span>
         </div>
-      </footer>
+      </CardMeta>
       <LabelList labels={item.labels} />
-    </article>
+    </Card>
   );
 };
