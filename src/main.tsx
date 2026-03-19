@@ -1,15 +1,16 @@
 import { render } from "preact";
-import { Provider } from "react-redux";
-import { store } from "@/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./globals.css";
 import { App } from "@/components/App";
+
+const queryClient = new QueryClient();
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Root element not found");
 
 render(
-  <Provider store={store}>
+  <QueryClientProvider client={queryClient}>
     <App />
-  </Provider>,
+  </QueryClientProvider>,
   root,
 );

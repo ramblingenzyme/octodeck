@@ -1,16 +1,16 @@
 /**
  * Full-app integration ("E2E-style") tests.
  *
- * These render <App> end-to-end with the real Redux store and interact through
- * the live UI using userEvent — no mocked child components.  isDemoMode is
- * forced to true so the auth modal never blocks the board.
+ * These render <App> end-to-end and interact through the live UI using
+ * userEvent — no mocked child components.  isDemoMode is forced to true so
+ * the auth modal never blocks the board.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, cleanup, within } from "@testing-library/preact";
 import userEvent from "@testing-library/user-event";
-import { Provider } from "react-redux";
-import { store } from "@/store";
-import { configApi } from "@/store/configApi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useLayoutStore } from "@/store/layoutStore";
+import { loadLayout } from "@/store/layoutStorage";
 
 // Force demo mode so the auth modal does not open.
 vi.mock("@/env", () => ({ isDemoMode: true, GITHUB_CLIENT_ID: undefined }));
@@ -19,18 +19,19 @@ vi.mock("@/env", () => ({ isDemoMode: true, GITHUB_CLIENT_ID: undefined }));
 const { App } = await import("./App");
 
 function renderApp() {
+  const queryClient = new QueryClient();
   return render(
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <App />
-    </Provider>,
+    </QueryClientProvider>,
   );
 }
 
 beforeEach(() => {
   // Clear persisted layout so each test starts from DEFAULT_COLUMNS.
   localStorage.clear();
-  // Reset RTK Query cache so the fresh localStorage is re-read on mount.
-  store.dispatch(configApi.util.resetApiState());
+  // Reset Zustand layout store so the fresh localStorage is re-read.
+  useLayoutStore.setState({ columns: loadLayout() });
 });
 
 afterEach(cleanup);
@@ -41,7 +42,6 @@ describe("demo board loads", () => {
   it("renders the five default columns", async () => {
     renderApp();
 
-    // findByRole waits for RTK Query to resolve its queryFn asynchronously.
     await screen.findByRole("region", { name: "Inbox" });
     expect(screen.getByRole("region", { name: "Open PRs" })).toBeTruthy();
     expect(screen.getByRole("region", { name: "Issues" })).toBeTruthy();

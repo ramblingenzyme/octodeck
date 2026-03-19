@@ -1,8 +1,7 @@
 import { useEffect } from "preact/hooks";
 import { useDeviceFlow } from "@/auth/useDeviceFlow";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
-import { useAppDispatch } from "@/store";
-import { clearError } from "@/store/authSlice";
+import { useAuthStore } from "@/store/authStore";
 import { Modal } from "./ui/Modal";
 import styles from "./AuthModal.module.css";
 
@@ -12,7 +11,7 @@ interface AuthModalProps {
 }
 
 export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
-  const dispatch = useAppDispatch();
+  const clearError = useAuthStore((s) => s.clearError);
   const { userCode, verificationUri, expiresAt, status, error, start } = useDeviceFlow();
   const secondsLeft = useCountdownTimer(expiresAt);
 
@@ -29,7 +28,7 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
   }, [status, onDemoMode]);
 
   const handleCancel = () => {
-    dispatch(clearError());
+    clearError();
     onDemoMode();
   };
 
@@ -48,7 +47,7 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
               onClick={
                 status === "error"
                   ? () => {
-                      dispatch(clearError());
+                      clearError();
                       void start();
                     }
                   : () => void start()

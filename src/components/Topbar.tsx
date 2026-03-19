@@ -1,6 +1,6 @@
 import { useRef } from "preact/hooks";
-import { useAppSelector } from "@/store";
-import { useGetUserQuery } from "@/store/githubApi";
+import { useAuthStore } from "@/store/authStore";
+import { useGetUser } from "@/store/githubQueries";
 import { isDemoMode } from "@/env";
 import { OctodeckLogo } from "./OctodeckLogo";
 import styles from "./Topbar.module.css";
@@ -14,8 +14,9 @@ interface TopbarProps {
 }
 
 export const Topbar = ({ onAddColumn, onSignIn, onSignOut }: TopbarProps) => {
-  const status = useAppSelector((s) => s.auth.status);
-  const { data: user } = useGetUserQuery(undefined, { skip: status !== "authed" });
+  const token = useAuthStore((s) => s.token);
+  const status = useAuthStore((s) => s.status);
+  const { data: user } = useGetUser(token);
   const authed = status === "authed" && user;
   const userMenuRef = useRef<PopoverElement>(null);
 

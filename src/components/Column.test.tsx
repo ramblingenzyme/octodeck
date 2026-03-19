@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/preact";
-import { Provider } from "react-redux";
-import { store } from "@/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 afterEach(cleanup);
 import userEvent from "@testing-library/user-event";
@@ -20,10 +19,11 @@ function renderColumn(
     onRemove: (id: string) => void;
   }> = {},
 ) {
+  const queryClient = new QueryClient();
   return render(
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <Column col={col} onRemove={overrides.onRemove ?? noop} />
-    </Provider>,
+    </QueryClientProvider>,
   );
 }
 

@@ -1,26 +1,27 @@
 import type { ColumnConfig, ColumnType } from "@/types";
 
 export function applyAdd(
-  d: ColumnConfig[],
+  cols: ColumnConfig[],
   id: string,
   type: ColumnType,
   title: string,
   query?: string,
-): void {
-  d.push({ id, type, title, ...(query ? { query } : {}) });
+): ColumnConfig[] {
+  return [...cols, { id, type, title, ...(query ? { query } : {}) }];
 }
 
-export function applyRemove(d: ColumnConfig[], id: string): void {
-  const i = d.findIndex((c) => c.id === id);
-  if (i >= 0) d.splice(i, 1);
+export function applyRemove(cols: ColumnConfig[], id: string): ColumnConfig[] {
+  return cols.filter((c) => c.id !== id);
 }
 
-export function applyReorder(d: ColumnConfig[], from: number, to: number): void {
-  const [item] = d.splice(from, 1);
-  d.splice(to, 0, item!);
+export function applyReorder(cols: ColumnConfig[], from: number, to: number): ColumnConfig[] {
+  const next = [...cols];
+  next.splice(to, 0, ...next.splice(from, 1));
+  return next;
 }
 
-export function applyUpdateQuery(d: ColumnConfig[], id: string, query: string): void {
-  const col = d.find((c) => c.id === id);
-  if (col) col.query = query || undefined;
+export function applyUpdateQuery(cols: ColumnConfig[], id: string, query: string): ColumnConfig[] {
+  return cols.map((c) =>
+    c.id === id ? { ...c, ...(query ? { query } : { query: undefined }) } : c,
+  );
 }

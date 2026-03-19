@@ -1,7 +1,7 @@
 import { useEffect } from "preact/hooks";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { ColumnConfig } from "@/types";
-import { useReorderMutation } from "@/store/configApi";
+import { useLayoutStore } from "@/store/layoutStore";
 import { Column } from "./Column";
 import styles from "./Board.module.css";
 
@@ -12,7 +12,7 @@ interface BoardProps {
 }
 
 export const Board = ({ columns, onAddColumn, onRemove }: BoardProps) => {
-  const [reorder] = useReorderMutation();
+  const reorder = useLayoutStore((s) => s.reorder);
 
   useEffect(() => {
     return monitorForElements({
@@ -25,7 +25,7 @@ export const Board = ({ columns, onAddColumn, onRemove }: BoardProps) => {
         if (fromId === toId) return;
         const from = columns.findIndex((c) => c.id === fromId);
         const to = columns.findIndex((c) => c.id === toId);
-        if (from !== -1 && to !== -1) reorder({ from, to });
+        if (from !== -1 && to !== -1) reorder(from, to);
       },
     });
   }, [columns, reorder]);

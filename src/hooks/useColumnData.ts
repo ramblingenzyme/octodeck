@@ -2,14 +2,14 @@ import { useCallback, useMemo } from "preact/hooks";
 import { isDemoMode } from "@/env";
 import { MOCK_PRS, MOCK_ISSUES, MOCK_CI, MOCK_NOTIFS, MOCK_ACTIVITY } from "@/test/fixtures/mock";
 import {
-  useGetPRsQuery,
-  useGetIssuesQuery,
-  useGetNotificationsQuery,
-  useGetCIRunsQuery,
-  useGetActivityQuery,
-  useGetUserQuery,
-} from "@/store/githubApi";
-import { useAppSelector } from "@/store";
+  useGetPRs,
+  useGetIssues,
+  useGetNotifications,
+  useGetCIRuns,
+  useGetActivity,
+  useGetUser,
+} from "@/store/githubQueries";
+import { useAuthStore } from "@/store/authStore";
 import type { ColumnConfig, KnownItem, AnyItem } from "@/types";
 import { parseQuery, matchesTokens } from "@/utils/queryFilter";
 
@@ -25,6 +25,28 @@ interface UseColumnDataResult {
 
 const noop = () => {};
 
+function toResult(
+  result: {
+    data?: AnyItem[];
+    isLoading: boolean;
+    isFetching: boolean;
+    isError: boolean;
+    refetch: () => void;
+  },
+  error: string,
+  filter: (items: AnyItem[]) => AnyItem[],
+  applyFilter = false,
+): UseColumnDataResult {
+  const data = result.data ?? [];
+  return {
+    data: applyFilter ? filter(data) : data,
+    isLoading: result.isLoading,
+    isFetching: result.isFetching,
+    error: result.isError ? error : null,
+    refetch: result.refetch,
+  };
+}
+
 const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
   prs: MOCK_PRS,
   issues: MOCK_ISSUES,
@@ -34,32 +56,23 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
 };
 
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
-  const token = useAppSelector((s) => s.auth.token);
+  const token = useAuthStore((s) => s.token);
   const demo = isDemoMode || !token;
-  const { data: user } = useGetUserQuery(undefined, { skip: demo || !token });
+
+  const { data: user } = useGetUser(demo ? null : token);
   const login = user?.login ?? "";
 
   const tokens = useMemo(() => parseQuery(col.query ?? ""), [col.query]);
   const repos = useMemo(() => tokens.filter((t) => t.key === "repo").map((t) => t.value), [tokens]);
 
-  const pollOpts = { pollingInterval: 5 * 60 * 1000 };
-  const prsResult = useGetPRsQuery(col.query ?? "", {
-    skip: demo || col.type !== "prs",
-    ...pollOpts,
-  });
-  const issuesResult = useGetIssuesQuery(col.query ?? "", {
-    skip: demo || col.type !== "issues",
-    ...pollOpts,
-  });
-  const notifsResult = useGetNotificationsQuery(undefined, {
-    skip: demo || col.type !== "notifications",
-    ...pollOpts,
-  });
-  const ciResult = useGetCIRunsQuery(repos, { skip: demo || col.type !== "ci", ...pollOpts });
-  const activityResult = useGetActivityQuery(login, {
-    skip: demo || col.type !== "activity" || !login,
-    ...pollOpts,
-  });
+  const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : token);
+  const issuesResult = useGetIssues(col.query ?? "", demo || col.type !== "issues" ? null : token);
+  const notifsResult = useGetNotifications(demo || col.type !== "notifications" ? null : token);
+  const ciResult = useGetCIRuns(repos, demo || col.type !== "ci" ? null : token);
+  const activityResult = useGetActivity(
+    login,
+    demo || col.type !== "activity" || !login ? null : token,
+  );
 
   const filter = useCallback(
     (items: ColumnData) =>
@@ -81,45 +94,15 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
 
   switch (col.type) {
     case "prs":
-      return {
-        data: prsResult.data ?? [],
-        isLoading: prsResult.isLoading,
-        isFetching: prsResult.isFetching,
-        error: prsResult.isError ? "Failed to load PRs" : null,
-        refetch: prsResult.refetch,
-      };
+      return toResult(prsResult, "Failed to load PRs", filter);
     case "issues":
-      return {
-        data: issuesResult.data ?? [],
-        isLoading: issuesResult.isLoading,
-        isFetching: issuesResult.isFetching,
-        error: issuesResult.isError ? "Failed to load issues" : null,
-        refetch: issuesResult.refetch,
-      };
+      return toResult(issuesResult, "Failed to load issues", filter);
     case "notifications":
-      return {
-        data: filter(notifsResult.data ?? []),
-        isLoading: notifsResult.isLoading,
-        isFetching: notifsResult.isFetching,
-        error: notifsResult.isError ? "Failed to load notifications" : null,
-        refetch: notifsResult.refetch,
-      };
+      return toResult(notifsResult, "Failed to load notifications", filter, true);
     case "ci":
-      return {
-        data: filter(ciResult.data ?? []),
-        isLoading: ciResult.isLoading,
-        isFetching: ciResult.isFetching,
-        error: ciResult.isError ? "Failed to load CI runs" : null,
-        refetch: ciResult.refetch,
-      };
+      return toResult(ciResult, "Failed to load CI runs", filter, true);
     case "activity":
-      return {
-        data: filter(activityResult.data ?? []),
-        isLoading: activityResult.isLoading,
-        isFetching: activityResult.isFetching,
-        error: activityResult.isError ? "Failed to load activity" : null,
-        refetch: activityResult.refetch,
-      };
+      return toResult(activityResult, "Failed to load activity", filter, true);
     default:
       return { data: [], isLoading: false, isFetching: false, error: null, refetch: noop };
   }

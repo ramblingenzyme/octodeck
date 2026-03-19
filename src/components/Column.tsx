@@ -15,7 +15,7 @@ import { useMinuteTicker } from "@/hooks/useMinuteTicker";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { useRefreshSpinner } from "@/hooks/useRefreshSpinner";
 import { useColumnDragDrop } from "@/hooks/useColumnDragDrop";
-import { useUpdateColumnQueryMutation } from "@/store/configApi";
+import { useLayoutStore } from "@/store/layoutStore";
 import styles from "./Column.module.css";
 import { Icon } from "./ui/Icon";
 import { PencilIcon } from "./ui/PencilIcon";
@@ -54,14 +54,14 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
   const { isConfirming: confirming, startConfirm, cancelConfirm } = useConfirmation();
   const [editingQuery, setEditingQuery] = useState(false);
   const [draftQuery, setDraftQuery] = useState("");
-  const [updateColumnQuery] = useUpdateColumnQueryMutation();
+  const updateColumnQuery = useLayoutStore((s) => s.updateColumnQuery);
 
   const startEditQuery = () => {
     setDraftQuery(col.query ?? "");
     setEditingQuery(true);
   };
   const confirmQuery = () => {
-    updateColumnQuery({ id: col.id, query: draftQuery });
+    updateColumnQuery(col.id, draftQuery);
     setEditingQuery(false);
   };
 
