@@ -5,7 +5,10 @@ import { useMinuteTicker } from '@/hooks/useMinuteTicker';
 import { useConfirmation } from '@/hooks/useConfirmation';
 import { useRefreshSpinner } from '@/hooks/useRefreshSpinner';
 import { useColumnDragDrop } from '@/hooks/useColumnDragDrop';
+import { useUpdateColumnQueryMutation } from '@/store/configApi';
 import styles from './Column.module.css';
+import { Icon } from './ui/Icon';
+import { PencilIcon } from './ui/PencilIcon';
 import { ColumnHeader } from './ColumnHeader';
 import { ColumnConfirmDelete } from './ColumnConfirmDelete';
 import { PRCard } from './cards/PRCard';
@@ -14,7 +17,6 @@ import { CICard } from './cards/CICard';
 import { NotifCard } from './cards/NotifCard';
 import { ActivityCard } from './cards/ActivityCard';
 import { FallbackCard } from './cards/FallbackCard';
-import { ColumnSettingsModal } from './ColumnSettingsModal';
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -23,7 +25,13 @@ interface ColumnProps {
 
 export const Column = ({ col, onRemove }: ColumnProps) => {
   const { isConfirming: confirming, startConfirm, cancelConfirm } = useConfirmation();
-  const [showSettings, setShowSettings] = useState(false);
+  const [editingQuery, setEditingQuery] = useState(false);
+  const [draftQuery, setDraftQuery] = useState('');
+  const [updateColumnQuery] = useUpdateColumnQueryMutation();
+
+  const startEditQuery = () => { setDraftQuery(col.query ?? ''); setEditingQuery(true); };
+  const confirmQuery = () => { updateColumnQuery({ id: col.id, query: draftQuery }); setEditingQuery(false); };
+
   const { data, isLoading, isFetching, error, refetch } = useColumnData(col);
   const { spinning, lastUpdated, handleRefresh } = useRefreshSpinner(isFetching, refetch);
   const { ref, handleRef, isDragging, dropEdge } = useColumnDragDrop(col.id);
@@ -68,20 +76,50 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
         spinning={spinning}
         lastUpdated={lastUpdated}
         onRefresh={handleRefresh}
-        onOpenSettings={() => setShowSettings(true)}
+        onOpenSettings={startEditQuery}
         onConfirmRemove={() => startConfirm()}
       />
 
-      {col.query && (
-        <div className={styles.colQuery} title={col.query}>
-          <span className={styles.colQueryText}>{col.query}</span>
-          <button
-            className={styles.colQueryEdit}
-            onClick={() => setShowSettings(true)}
-            aria-label="Edit filter query"
-          >
-            edit
-          </button>
+      {(col.query || editingQuery) && (
+        <div className={styles.colQuery}>
+          {editingQuery ? (
+            <>
+              <input
+                className={styles.colQueryInput}
+                value={draftQuery}
+                onChange={e => setDraftQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') confirmQuery();
+                  if (e.key === 'Escape') setEditingQuery(false);
+                }}
+                autoFocus
+                aria-label="Filter query"
+              />
+              <button
+                className={styles.colQueryConfirm}
+                onClick={confirmQuery}
+                aria-label="Confirm"
+              >✓</button>
+              <button
+                className={styles.colQueryCancel}
+                onClick={() => setEditingQuery(false)}
+                aria-label="Cancel"
+              ><Icon>✕</Icon></button>
+            </>
+          ) : (
+            <span
+              className={styles.colQueryText}
+              onClick={startEditQuery}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') startEditQuery(); }}
+              aria-label="Edit filter query"
+              title={col.query}
+            >
+              {col.query}
+              <PencilIcon className={styles.colQueryPencil} />
+            </span>
+          )}
         </div>
       )}
 
@@ -109,7 +147,7 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
         {!isLoading && !error && data.map((item) => renderCard(item))}
       </div>
 
-      {showSettings && <ColumnSettingsModal col={col} onClose={() => setShowSettings(false)} />}
+
     </section>
   );
 };

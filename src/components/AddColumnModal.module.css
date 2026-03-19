@@ -17,28 +17,6 @@
   text-transform: uppercase;
 }
 
-.clearConfirm {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 16px;
-  background: color-mix(in srgb, var(--accent-issues, #f87171) 8%, transparent);
-  border-top: 1px solid color-mix(in srgb, var(--accent-issues, #f87171) 25%, transparent);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-.clearConfirmText {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
-.clearConfirmButtons {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
 .typeBtn {
   display: flex;
   align-items: center;

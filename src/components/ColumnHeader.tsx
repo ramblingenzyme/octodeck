@@ -3,6 +3,7 @@ import type { ColumnConfig } from '@/types';
 import { COLUMN_TYPES } from '@/constants';
 import { Icon } from './ui/Icon';
 import { Tooltip } from './ui/Tooltip';
+import { PencilIcon } from './ui/PencilIcon';
 import styles from './Column.module.css';
 
 interface ColumnHeaderProps {
@@ -70,15 +71,17 @@ export const ColumnHeader = ({
             <Icon>↻</Icon>
           </button>
         </Tooltip>
-        <Tooltip text="Column filters" position="below">
-          <button
-            className={`${styles.btnIcon} ${col.query ? styles.btnIconActive : ''}`}
-            onClick={onOpenSettings}
-            aria-label="Column filters"
-          >
-            <Icon>⚙</Icon>
-          </button>
-        </Tooltip>
+        {!col.query && (
+          <Tooltip text="Add filter" position="below">
+            <button
+              className={styles.btnIcon}
+              onClick={onOpenSettings}
+              aria-label="Add filter"
+            >
+              <PencilIcon className={styles.btnIconPencil} />
+            </button>
+          </Tooltip>
+        )}
         <Tooltip text="Remove column" position="below">
           <button
             className={styles.btnIcon}
