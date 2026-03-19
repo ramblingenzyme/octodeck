@@ -21,5 +21,9 @@ export function loadLayout(): ColumnConfig[] {
 }
 
 export function saveLayout(columns: ColumnConfig[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(columns));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(columns));
+  } catch {
+    // Ignore storage errors (e.g. private browsing quota exceeded)
+  }
 }

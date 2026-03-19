@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { loadToken, saveToken, clearToken } from "./tokenStorage";
+import { loadToken } from "./tokenStorage";
 
 export type AuthStatus = "idle" | "polling" | "authed" | "error";
 
@@ -62,7 +62,6 @@ const authSlice = createSlice({
       state.userCode = null;
       state.verificationUri = null;
       state.expiresAt = null;
-      saveToken(action.payload);
     },
     userLoaded(state, action: PayloadAction<AuthUser>) {
       state.user = action.payload;
@@ -76,7 +75,6 @@ const authSlice = createSlice({
       state.verificationUri = null;
       state.expiresAt = null;
       state.error = null;
-      clearToken();
     },
     setError(state, action: PayloadAction<string>) {
       state.status = "error";

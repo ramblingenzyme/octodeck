@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { isDemoMode } from "@/env";
-import { MOCK_PRS, MOCK_ISSUES, MOCK_CI, MOCK_NOTIFS, MOCK_ACTIVITY } from "@/data/mock";
+import { MOCK_PRS, MOCK_ISSUES, MOCK_CI, MOCK_NOTIFS, MOCK_ACTIVITY } from "@/test/fixtures/mock";
 import {
   useGetPRsQuery,
   useGetIssuesQuery,
@@ -10,7 +10,7 @@ import {
 } from "@/store/githubApi";
 import { useAppSelector } from "@/store";
 import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
-import { getItemDisplayText } from "@/utils/getItemDisplayText";
+import { parseQuery, matchesTokens } from "@/utils/queryFilter";
 
 type AnyItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;
 type ColumnData = AnyItem[];
@@ -21,58 +21,6 @@ interface UseColumnDataResult {
   isFetching: boolean;
   error: string | null;
   refetch: () => void;
-}
-
-/** Parse a GitHub-style query string into key:value tokens and bare terms. */
-function parseQuery(query: string): { key: string; value: string }[] {
-  return query
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((token) => {
-      const colon = token.indexOf(":");
-      if (colon > 0) {
-        return {
-          key: token.slice(0, colon).toLowerCase(),
-          value: token.slice(colon + 1).toLowerCase(),
-        };
-      }
-      return { key: "", value: token.toLowerCase() };
-    });
-}
-
-function matchesTokens(item: AnyItem, tokens: ReturnType<typeof parseQuery>): boolean {
-  return tokens.every(({ key, value }) => {
-    if (!key) {
-      return getItemDisplayText(item).toLowerCase().includes(value);
-    }
-    switch (key) {
-      case "repo":
-        return item.repo.toLowerCase() === value;
-      case "author":
-        return "author" in item && (item as PRItem).author.toLowerCase() === value;
-      case "assignee":
-        return "assignee" in item && (item as IssueItem).assignee?.toLowerCase() === value;
-      case "label":
-        return (
-          "labels" in item &&
-          (item as PRItem | IssueItem).labels.some((l) => l.toLowerCase() === value)
-        );
-      case "is":
-        if (value === "draft") return "draft" in item && (item as PRItem).draft === true;
-        if (value === "open") return "state" in item && (item as IssueItem).state === "open";
-        if (value === "closed") return "state" in item && (item as IssueItem).state === "closed";
-        if (value === "pr" || value === "pull-request") return "draft" in item;
-        if (value === "issue") return "state" in item && !("draft" in item);
-        return true;
-      case "status":
-        return "status" in item && (item as CIItem).status.toLowerCase() === value;
-      case "branch":
-        return "branch" in item && (item as CIItem).branch.toLowerCase().includes(value);
-      default:
-        return true;
-    }
-  });
 }
 
 const DEMO_DATA_MAP: Record<ColumnConfig["type"], ColumnData> = {

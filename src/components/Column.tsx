@@ -1,17 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import { draggable, dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
-import { COLUMN_TYPES } from "@/constants";
-import { useColumnData } from "@/hooks/useColumnData";
-import styles from "./Column.module.css";
-import { Icon } from './ui/Icon';
-import { Tooltip } from './ui/Tooltip';
-import { PRCard } from "./cards/PRCard";
-import { IssueCard } from "./cards/IssueCard";
-import { CICard } from "./cards/CICard";
-import { NotifCard } from "./cards/NotifCard";
-import { ActivityCard } from "./cards/ActivityCard";
-import { ColumnSettingsModal } from "./ColumnSettingsModal";
+import { useState, useEffect, useRef } from 'react';
+import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from '@/types';
+import { useColumnData } from '@/hooks/useColumnData';
+import styles from './Column.module.css';
+import { ColumnHeader } from './ColumnHeader';
+import { ColumnConfirmDelete } from './ColumnConfirmDelete';
+import { PRCard } from './cards/PRCard';
+import { IssueCard } from './cards/IssueCard';
+import { CICard } from './cards/CICard';
+import { NotifCard } from './cards/NotifCard';
+import { ActivityCard } from './cards/ActivityCard';
+import { ColumnSettingsModal } from './ColumnSettingsModal';
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -28,7 +27,6 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
   const [dropEdge, setDropEdge] = useState<'left' | 'right' | null>(null);
   const ref = useRef<HTMLElement>(null);
   const handleRef = useRef<HTMLSpanElement>(null);
-  const cfg = COLUMN_TYPES[col.type];
   const { data, isLoading, isFetching, error, refetch } = useColumnData(col);
   const prevFetching = useRef(false);
 
@@ -84,82 +82,44 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
     setTimeout(() => setSpinning(false), 800);
   };
 
-  const formatAge = (date: Date) => {
-    const mins = Math.floor((Date.now() - date.getTime()) / 60_000);
-    if (mins < 1) return 'just now';
-    if (mins === 1) return '1m ago';
-    return `${mins}m ago`;
-  };
-
   const renderCard = (item: PRItem | IssueItem | CIItem | NotifItem | ActivityItem) => {
     switch (col.type) {
-      case "prs":
+      case 'prs':
         return <PRCard key={item.id} item={item as PRItem} />;
-      case "issues":
+      case 'issues':
         return <IssueCard key={item.id} item={item as IssueItem} />;
-      case "ci":
+      case 'ci':
         return <CICard key={item.id} item={item as CIItem} />;
-      case "notifications":
+      case 'notifications':
         return <NotifCard key={item.id} item={item as NotifItem} />;
-      case "activity":
+      case 'activity':
         return <ActivityCard key={item.id} item={item as ActivityItem} />;
     }
   };
 
+  const columnClass = [
+    styles.column,
+    styles[col.type],
+    isDragging ? styles.columnDragging : '',
+    dropEdge === 'left' ? styles.dropLeft : '',
+    dropEdge === 'right' ? styles.dropRight : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <section
-      ref={ref}
-      className={`${styles.column} ${styles[col.type]}${isDragging ? ` ${styles.columnDragging}` : ''}${dropEdge === 'left' ? ` ${styles.dropLeft}` : ''}${dropEdge === 'right' ? ` ${styles.dropRight}` : ''}`}
-      aria-label={col.title}
-    >
-      <header className={styles.colHeader}>
-        <span ref={handleRef} className={styles.dragHandle} aria-hidden="true">⠿</span>
-        <div className={styles.colHeaderLeft}>
-          <Icon className={styles.colIcon}>{cfg.icon}</Icon>
-          <Tooltip text={col.title} position="below">
-            <h2 className={styles.colTitle}>{col.title}</h2>
-          </Tooltip>
-          <Tooltip text={`${data.length} ${data.length === 1 ? cfg.itemLabel : `${cfg.itemLabel}s`}`} position="below">
-            <output className={styles.colBadge} aria-label={`${data.length} ${data.length === 1 ? cfg.itemLabel : `${cfg.itemLabel}s`}`}>
-              {data.length}
-            </output>
-          </Tooltip>
-        </div>
-        <div className={styles.colControls}>
-          {lastUpdated && (
-            <Tooltip text={lastUpdated.toLocaleTimeString()} position="below">
-              <span className={styles.lastUpdated}>{formatAge(lastUpdated)}</span>
-            </Tooltip>
-          )}
-          <Tooltip text="Refresh" position="below">
-            <button
-              className={`${styles.btnIcon} ${spinning || isFetching ? styles.btnIconSpinning : ""}`}
-              onClick={handleRefresh}
-              aria-label="Refresh"
-            >
-              <Icon>↻</Icon>
-            </button>
-          </Tooltip>
-          <Tooltip text="Column filters" position="below">
-            <button
-              className={`${styles.btnIcon} ${col.query ? styles.btnIconActive : ""}`}
-              onClick={() => setShowSettings(true)}
-              aria-label="Column filters"
-            >
-              <Icon>⚙</Icon>
-            </button>
-          </Tooltip>
-          <Tooltip text="Remove column" position="below">
-            <button
-              className={styles.btnIcon}
-              onClick={() => setConfirming(true)}
-              aria-label="Remove column"
-            >
-              <Icon>✕</Icon>
-            </button>
-          </Tooltip>
-        </div>
-      </header>
+    <section ref={ref} className={columnClass} aria-label={col.title}>
+      <ColumnHeader
+        col={col}
+        handleRef={handleRef}
+        itemCount={data.length}
+        isFetching={isFetching}
+        spinning={spinning}
+        lastUpdated={lastUpdated}
+        onRefresh={handleRefresh}
+        onOpenSettings={() => setShowSettings(true)}
+        onConfirmRemove={() => setConfirming(true)}
+      />
 
       {col.query && (
         <div className={styles.colQuery} title={col.query}>
@@ -175,17 +135,11 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
       )}
 
       {confirming && (
-        <div className={styles.colConfirmation} role="alert">
-          <span className={styles.colConfirmationText}>Remove "{col.title}"?</span>
-          <div className={styles.colConfirmationButtons}>
-            <button className={styles.btnConfirmCancel} onClick={() => setConfirming(false)}>
-              No
-            </button>
-            <button className={styles.btnConfirmDanger} onClick={() => onRemove(col.id)}>
-              Yes, remove
-            </button>
-          </div>
-        </div>
+        <ColumnConfirmDelete
+          col={col}
+          onCancel={() => setConfirming(false)}
+          onConfirm={() => onRemove(col.id)}
+        />
       )}
 
       <div className={styles.colBody}>
