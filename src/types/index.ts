@@ -1,5 +1,7 @@
 export type ColumnType = "prs" | "issues" | "ci" | "notifications" | "activity";
 export type CIStatus = "success" | "failure" | "running";
+export type IssueState = "open" | "closed";
+export type CITrigger = "push" | "pull_request" | "release";
 export type NotifType = "review_requested" | "mention" | "assigned" | "approved" | "comment";
 export type ActivityType = "commit" | "comment" | "pr_opened" | "review" | "issue_closed";
 
@@ -33,7 +35,7 @@ export interface IssueItem {
   assignee: string | null;
   comments: number;
   age: string;
-  state: "open" | "closed";
+  state: IssueState;
   url: string;
 }
 
@@ -45,7 +47,7 @@ export interface CIItem {
   status: CIStatus;
   duration: string;
   age: string;
-  triggered: "push" | "pull_request" | "release";
+  triggered: CITrigger;
   url: string;
 }
 
