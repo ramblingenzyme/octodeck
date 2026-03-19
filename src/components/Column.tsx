@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from '@/types';
+import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem, FallbackItem } from '@/types';
 import { useColumnData } from '@/hooks/useColumnData';
 import { useMinuteTicker } from '@/hooks/useMinuteTicker';
 import { useConfirmation } from '@/hooks/useConfirmation';
@@ -13,6 +13,7 @@ import { IssueCard } from './cards/IssueCard';
 import { CICard } from './cards/CICard';
 import { NotifCard } from './cards/NotifCard';
 import { ActivityCard } from './cards/ActivityCard';
+import { FallbackCard } from './cards/FallbackCard';
 import { ColumnSettingsModal } from './ColumnSettingsModal';
 
 interface ColumnProps {
@@ -30,7 +31,7 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
   // Re-render every minute so the relative time stays accurate.
   useMinuteTicker();
 
-  const renderCard = (item: PRItem | IssueItem | CIItem | NotifItem | ActivityItem) => {
+  const renderCard = (item: PRItem | IssueItem | CIItem | NotifItem | ActivityItem | FallbackItem) => {
     switch (col.type) {
       case 'prs':
         return <PRCard key={item.id} item={item as PRItem} />;
@@ -42,6 +43,8 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
         return <NotifCard key={item.id} item={item as NotifItem} />;
       case 'activity':
         return <ActivityCard key={item.id} item={item as ActivityItem} />;
+      default:
+        return <FallbackCard key={item.id} item={item as unknown as FallbackItem} />;
     }
   };
 

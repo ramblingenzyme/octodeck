@@ -68,3 +68,15 @@ export interface ActivityItem {
   ref?: string;
   url: string;
 }
+
+export type KnownItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;
+export type AnyItem = KnownItem | FallbackItem;
+
+export interface FallbackItem {
+  id: number;
+  title: string;
+  repo: string;
+  age: string;
+  url: string;
+  [key: string]: unknown;
+}

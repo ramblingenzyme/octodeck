@@ -10,10 +10,9 @@ import {
   useGetUserQuery,
 } from "@/store/githubApi";
 import { useAppSelector } from "@/store";
-import type { ColumnConfig, PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
+import type { ColumnConfig, KnownItem, AnyItem } from "@/types";
 import { parseQuery, matchesTokens } from "@/utils/queryFilter";
 
-type AnyItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;
 type ColumnData = AnyItem[];
 
 interface UseColumnDataResult {
@@ -24,7 +23,7 @@ interface UseColumnDataResult {
   refetch: () => void;
 }
 
-const DEMO_DATA_MAP: Record<ColumnConfig["type"], ColumnData> = {
+const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
   prs: MOCK_PRS,
   issues: MOCK_ISSUES,
   ci: MOCK_CI,
@@ -55,12 +54,12 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   });
 
   const filter = (items: ColumnData) =>
-    tokens.length ? items.filter((item) => matchesTokens(item, tokens)) : items;
+    tokens.length ? items.filter((item) => matchesTokens(item as KnownItem, tokens)) : items;
 
   const noop = () => {};
 
   if (demo) {
-    return { data: filter(DEMO_DATA_MAP[col.type]), isLoading: false, isFetching: false, error: null, refetch: noop };
+    return { data: filter(DEMO_DATA_MAP[col.type] ?? []), isLoading: false, isFetching: false, error: null, refetch: noop };
   }
 
   switch (col.type) {
@@ -104,5 +103,7 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
         error: activityResult.isError ? "Failed to load activity" : null,
         refetch: activityResult.refetch,
       };
+    default:
+      return { data: [], isLoading: false, isFetching: false, error: null, refetch: noop };
   }
 }

@@ -1,7 +1,5 @@
-import type { PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from '@/types';
+import type { PRItem, IssueItem, CIItem, KnownItem } from '@/types';
 import { getItemDisplayText } from '@/utils/getItemDisplayText';
-
-type AnyItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;
 
 /** Parse a GitHub-style query string into key:value tokens and bare terms. */
 export function parseQuery(query: string): { key: string; value: string }[] {
@@ -21,7 +19,7 @@ export function parseQuery(query: string): { key: string; value: string }[] {
     });
 }
 
-export function matchesTokens(item: AnyItem, tokens: ReturnType<typeof parseQuery>): boolean {
+export function matchesTokens(item: KnownItem, tokens: ReturnType<typeof parseQuery>): boolean {
   return tokens.every(({ key, value }) => {
     if (!key) {
       return getItemDisplayText(item).toLowerCase().includes(value);
