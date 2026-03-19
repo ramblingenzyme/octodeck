@@ -60,9 +60,10 @@ describe('auth modal closes when status becomes authed (App.tsx effect)', () => 
   it('modal is open on idle, closes on authed', () => {
     const { result, rerender } = renderHook(({ status }: { status: string }) => {
       const modal = useModal(status === 'idle');
+      const { close } = modal;
       useEffect(() => {
-        if (status === 'authed') modal.close();
-      }, [status, modal.close]);
+        if (status === 'authed') close();
+      }, [status, close]);
       return modal;
     }, { initialProps: { status: 'idle' } });
 
@@ -76,9 +77,10 @@ describe('auth modal closes when status becomes authed (App.tsx effect)', () => 
   it('modal stays open while status is polling', () => {
     const { result, rerender } = renderHook(({ status }: { status: string }) => {
       const modal = useModal(status === 'idle');
+      const { close } = modal;
       useEffect(() => {
-        if (status === 'authed') modal.close();
-      }, [status, modal.close]);
+        if (status === 'authed') close();
+      }, [status, close]);
       return modal;
     }, { initialProps: { status: 'idle' } });
 
@@ -93,9 +95,10 @@ describe('auth modal closes when status becomes authed (App.tsx effect)', () => 
     // a re-render between idle→authed could leave a stale close in the closure.
     const { result, rerender } = renderHook(({ status }: { status: string }) => {
       const modal = useModal(status === 'idle');
+      const { close } = modal;
       useEffect(() => {
-        if (status === 'authed') modal.close();
-      }, [status, modal.close]);
+        if (status === 'authed') close();
+      }, [status, close]);
       return modal;
     }, { initialProps: { status: 'idle' } });
 

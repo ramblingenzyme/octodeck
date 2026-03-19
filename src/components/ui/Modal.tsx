@@ -37,9 +37,11 @@ export const Modal = ({
       className={styles.dialog}
       onClose={onClose}
       onCancel={preventCancel ? (e) => e.preventDefault() : undefined}
-onClick={onBackdropClick ? (e) => { if (e.target === e.currentTarget) onBackdropClick(); } : undefined}
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- <dialog> has native keyboard accessibility via onCancel/Escape; backdrop click is a pointer-only affordance
+      onClick={onBackdropClick ? (e) => { if (e.target === e.currentTarget) onBackdropClick(); } : undefined}
       aria-labelledby={titleId}
     >
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- not an interaction point; stopPropagation prevents backdrop-click from firing on modal content clicks */}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2 id={titleId} className={styles.modalTitle}>

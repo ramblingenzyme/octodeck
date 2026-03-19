@@ -92,6 +92,7 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
                   if (e.key === 'Enter') confirmQuery();
                   if (e.key === 'Escape') setEditingQuery(false);
                 }}
+                // eslint-disable-next-line jsx-a11y/no-autofocus -- user-triggered edit (clicking the query text), not autofocus on page load
                 autoFocus
                 aria-label="Filter query"
               />
@@ -107,18 +108,17 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
               ><Icon>✕</Icon></button>
             </>
           ) : (
-            <span
+            <button
+              type="button"
               className={styles.colQueryText}
               onClick={startEditQuery}
-              role="button"
-              tabIndex={0}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') startEditQuery(); }}
               aria-label="Edit filter query"
               title={col.query}
             >
               {col.query}
               <PencilIcon className={styles.colQueryPencil} />
-            </span>
+            </button>
           )}
         </div>
       )}

@@ -25,9 +25,10 @@ export const App = () => {
   const authModal = useModal(!isDemoMode && auth.status === "idle");
 
   // Close auth modal when authed
+  const { close: closeAuthModal } = authModal;
   useEffect(() => {
-    if (auth.status === "authed") authModal.close();
-  }, [auth.status, authModal.close]);
+    if (auth.status === "authed") closeAuthModal();
+  }, [auth.status, closeAuthModal]);
 
   const handleAddColumn = (type: ColumnType, title: string, query?: string) => {
     addColumn({ type, title, query });

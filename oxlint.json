@@ -1,6 +1,32 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "jsx-a11y", "react_perf"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "error"
+    "@typescript-eslint/no-explicit-any": "error",
+
+    // warn: has known false positives when stable method refs (e.g. useCallback with no deps)
+    // are accessed via an object property rather than destructured before the effect
+    "react/exhaustive-deps": "warn",
+    "react/jsx-key": "error",
+    // warn: intentional omissions (e.g. type="submit") are rare but valid
+    "react/button-has-type": "warn",
+    // warn: index keys are sometimes acceptable for static/non-reordered lists (e.g. skeletons)
+    "react/no-array-index-key": "warn",
+
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/aria-props": "error",
+    "jsx-a11y/aria-proptypes": "error",
+    "jsx-a11y/aria-role": "error",
+    "jsx-a11y/aria-unsupported-elements": "error",
+    "jsx-a11y/anchor-has-content": "error",
+    "jsx-a11y/no-redundant-roles": "warn",
+    "jsx-a11y/prefer-tag-over-role": "warn",
+    "jsx-a11y/role-has-required-aria-props": "error",
+    // warn: some intentional patterns (backdrop click on <dialog>) need inline suppression
+    "jsx-a11y/click-events-have-key-events": "warn",
+    // warn: same as above — <dialog> and propagation-stopper <div> are false positives here
+    "jsx-a11y/no-static-element-interactions": "warn",
+    // warn: one intentional autofocus in Column.tsx (user-triggered edit, not page load)
+    "jsx-a11y/no-autofocus": "warn"
   }
 }
