@@ -43,12 +43,12 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const repos = useMemo(() => tokens.filter((t) => t.key === "repo").map((t) => t.value), [tokens]);
 
   const pollOpts = { pollingInterval: 5 * 60 * 1000 };
-  const prsResult = useGetPRsQuery(login, {
-    skip: demo || col.type !== "prs" || !login,
+  const prsResult = useGetPRsQuery(col.query ?? "", {
+    skip: demo || col.type !== "prs",
     ...pollOpts,
   });
-  const issuesResult = useGetIssuesQuery(login, {
-    skip: demo || col.type !== "issues" || !login,
+  const issuesResult = useGetIssuesQuery(col.query ?? "", {
+    skip: demo || col.type !== "issues",
     ...pollOpts,
   });
   const notifsResult = useGetNotificationsQuery(undefined, {
@@ -68,8 +68,10 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   );
 
   if (demo) {
+    const demoData = DEMO_DATA_MAP[col.type] ?? [];
+    const shouldFilter = col.type !== "prs" && col.type !== "issues";
     return {
-      data: filter(DEMO_DATA_MAP[col.type] ?? []),
+      data: shouldFilter ? filter(demoData) : demoData,
       isLoading: false,
       isFetching: false,
       error: null,
@@ -80,7 +82,7 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   switch (col.type) {
     case "prs":
       return {
-        data: filter(prsResult.data ?? []),
+        data: prsResult.data ?? [],
         isLoading: prsResult.isLoading,
         isFetching: prsResult.isFetching,
         error: prsResult.isError ? "Failed to load PRs" : null,
@@ -88,7 +90,7 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
       };
     case "issues":
       return {
-        data: filter(issuesResult.data ?? []),
+        data: issuesResult.data ?? [],
         isLoading: issuesResult.isLoading,
         isFetching: issuesResult.isFetching,
         error: issuesResult.isError ? "Failed to load issues" : null,

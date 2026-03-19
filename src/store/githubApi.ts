@@ -45,12 +45,12 @@ export const githubApi = createApi({
       }),
     }),
     getPRs: build.query<PRItem[], string>({
-      query: (login) => `/search/issues?q=is:pr+is:open+involves:${login}&sort=updated&per_page=30`,
+      query: (q) => `/search/issues?q=${encodeURIComponent("is:pr " + q)}&sort=updated&per_page=30`,
       transformResponse: (raw: GHSearchResult) => raw.items.map(mapSearchItemToPR),
     }),
     getIssues: build.query<IssueItem[], string>({
-      query: (login) =>
-        `/search/issues?q=is:issue+is:open+involves:${login}&sort=updated&per_page=30`,
+      query: (q) =>
+        `/search/issues?q=${encodeURIComponent("is:issue " + q)}&sort=updated&per_page=30`,
       transformResponse: (raw: GHSearchResult) => raw.items.map(mapSearchItemToIssue),
     }),
     getNotifications: build.query<NotifItem[], void>({

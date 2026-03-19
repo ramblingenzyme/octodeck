@@ -14,11 +14,12 @@ interface AddColumnModalProps {
 export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
   const [selectedType, setSelectedType] = useState<ColumnType>("prs");
   const [title, setTitle] = useState(COLUMN_TYPES[selectedType].label);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(COLUMN_TYPES[selectedType].defaultQuery);
 
   const handleTypeChange = (type: ColumnType) => {
     setSelectedType(type);
     setTitle(COLUMN_TYPES[type].label);
+    setQuery(COLUMN_TYPES[type].defaultQuery);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
