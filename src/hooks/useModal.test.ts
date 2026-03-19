@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { useEffect } from "react";
+import { renderHook, act } from "@testing-library/preact";
+import { useEffect } from "preact/hooks";
 import { useModal } from "./useModal";
 
 describe("useModal", () => {

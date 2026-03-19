@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/preact";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 

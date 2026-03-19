@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef } from "preact/hooks";
 import { useAppSelector } from "@/store";
 import { useGetUserQuery } from "@/store/githubApi";
 import { isDemoMode } from "@/env";

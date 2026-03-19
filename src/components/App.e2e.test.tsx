@@ -6,7 +6,7 @@
  * forced to true so the auth modal never blocks the board.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, cleanup, within } from "@testing-library/react";
+import { render, screen, cleanup, within } from "@testing-library/preact";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { store } from "@/store";

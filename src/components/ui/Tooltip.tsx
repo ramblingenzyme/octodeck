@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId } from "preact/hooks";
 import styles from "./Tooltip.module.css";
 
 interface TooltipProps {

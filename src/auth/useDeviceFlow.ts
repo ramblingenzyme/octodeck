@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "preact/hooks";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { deviceCodeReceived, tokenReceived, setError } from "@/store/authSlice";
 import { githubApi } from "@/store/githubApi";

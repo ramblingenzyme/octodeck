@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import { useModal } from "@/hooks/useModal";
 import type { ColumnType } from "@/types";
 import {

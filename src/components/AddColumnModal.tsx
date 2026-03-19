@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "preact/hooks";
 import type { ColumnType } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
 import colStyles from "./Column.module.css";
@@ -63,7 +63,7 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
               className={modalStyles.fieldInput}
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setTitle((e.target as HTMLInputElement).value)}
               placeholder="Enter title..."
             />
           </div>
@@ -76,7 +76,7 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
               className={modalStyles.fieldInput}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
               placeholder="repo:owner/repo label:bug is:open"
             />
           </div>

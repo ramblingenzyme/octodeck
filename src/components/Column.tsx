@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "preact/hooks";
 import type {
   ColumnConfig,
   ColumnType,
@@ -103,7 +103,7 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
               <input
                 className={styles.colQueryInput}
                 value={draftQuery}
-                onChange={(e) => setDraftQuery(e.target.value)}
+                onChange={(e) => setDraftQuery((e.target as HTMLInputElement).value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") confirmQuery();
                   if (e.key === "Escape") setEditingQuery(false);

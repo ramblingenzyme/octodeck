@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/preact";
 import { useRefreshSpinner } from "./useRefreshSpinner";
 
 describe("useRefreshSpinner", () => {
@@ -38,7 +38,9 @@ describe("useRefreshSpinner", () => {
     rerender({ isFetching: true });
 
     // Old behaviour: spinner would have stopped here. New behaviour: it must not.
-    act(() => vi.advanceTimersByTime(900));
+    act(() => {
+      vi.advanceTimersByTime(900);
+    });
 
     expect(result.current.spinning).toBe(true);
   });
@@ -52,9 +54,13 @@ describe("useRefreshSpinner", () => {
     act(() => result.current.handleRefresh());
     rerender({ isFetching: true });
 
-    act(() => vi.advanceTimersByTime(900)); // fetch takes 900 ms
+    act(() => {
+      vi.advanceTimersByTime(900);
+    }); // fetch takes 900 ms
     act(() => rerender({ isFetching: false })); // fetch complete; effect schedules setTimeout(0)
-    act(() => vi.runAllTimers()); // fire that timeout
+    act(() => {
+      vi.runAllTimers();
+    }); // fire that timeout
 
     expect(result.current.spinning).toBe(false);
   });
@@ -69,15 +75,21 @@ describe("useRefreshSpinner", () => {
     rerender({ isFetching: true });
 
     // Fetch resolves quickly (200 ms elapsed)
-    act(() => vi.advanceTimersByTime(200));
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
     act(() => rerender({ isFetching: false }));
 
     // Spinner should still be visible (minimum 800 ms not reached yet)
-    act(() => vi.advanceTimersByTime(400)); // 600 ms elapsed total
+    act(() => {
+      vi.advanceTimersByTime(400);
+    }); // 600 ms elapsed total
     expect(result.current.spinning).toBe(true);
 
     // Advance past the 800 ms minimum
-    act(() => vi.advanceTimersByTime(300)); // 900 ms elapsed total
+    act(() => {
+      vi.advanceTimersByTime(300);
+    }); // 900 ms elapsed total
     expect(result.current.spinning).toBe(false);
   });
 

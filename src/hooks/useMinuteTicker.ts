@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 
 export function useMinuteTicker(): void {
   const [, setTick] = useState(0);

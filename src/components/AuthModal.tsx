@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import { useDeviceFlow } from "@/auth/useDeviceFlow";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useAppDispatch } from "@/store";

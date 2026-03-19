@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { RefObject } from "preact";
 import type { ColumnConfig } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
 import { Icon } from "./ui/Icon";
@@ -8,7 +8,7 @@ import styles from "./Column.module.css";
 
 interface ColumnHeaderProps {
   col: ColumnConfig;
-  handleRef: RefObject<HTMLSpanElement | null>;
+  handleRef: RefObject<HTMLSpanElement>;
   itemCount: number;
   isFetching: boolean;
   spinning: boolean;

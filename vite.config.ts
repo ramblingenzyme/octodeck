@@ -1,12 +1,13 @@
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
+import preact from '@preact/preset-vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const srcPath = resolve(__dirname, './src');
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [preact()],
   server: {
     proxy: {
       '/github-oauth': {
@@ -18,11 +19,11 @@ export default defineConfig({
   },
   test: {
     environment: 'happy-dom',
-    alias: { '@': new URL('./src', import.meta.url).pathname },
+    pool: 'vmThreads',
+    alias: [{ find: '@', replacement: srcPath }],
+    setupFiles: ['src/test/setup.ts'],
   },
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
+    alias: [{ find: '@', replacement: srcPath }],
   },
 });
