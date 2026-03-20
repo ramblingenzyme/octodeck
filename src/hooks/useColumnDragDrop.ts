@@ -12,14 +12,29 @@ export function useColumnDragDrop(columnId: string) {
 
   useEffect(() => {
     const el = ref.current;
+    const handle = handleRef.current;
     if (!el) return;
     const cleanupDraggable = draggable({
       element: el,
-      dragHandle: handleRef.current ?? undefined,
+      dragHandle: handle ?? undefined,
       getInitialData: () => ({ columnId }),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
+
+    // pragmatic-drag-and-drop permanently sets draggable="true" on `el`,
+    // which prevents cursor repositioning in child form elements.
+    // Only enable draggable during drag-handle interaction.
+    el.removeAttribute("draggable");
+    const enableDrag = () => {
+      el.setAttribute("draggable", "true");
+    };
+    const disableDrag = () => {
+      el.removeAttribute("draggable");
+    };
+    handle?.addEventListener("pointerdown", enableDrag);
+    window.addEventListener("pointerup", disableDrag);
+
     const updateDropEdge = (clientX: number) => {
       const rect = el.getBoundingClientRect();
       const mid = rect.left + rect.width / 2;
@@ -38,6 +53,8 @@ export function useColumnDragDrop(columnId: string) {
     return () => {
       cleanupDraggable();
       cleanupDropTarget();
+      handle?.removeEventListener("pointerdown", enableDrag);
+      window.removeEventListener("pointerup", disableDrag);
     };
   }, [columnId]);
 
