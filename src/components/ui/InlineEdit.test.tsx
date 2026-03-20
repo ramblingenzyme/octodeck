@@ -63,6 +63,7 @@ describe("InlineEdit committing", () => {
     const user = userEvent.setup();
     render(<InlineEdit value="is:open" onCommit={() => {}} aria-label="Filter query" />);
     await user.click(screen.getByRole("button", { name: /edit filter query/i }));
+    await user.click(await screen.findByRole("textbox"));
     await user.keyboard("{Enter}");
     expect(screen.queryByRole("textbox")).toBeNull();
   });
@@ -74,6 +75,7 @@ describe("InlineEdit cancelling", () => {
     const onCommit = vi.fn();
     render(<InlineEdit value="is:open" onCommit={onCommit} aria-label="Filter query" />);
     await user.click(screen.getByRole("button", { name: /edit filter query/i }));
+    await user.click(await screen.findByRole("textbox"));
     await user.keyboard("{Escape}");
     expect(onCommit).not.toHaveBeenCalled();
     expect(screen.queryByRole("textbox")).toBeNull();

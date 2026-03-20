@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
 import { PencilIcon } from "./PencilIcon";
 import { Icon } from "./Icon";
 import styles from "./InlineEdit.module.css";
@@ -12,12 +12,6 @@ interface InlineEditProps {
 export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineEditProps) => {
   const [editing, setEditing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useLayoutEffect(() => {
-    if (editing) {
-      textareaRef.current?.focus();
-    }
-  }, [editing]);
 
   const startEdit = () => {
     setEditing(true);
@@ -37,6 +31,7 @@ export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineE
     return (
       <div className={styles.editRow}>
         <textarea
+          autoFocus
           ref={textareaRef}
           className={styles.textarea}
           defaultValue={value}
