@@ -17,8 +17,7 @@ import { useRefreshSpinner } from "@/hooks/useRefreshSpinner";
 import { useColumnDragDrop } from "@/hooks/useColumnDragDrop";
 import { useLayoutStore } from "@/store/layoutStore";
 import styles from "./Column.module.css";
-import { Icon } from "./ui/Icon";
-import { PencilIcon } from "./ui/PencilIcon";
+import { InlineEdit } from "./ui/InlineEdit";
 import { ColumnHeader } from "./ColumnHeader";
 import { ColumnConfirmDelete } from "./ColumnConfirmDelete";
 import { PRCard } from "./cards/PRCard";
@@ -52,18 +51,7 @@ interface ColumnProps {
 
 export const Column = ({ col, onRemove }: ColumnProps) => {
   const { isConfirming: confirming, startConfirm, cancelConfirm } = useConfirmation();
-  const [editingQuery, setEditingQuery] = useState(false);
-  const [draftQuery, setDraftQuery] = useState("");
   const updateColumnQuery = useLayoutStore((s) => s.updateColumnQuery);
-
-  const startEditQuery = () => {
-    setDraftQuery(col.query ?? "");
-    setEditingQuery(true);
-  };
-  const confirmQuery = () => {
-    updateColumnQuery(col.id, draftQuery);
-    setEditingQuery(false);
-  };
 
   const { data, isLoading, isFetching, error, refetch } = useColumnData(col);
   const { spinning, lastUpdated, handleRefresh } = useRefreshSpinner(isFetching, refetch);
@@ -92,56 +80,17 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
         spinning={spinning}
         lastUpdated={lastUpdated}
         onRefresh={handleRefresh}
-        onOpenSettings={startEditQuery}
+        onOpenSettings={() => {}}
         onConfirmRemove={() => startConfirm()}
       />
 
-      {(col.query || editingQuery) && (
+      {col.query && (
         <div className={styles.colQuery}>
-          {editingQuery ? (
-            <>
-              <input
-                className={styles.colQueryInput}
-                value={draftQuery}
-                onChange={(e) => setDraftQuery((e.target as HTMLInputElement).value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") confirmQuery();
-                  if (e.key === "Escape") setEditingQuery(false);
-                }}
-                // eslint-disable-next-line jsx-a11y/no-autofocus -- user-triggered edit (clicking the query text), not autofocus on page load
-                autoFocus
-                aria-label="Filter query"
-              />
-              <button
-                className={styles.colQueryConfirm}
-                onClick={confirmQuery}
-                aria-label="Confirm"
-              >
-                ✓
-              </button>
-              <button
-                className={styles.colQueryCancel}
-                onClick={() => setEditingQuery(false)}
-                aria-label="Cancel"
-              >
-                <Icon>✕</Icon>
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className={styles.colQueryText}
-              onClick={startEditQuery}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") startEditQuery();
-              }}
-              aria-label="Edit filter query"
-              title={col.query}
-            >
-              {col.query}
-              <PencilIcon className={styles.colQueryPencil} />
-            </button>
-          )}
+          <InlineEdit
+            value={col.query}
+            onCommit={(v) => updateColumnQuery(col.id, v)}
+            aria-label="Filter query"
+          />
         </div>
       )}
 
