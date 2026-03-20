@@ -2,6 +2,7 @@ import { useEffect, useRef } from "preact/hooks";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
+  open: boolean;
   title: string;
   titleId: string;
   onClose: () => void;
@@ -11,6 +12,7 @@ interface ModalProps {
 }
 
 export const Modal = ({
+  open,
   title,
   titleId,
   onClose,
@@ -21,24 +23,23 @@ export const Modal = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    dialogRef.current?.showModal();
-  }, []);
-
-  useEffect(() => {
-    if (preventCancel) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [preventCancel, onClose]);
+    if (open) dialogRef.current?.showModal();
+    else dialogRef.current?.close();
+  }, [open]);
 
   return (
     <dialog
       ref={dialogRef}
       className={styles.dialog}
       onClose={onClose}
-      onCancel={preventCancel ? (e) => e.preventDefault() : undefined}
+      onCancel={
+        preventCancel
+          ? (e) => e.preventDefault()
+          : (e) => {
+              e.preventDefault();
+              onClose();
+            }
+      }
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- <dialog> has native keyboard accessibility via onCancel/Escape; backdrop click is a pointer-only affordance
       onClick={
         onBackdropClick

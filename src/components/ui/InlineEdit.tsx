@@ -23,7 +23,6 @@ export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineE
   };
 
   const cancel = () => {
-    textareaRef.current!.value = value;
     setEditing(false);
   };
 
@@ -38,6 +37,7 @@ export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineE
           onKeyDown={(e) => {
             if (e.key === "Enter") commit();
           }}
+          // Escape on keyup feels better than onKeyDown
           onKeyUp={(e) => {
             if (e.key === "Escape") cancel();
           }}

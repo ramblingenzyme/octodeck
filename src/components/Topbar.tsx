@@ -1,11 +1,8 @@
-import { useRef } from "preact/hooks";
 import { useAuthStore } from "@/store/authStore";
 import { useGetUser } from "@/store/githubQueries";
 import { isDemoMode } from "@/env";
 import { OctodeckLogo } from "./OctodeckLogo";
 import styles from "./Topbar.module.css";
-
-type PopoverElement = HTMLDivElement & { hidePopover(): void };
 
 interface TopbarProps {
   onAddColumn: () => void;
@@ -18,7 +15,6 @@ export const Topbar = ({ onAddColumn, onSignIn, onSignOut }: TopbarProps) => {
   const status = useAuthStore((s) => s.status);
   const { data: user } = useGetUser(token);
   const authed = status === "authed" && user;
-  const userMenuRef = useRef<PopoverElement>(null);
 
   return (
     <header className={styles.topbar}>
@@ -44,16 +40,10 @@ export const Topbar = ({ onAddColumn, onSignIn, onSignOut }: TopbarProps) => {
                 height={28}
               />
             </button>
-            <div ref={userMenuRef} id="user-menu" popover="auto" className={styles.userMenu}>
+            <div id="user-menu" popover="auto" className={styles.userMenu}>
               <span className={styles.menuLogin}>@{user.login}</span>
               <hr className={styles.menuDivider} />
-              <button
-                className={styles.menuSignOut}
-                onClick={() => {
-                  onSignOut();
-                  userMenuRef.current?.hidePopover();
-                }}
-              >
+              <button className={styles.menuSignOut} onClick={onSignOut}>
                 Sign out
               </button>
             </div>

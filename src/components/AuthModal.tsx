@@ -6,18 +6,15 @@ import { Modal } from "./ui/Modal";
 import styles from "./AuthModal.module.css";
 
 interface AuthModalProps {
+  open: boolean;
   onDemoMode: () => void;
   onClose: () => void;
 }
 
-export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
+export const AuthModal = ({ open, onDemoMode, onClose }: AuthModalProps) => {
   const clearError = useAuthStore((s) => s.clearError);
   const { userCode, verificationUri, expiresAt, status, error, start } = useDeviceFlow();
   const secondsLeft = useCountdownTimer(expiresAt);
-
-  useEffect(() => {
-    if (status === "authed") onClose();
-  }, [status, onClose]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,7 +30,7 @@ export const AuthModal = ({ onDemoMode, onClose }: AuthModalProps) => {
   };
 
   return (
-    <Modal title="Sign In" titleId="auth-modal-title" onClose={onClose} preventCancel>
+    <Modal open={open} title="Sign In" titleId="auth-modal-title" onClose={onClose} preventCancel>
       <div className={styles.modalBody}>
         {(status === "idle" || status === "error") && (
           <>

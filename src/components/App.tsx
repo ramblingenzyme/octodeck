@@ -1,4 +1,3 @@
-import { useEffect } from "preact/hooks";
 import { useModal } from "@/hooks/useModal";
 import type { ColumnType } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
@@ -18,11 +17,6 @@ export const App = () => {
   const authStatus = useAuthStore((s) => s.status);
   const logOut = useAuthStore((s) => s.logOut);
   const authModal = useModal(!isDemoMode && authStatus === "idle");
-
-  const { close: closeAuthModal } = authModal;
-  useEffect(() => {
-    if (authStatus === "authed") closeAuthModal();
-  }, [authStatus, closeAuthModal]);
 
   const handleAddColumn = (type: ColumnType, title: string, query?: string) => {
     addColumn(type, title, query);
@@ -46,12 +40,16 @@ export const App = () => {
         onAddColumn={() => addColumnModal.open()}
         onRemove={(id) => removeColumn(id)}
       />
-      {addColumnModal.isOpen && (
-        <AddColumnModal onAdd={handleAddColumn} onClose={() => addColumnModal.close()} />
-      )}
-      {authModal.isOpen && (
-        <AuthModal onDemoMode={() => authModal.close()} onClose={() => authModal.close()} />
-      )}
+      <AddColumnModal
+        open={addColumnModal.isOpen}
+        onAdd={handleAddColumn}
+        onClose={() => addColumnModal.close()}
+      />
+      <AuthModal
+        open={authModal.isOpen && authStatus !== "authed"}
+        onDemoMode={() => authModal.close()}
+        onClose={() => authModal.close()}
+      />
     </>
   );
 };

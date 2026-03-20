@@ -7,11 +7,12 @@ import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";
 import styles from "./AddColumnModal.module.css";
 
 interface AddColumnModalProps {
+  open: boolean;
   onAdd: (type: ColumnType, title: string, query?: string) => void;
   onClose: () => void;
 }
 
-export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
+export const AddColumnModal = ({ open, onAdd, onClose }: AddColumnModalProps) => {
   const [selectedType, setSelectedType] = useState<ColumnType>("prs");
   const [title, setTitle] = useState(COLUMN_TYPES[selectedType].label);
   const [query, setQuery] = useState(COLUMN_TYPES[selectedType].defaultQuery);
@@ -30,6 +31,7 @@ export const AddColumnModal = ({ onAdd, onClose }: AddColumnModalProps) => {
 
   return (
     <Modal
+      open={open}
       title="Add Column"
       titleId="add-column-modal-title"
       onClose={onClose}
