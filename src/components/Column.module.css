@@ -236,12 +236,20 @@
 
 .errorState {
   padding: 12px;
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   color: var(--ci-failure);
   background: color-mix(in srgb, var(--ci-failure) 8%, transparent);
   border-radius: var(--radius-md);
   border: 1px solid color-mix(in srgb, var(--ci-failure) 20%, transparent);
   text-align: center;
+}
+
+.emptyState {
+  padding: 12px;
+  font-size: var(--text-md);
+  color: var(--text-ghost);
+  text-align: center;
+  margin: 0;
 }
 
 .dragHandle {

@@ -89,7 +89,10 @@ export const BaseColumn = ({ col, onRemove, renderCard }: BaseColumnProps) => {
             {error}
           </div>
         )}
-        {!isLoading && !error && data.map((item) => renderCard(item))}
+        {!isLoading && !error && data.length === 0 && (
+          <p className={styles.emptyState}>No results</p>
+        )}
+        {!isLoading && !error && data.length > 0 && data.map((item) => renderCard(item))}
       </div>
     </section>
   );
