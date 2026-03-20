@@ -69,11 +69,15 @@ export interface GHEvent {
   payload: {
     action?: string;
     ref?: string;
+    head?: string;
     commits?: Array<{ sha: string; message: string }>;
     pull_request?: { number: number; title: string; html_url: string };
     issue?: { number: number; title: string; html_url: string };
     comment?: { body: string; html_url: string };
     size?: number;
+    distinct_size?: number;
+    ref_type?: string;
+    forkee?: { full_name: string; html_url: string };
   };
   created_at: string;
 }

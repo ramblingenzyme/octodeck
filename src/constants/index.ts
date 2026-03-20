@@ -25,8 +25,12 @@ export const ACTIVITY_ICONS: Record<ActivityType, IconName> = {
   commit: "gitCommit",
   comment: "comment",
   pr_opened: "gitMerge",
+  pr_merged: "gitMerge",
   review: "eye",
   issue_closed: "x",
+  branch_created: "gitBranch",
+  fork: "gitFork",
+  star: "star",
 };
 
 export const COLUMN_TYPES: Record<

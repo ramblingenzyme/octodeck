@@ -14,12 +14,24 @@ export type IconName =
   | "eye"
   | "play"
   | "issueOpen"
-  | "tag";
+  | "tag"
+  | "gitBranch"
+  | "gitFork"
+  | "star";
 export type CIStatus = "success" | "failure" | "running";
 export type IssueState = "open" | "closed";
 export type CITrigger = "push" | "pull_request" | "release";
 export type NotifType = "review_requested" | "mention" | "assigned" | "approved" | "comment";
-export type ActivityType = "commit" | "comment" | "pr_opened" | "review" | "issue_closed";
+export type ActivityType =
+  | "commit"
+  | "comment"
+  | "pr_opened"
+  | "pr_merged"
+  | "review"
+  | "issue_closed"
+  | "branch_created"
+  | "fork"
+  | "star";
 
 export interface ColumnConfig {
   id: string;

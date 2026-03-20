@@ -122,32 +122,48 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
 
   switch (event.type) {
     case "PushEvent": {
-      const count = event.payload.size ?? event.payload.commits?.length ?? 1;
+      const count =
+        event.payload.size ?? event.payload.distinct_size ?? event.payload.commits?.length;
       const branch = event.payload.ref?.replace("refs/heads/", "") ?? "unknown";
-      const sha = event.payload.commits?.[0]?.sha.slice(0, 7);
+      const sha = (event.payload.commits?.[0]?.sha ?? event.payload.head)?.slice(0, 7);
+      const countText = count != null ? `${count} commit${count !== 1 ? "s" : ""} ` : "";
       return {
         id: parseInt(event.id, 10),
         type: "commit",
-        text: `Pushed ${count} commit${count !== 1 ? "s" : ""} to ${branch}`,
+        text: `Pushed ${countText}to ${branch}`,
         repo,
         age,
         ref: sha,
         url: sha ? `${ghBase}/commit/${sha}` : `${ghBase}/commits/${branch}`,
       };
     }
-    case "PullRequestEvent":
+    case "PullRequestEvent": {
+      const prNum = event.payload.pull_request?.number;
+      const prUrl = event.payload.pull_request?.html_url ?? `${ghBase}/pulls`;
       if (event.payload.action === "opened") {
         return {
           id: parseInt(event.id, 10),
           type: "pr_opened",
-          text: `Opened PR #${event.payload.pull_request?.number}`,
+          text: `Opened PR #${prNum}`,
           repo,
           age,
-          ref: `PR #${event.payload.pull_request?.number}`,
-          url: event.payload.pull_request?.html_url ?? `${ghBase}/pulls`,
+          ref: `PR #${prNum}`,
+          url: prUrl,
+        };
+      }
+      if (event.payload.action === "merged") {
+        return {
+          id: parseInt(event.id, 10),
+          type: "pr_merged",
+          text: `Merged PR #${prNum}`,
+          repo,
+          age,
+          ref: `PR #${prNum}`,
+          url: prUrl,
         };
       }
       return null;
+    }
     case "IssueCommentEvent":
     case "PullRequestReviewCommentEvent":
       return {
@@ -181,6 +197,36 @@ export function mapEvent(event: GHEvent): ActivityItem | null {
         };
       }
       return null;
+    case "CreateEvent":
+      if (event.payload.ref_type === "branch") {
+        return {
+          id: parseInt(event.id, 10),
+          type: "branch_created",
+          text: `Created branch ${event.payload.ref ?? "unknown"}`,
+          repo,
+          age,
+          url: `${ghBase}/tree/${event.payload.ref ?? ""}`,
+        };
+      }
+      return null;
+    case "ForkEvent":
+      return {
+        id: parseInt(event.id, 10),
+        type: "fork",
+        text: `Forked ${repo}`,
+        repo,
+        age,
+        url: event.payload.forkee?.html_url ?? ghBase,
+      };
+    case "WatchEvent":
+      return {
+        id: parseInt(event.id, 10),
+        type: "star",
+        text: `Starred ${repo}`,
+        repo,
+        age,
+        url: ghBase,
+      };
     default:
       return null;
   }

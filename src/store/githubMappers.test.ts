@@ -263,8 +263,7 @@ describe("mapEvent", () => {
   });
 
   it("returns null for unsupported event types", () => {
-    expect(mapEvent(makeEvent("WatchEvent"))).toBeNull();
-    expect(mapEvent(makeEvent("ForkEvent"))).toBeNull();
+    expect(mapEvent(makeEvent("UnsupportedEvent"))).toBeNull();
   });
 
   it("produces stable id for non-numeric event id", () => {
