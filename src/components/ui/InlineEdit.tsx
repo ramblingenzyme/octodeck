@@ -6,11 +6,19 @@ import styles from "./InlineEdit.module.css";
 interface InlineEditProps {
   value: string;
   onCommit: (value: string) => void;
+  onCancel?: () => void;
+  initialEditing?: boolean;
   "aria-label"?: string;
 }
 
-export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineEditProps) => {
-  const [editing, setEditing] = useState(false);
+export const InlineEdit = ({
+  value,
+  onCommit,
+  onCancel,
+  initialEditing = false,
+  "aria-label": ariaLabel,
+}: InlineEditProps) => {
+  const [editing, setEditing] = useState(initialEditing);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const startEdit = () => {
@@ -24,6 +32,7 @@ export const InlineEdit = ({ value, onCommit, "aria-label": ariaLabel }: InlineE
 
   const cancel = () => {
     setEditing(false);
+    onCancel?.();
   };
 
   if (editing) {
