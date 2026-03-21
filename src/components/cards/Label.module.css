@@ -14,25 +14,9 @@
 }
 
 .colored {
-  --lightness-threshold: 0.6;
-  --perceived-lightness: calc(
-    (var(--label-r) * 0.2126 + var(--label-g) * 0.7152 + var(--label-b) * 0.0722) / 255
-  );
-  --lightness-switch: max(
-    0,
-    min(calc(1 / (var(--lightness-threshold) - var(--perceived-lightness))), 1)
-  );
-  --lighten-by: calc(
-    (var(--lightness-threshold) - var(--perceived-lightness)) * 100 * var(--lightness-switch)
-  );
-
-  color: hsl(
-    var(--label-h),
-    calc(var(--label-s) * 1%),
-    calc(var(--label-l) * 1% + var(--lighten-by) * 1%)
-  );
-  background-color: rgba(var(--label-r), var(--label-g), var(--label-b), 0.18);
-  border: 1px solid rgba(var(--label-r), var(--label-g), var(--label-b), 0.3);
+  color: oklch(from var(--label-color) max(l, 0.82) c h);
+  background-color: color-mix(in oklch, var(--label-color) 18%, transparent);
+  border: 1px solid color-mix(in oklch, var(--label-color) 30%, transparent);
 }
 
 .fallback {
