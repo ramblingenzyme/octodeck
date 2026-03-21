@@ -26,7 +26,7 @@
   background: var(--bg-topbar);
   border-bottom: 1px solid var(--border-structural);
 
-  & h2 {
+  & h1 {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: var(--text-md);
@@ -80,13 +80,13 @@
 }
 
 .btnModalDanger {
-  color: var(--accent-issues, #f87171);
-  border-color: var(--accent-issues, #f87171);
+  color: var(--accent-issues, oklch(0.72 0.17 22));
+  border-color: var(--accent-issues, oklch(0.72 0.17 22));
 
   &:hover {
-    background: color-mix(in srgb, var(--accent-issues, #f87171) 12%, transparent);
-    color: var(--accent-issues, #f87171);
-    border-color: var(--accent-issues, #f87171);
+    background: color-mix(in srgb, var(--accent-issues, oklch(0.72 0.17 22)) 12%, transparent);
+    color: var(--accent-issues, oklch(0.72 0.17 22));
+    border-color: var(--accent-issues, oklch(0.72 0.17 22));
   }
 
   &:disabled {

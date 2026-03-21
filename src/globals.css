@@ -13,11 +13,11 @@
   --text-muted: #a8b8cb;
   --text-ghost: #93adc2;
 
-  --accent-notifications: #4ade80;
-  --accent-prs: #818cf8;
-  --accent-issues: #f87171;
-  --accent-ci: #fbbf24;
-  --accent-activity: #c4b5fd;
+  --accent-notifications: oklch(0.80 0.16 142);
+  --accent-prs: oklch(0.70 0.16 265);
+  --accent-issues: oklch(0.72 0.17 22);
+  --accent-ci: oklch(0.83 0.16 90);
+  --accent-activity: oklch(0.78 0.13 308);
 
   --ci-success: #4ade80;
   --ci-failure: #f87171;

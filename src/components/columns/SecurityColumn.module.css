@@ -1,3 +1,3 @@
 .accent {
-  --color-accent: #f87171;
+  --color-accent: oklch(0.75 0.17 55);
 }

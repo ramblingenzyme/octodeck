@@ -20,7 +20,7 @@
 .typeBtn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
@@ -39,10 +39,12 @@
   }
 
   &.active {
-    border-color: var(--accent-prs);
-    background: color-mix(in srgb, var(--accent-prs) 8%, var(--bg-card));
+    border-color: var(--border-mid);
+    background: var(--bg-hover);
+    box-shadow: inset 3px 0 0 var(--color-accent);
   }
 }
 
 .colIcon {
+  color: var(--color-accent);
 }

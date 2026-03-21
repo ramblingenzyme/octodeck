@@ -40,7 +40,7 @@ export const COLUMN_TYPES: Record<
   { label: string; icon: IconName; itemLabel: string; defaultQuery: string }
 > = {
   prs: {
-    label: "Pull Requests",
+    label: "Open PRs",
     icon: "gitMerge",
     itemLabel: "PR",
     defaultQuery: "involves:@me is:open",
@@ -53,12 +53,12 @@ export const COLUMN_TYPES: Record<
   },
   ci: { label: "CI / CD", icon: "play", itemLabel: "run", defaultQuery: "" },
   notifications: {
-    label: "Notifications",
+    label: "Inbox",
     icon: "bell",
     itemLabel: "notification",
     defaultQuery: "",
   },
-  activity: { label: "My Activity", icon: "gitCommit", itemLabel: "event", defaultQuery: "" },
+  activity: { label: "Activity", icon: "gitCommit", itemLabel: "event", defaultQuery: "" },
   releases: { label: "Releases", icon: "tag", itemLabel: "release", defaultQuery: "" },
   deployments: { label: "Deployments", icon: "deploy", itemLabel: "deployment", defaultQuery: "" },
   security: { label: "Security Alerts", icon: "shield", itemLabel: "alert", defaultQuery: "" },
