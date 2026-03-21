@@ -25,6 +25,10 @@
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   flex-shrink: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 13%, transparent);
+
+  &:hover .dragHandle {
+    opacity: 0.5;
+  }
 }
 
 .colHeaderLeft {
@@ -123,25 +127,28 @@
   transition:
     color 0.15s,
     background 0.15s;
-}
 
-.btnIcon:hover {
-  color: var(--text-primary);
-  background: var(--border-mid);
-}
+  &:hover {
+    color: var(--text-primary);
+    background: var(--border-mid);
+  }
 
-.btnIconActive {
-  color: var(--color-accent);
-}
+  &Active {
+    color: var(--color-accent);
+  }
 
-.btnIconSpinning,
-.btnIconSpinning:hover {
-  color: var(--color-accent);
-}
+  &Spinning {
+    color: var(--color-accent);
 
-.btnIconSpinning > * {
-  display: inline-block;
-  animation: spin 0.8s linear infinite;
+    &:hover {
+      color: var(--color-accent);
+    }
+
+    & > * {
+      display: inline-block;
+      animation: spin 0.8s linear infinite;
+    }
+  }
 }
 
 @keyframes spin {
@@ -175,11 +182,11 @@
   transition:
     border-color 0.15s,
     color 0.15s;
-}
 
-.btnConfirmCancel:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
 }
 
 .btnConfirmDanger {
@@ -192,11 +199,11 @@
   transition:
     border-color 0.15s,
     background 0.15s;
-}
 
-.btnConfirmDanger:hover {
-  border-color: var(--ci-failure);
-  background: color-mix(in srgb, var(--ci-failure) 10%, transparent);
+  &:hover {
+    border-color: var(--ci-failure);
+    background: color-mix(in srgb, var(--ci-failure) 10%, transparent);
+  }
 }
 
 .skeletonWrapper {
@@ -254,31 +261,40 @@
   transition:
     opacity 0.15s,
     color 0.15s;
-}
-.colHeader:hover .dragHandle {
-  opacity: 0.5;
-}
-.dragHandle:hover {
-  opacity: 1 !important;
-  color: var(--text-secondary);
-  background: var(--border-mid);
+
+  &:hover {
+    opacity: 1 !important;
+    color: var(--text-secondary);
+    background: var(--border-mid);
+  }
 }
 
-.dropLeft::before,
-.dropRight::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  width: 3px;
-  border-radius: 2px;
-  background: var(--color-accent);
-  pointer-events: none;
-  z-index: 10;
+.dropLeft {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-accent);
+    pointer-events: none;
+    z-index: 10;
+    left: -8px;
+  }
 }
-.dropLeft::before {
-  left: -8px;
-}
-.dropRight::after {
-  right: -8px;
+
+.dropRight {
+  &::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-accent);
+    pointer-events: none;
+    z-index: 10;
+    right: -8px;
+  }
 }

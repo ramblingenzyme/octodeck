@@ -2,6 +2,13 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+
+  /* Show on hover OR keyboard focus of any focusable child */
+  &:hover .tooltip,
+  &:focus-within .tooltip {
+    opacity: 1;
+    scale: 1;
+  }
 }
 
 .tooltip {
@@ -24,26 +31,17 @@
   transition:
     opacity 0.12s,
     scale 0.12s;
-}
 
-.above {
-  bottom: calc(100% + 6px);
-}
+  &.above {
+    bottom: calc(100% + 6px);
+  }
 
-.below {
-  top: calc(100% + 6px);
-}
+  &.below {
+    top: calc(100% + 6px);
+  }
 
-/* Show on hover OR keyboard focus of any focusable child */
-.wrapper:hover .tooltip,
-.wrapper:focus-within .tooltip {
-  opacity: 1;
-  scale: 1;
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .tooltip {
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 }

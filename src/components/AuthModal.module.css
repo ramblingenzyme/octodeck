@@ -6,11 +6,11 @@
   color: inherit;
   max-height: 100dvh;
   overflow: visible;
-}
 
-.dialog::backdrop {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(4px);
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+  }
 }
 
 .modal {
@@ -65,10 +65,10 @@
   border-radius: var(--radius-md);
   width: 100%;
   transition: opacity 0.15s;
-}
 
-.btnGitHub:hover {
-  opacity: 0.85;
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 .demoLink {
@@ -76,10 +76,10 @@
   color: var(--text-ghost);
   text-decoration: underline;
   cursor: pointer;
-}
 
-.demoLink:hover {
-  color: var(--text-muted);
+  &:hover {
+    color: var(--text-muted);
+  }
 }
 
 .userCodeBox {
@@ -117,11 +117,11 @@
   transition:
     border-color 0.15s,
     color 0.15s;
-}
 
-.btnCancel:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
 }
 
 .errorText {
@@ -140,9 +140,9 @@
   transition:
     border-color 0.15s,
     color 0.15s;
-}
 
-.btnModal:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
 }

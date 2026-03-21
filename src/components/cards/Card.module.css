@@ -33,9 +33,11 @@
   margin-bottom: 6px;
 }
 
-.cardTitleLink:hover {
-  text-decoration: underline;
-  color: var(--color-accent);
+.cardTitleLink {
+  &:hover {
+    text-decoration: underline;
+    color: var(--color-accent);
+  }
 }
 
 .cardMeta {

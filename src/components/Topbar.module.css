@@ -34,10 +34,10 @@
   padding: 6px 14px;
   border-radius: var(--radius-md);
   transition: opacity 0.15s;
-}
 
-.btnAdd:hover {
-  opacity: 0.85;
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 .topbarRight {
@@ -57,10 +57,10 @@
   border: 2px solid transparent;
   transition: border-color 0.15s;
   anchor-name: --avatar-btn;
-}
 
-.avatarBtn:hover {
-  border-color: var(--text-muted);
+  &:hover {
+    border-color: var(--text-muted);
+  }
 }
 
 .userAvatar {
@@ -110,11 +110,11 @@
   transition:
     color 0.15s,
     background 0.15s;
-}
 
-.menuSignOut:hover {
-  color: var(--text-primary);
-  background: var(--bg-column);
+  &:hover {
+    color: var(--text-primary);
+    background: var(--bg-column);
+  }
 }
 
 .demoBadge {
@@ -136,9 +136,9 @@
   transition:
     border-color 0.15s,
     color 0.15s;
-}
 
-.btnSignIn:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
 }

@@ -6,11 +6,11 @@
   color: inherit;
   max-height: 100dvh;
   overflow: visible;
-}
 
-.dialog::backdrop {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(4px);
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+  }
 }
 
 .modal {
@@ -61,37 +61,37 @@
   transition:
     border-color 0.15s,
     color 0.15s;
-}
 
-.btnModal:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
-}
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
 
-.btnModalPrimary {
-  background: var(--accent-prs);
-  color: var(--text-on-light);
-  border-color: var(--accent-prs);
-}
+  &Primary {
+    background: var(--accent-prs);
+    color: var(--text-on-light);
+    border-color: var(--accent-prs);
 
-.btnModalPrimary:hover {
-  opacity: 0.9;
-}
+    &:hover {
+      opacity: 0.9;
+    }
+  }
 
-.btnModalDanger {
-  color: var(--accent-issues, #f87171);
-  border-color: var(--accent-issues, #f87171);
-}
+  &Danger {
+    color: var(--accent-issues, #f87171);
+    border-color: var(--accent-issues, #f87171);
 
-.btnModalDanger:hover {
-  background: color-mix(in srgb, var(--accent-issues, #f87171) 12%, transparent);
-  color: var(--accent-issues, #f87171);
-  border-color: var(--accent-issues, #f87171);
-}
+    &:hover {
+      background: color-mix(in srgb, var(--accent-issues, #f87171) 12%, transparent);
+      color: var(--accent-issues, #f87171);
+      border-color: var(--accent-issues, #f87171);
+    }
 
-.btnModalDanger:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .fieldInput {
@@ -104,8 +104,8 @@
   padding: 8px 10px;
   color: var(--text-primary);
   font-size: var(--text-md);
-}
 
-.fieldInput:focus {
-  border-color: var(--accent-prs);
+  &:focus {
+    border-color: var(--accent-prs);
+  }
 }

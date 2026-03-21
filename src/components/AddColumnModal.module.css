@@ -32,16 +32,16 @@
   transition:
     border-color 0.15s,
     background 0.15s;
-}
 
-.typeBtn:hover {
-  border-color: var(--border-mid);
-  background: var(--bg-hover);
-}
+  &:hover {
+    border-color: var(--border-mid);
+    background: var(--bg-hover);
+  }
 
-.typeBtn.active {
-  border-color: var(--accent-prs);
-  background: color-mix(in srgb, var(--accent-prs) 8%, var(--bg-card));
+  &.active {
+    border-color: var(--accent-prs);
+    background: color-mix(in srgb, var(--accent-prs) 8%, var(--bg-card));
+  }
 }
 
 .colIcon {
