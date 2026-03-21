@@ -22,6 +22,12 @@ export default defineConfig({
     pool: 'vmThreads',
     alias: [{ find: '@', replacement: srcPath }],
     setupFiles: ['src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/test/**', 'src/**/*.test.{ts,tsx}', 'src/**/*.d.ts'],
+      reporter: ['text', 'html'],
+    },
   },
   resolve: {
     alias: [{ find: '@', replacement: srcPath }],

@@ -25,6 +25,11 @@ describe("loadLayout", () => {
     expect(loadLayout()).toEqual(cols);
   });
 
+  it("returns DEFAULT_COLUMNS when localStorage contains valid JSON that is not an array", () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ not: "an array" }));
+    expect(loadLayout()).toEqual(DEFAULT_COLUMNS);
+  });
+
   it("migrates old repos field to query string", () => {
     const old = [{ id: "col-1", type: "ci", title: "CI", repos: ["acme/api", "acme/worker"] }];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(old));

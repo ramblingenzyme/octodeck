@@ -231,6 +231,51 @@ describe("mapEvent", () => {
     expect(item).toBeNull();
   });
 
+  it("maps PullRequestEvent merged", () => {
+    const item = mapEvent(
+      makeEvent("PullRequestEvent", {
+        action: "merged",
+        pull_request: {
+          number: 12,
+          title: "Merge feature",
+          html_url: "https://github.com/owner/repo/pull/12",
+        },
+      }),
+    );
+    expect(item).not.toBeNull();
+    expect(item!.type).toBe("pr_merged");
+    expect(item!.text).toBe("Merged PR #12");
+  });
+
+  it("maps CreateEvent branch_created", () => {
+    const item = mapEvent(
+      makeEvent("CreateEvent", { ref_type: "branch", ref: "feature/new-thing" }),
+    );
+    expect(item).not.toBeNull();
+    expect(item!.type).toBe("branch_created");
+    expect(item!.text).toBe("Created branch feature/new-thing");
+  });
+
+  it("returns null for CreateEvent with non-branch ref_type", () => {
+    expect(mapEvent(makeEvent("CreateEvent", { ref_type: "tag", ref: "v1.0.0" }))).toBeNull();
+  });
+
+  it("maps ForkEvent", () => {
+    const item = mapEvent(
+      makeEvent("ForkEvent", { forkee: { html_url: "https://github.com/alice/repo" } }),
+    );
+    expect(item).not.toBeNull();
+    expect(item!.type).toBe("fork");
+    expect(item!.text).toBe("Forked owner/repo");
+  });
+
+  it("maps WatchEvent (star)", () => {
+    const item = mapEvent(makeEvent("WatchEvent", { action: "started" }));
+    expect(item).not.toBeNull();
+    expect(item!.type).toBe("star");
+    expect(item!.text).toBe("Starred owner/repo");
+  });
+
   it("maps IssueCommentEvent", () => {
     const item = mapEvent(
       makeEvent("IssueCommentEvent", {

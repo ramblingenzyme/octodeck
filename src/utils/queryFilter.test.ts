@@ -130,3 +130,47 @@ describe("matchesTokens — empty query", () => {
     expect(matchesTokens(baseIssue, [])).toBe(true);
   });
 });
+
+describe("matchesTokens — is: unknown value passes through", () => {
+  it("is:unknown returns true (unknown is: values pass through)", () => {
+    expect(matches(basePR, "is:unknown")).toBe(true);
+  });
+});
+
+describe("matchesTokens — is:pr / is:pull-request", () => {
+  it("is:pr matches a PRItem", () => expect(matches(basePR, "is:pr")).toBe(true));
+  it("is:pr does not match IssueItem", () => expect(matches(baseIssue, "is:pr")).toBe(false));
+  it("is:pull-request matches a PRItem", () =>
+    expect(matches(basePR, "is:pull-request")).toBe(true));
+  it("is:pull-request does not match IssueItem", () =>
+    expect(matches(baseIssue, "is:pull-request")).toBe(false));
+});
+
+describe("matchesTokens — is:issue", () => {
+  it("is:issue matches an IssueItem", () => expect(matches(baseIssue, "is:issue")).toBe(true));
+  it("is:issue does not match PRItem", () => expect(matches(basePR, "is:issue")).toBe(false));
+});
+
+describe("matchesTokens — branch: partial match", () => {
+  const featureCI: CIItem = { ...baseCI, branch: "feature/foo" };
+  it("substring match on branch", () => expect(matches(featureCI, "branch:feature")).toBe(true));
+  it("no match for non-matching substring", () =>
+    expect(matches(featureCI, "branch:hotfix")).toBe(false));
+});
+
+describe("matchesTokens — assignee: null", () => {
+  const issueNoAssignee: IssueItem = { ...baseIssue, assignee: null };
+  it("does not match when assignee is null", () =>
+    expect(matches(issueNoAssignee, "assignee:bob")).toBe(false));
+});
+
+describe("matchesTokens — label: on item with no labels field", () => {
+  it("does not match CIItem (no labels field)", () =>
+    expect(matches(baseCI, "label:bug")).toBe(false));
+});
+
+describe("parseQuery", () => {
+  it("empty string returns []", () => expect(parseQuery("")).toEqual([]));
+  it("leading/trailing spaces are trimmed", () =>
+    expect(parseQuery("  repo:acme/api  ")).toEqual([{ key: "repo", value: "acme/api" }]));
+});
