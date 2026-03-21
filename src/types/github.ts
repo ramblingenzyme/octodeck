@@ -1,3 +1,8 @@
+export interface GHRepo {
+  id: number;
+  full_name: string;
+}
+
 export interface GHUser {
   login: string;
   avatar_url: string;

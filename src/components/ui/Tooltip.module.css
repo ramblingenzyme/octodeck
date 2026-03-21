@@ -59,3 +59,16 @@
     transition: none;
   }
 }
+
+[role="tooltip"].end {
+  left: unset;
+  right: anchor(right);
+
+  &.above {
+    translate: 0 -6px;
+  }
+
+  &.below {
+    translate: 0 6px;
+  }
+}

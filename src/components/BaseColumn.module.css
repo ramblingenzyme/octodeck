@@ -168,6 +168,35 @@
   min-width: 0;
 }
 
+.repoList {
+  list-style: none;
+  white-space: nowrap;
+
+  li {
+    &:not(:first-child) {
+      padding-top: 4px;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-ghost);
+    }
+  }
+}
+
+.repoCount {
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  white-space: nowrap;
+  cursor: default;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+
 .btnIconPencil {
   width: 0.8em;
   height: 0.8em;

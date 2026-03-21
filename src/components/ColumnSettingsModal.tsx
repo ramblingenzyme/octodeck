@@ -1,6 +1,8 @@
 import { useState, useEffect } from "preact/hooks";
 import type { ColumnConfig } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
+import { useAuthStore } from "@/store/authStore";
+import { useGetUserRepos } from "@/store/githubQueries";
 import { MULTI_REPO_COLUMN_TYPES } from "@/constants";
 import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";
 import { RepoChipList } from "./ui/RepoChipList";
@@ -15,6 +17,8 @@ interface ColumnSettingsModalProps {
 export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalProps) => {
   const isMultiRepo = MULTI_REPO_COLUMN_TYPES.has(col.type);
   const [repos, setRepos] = useState<string[]>(col.repos ?? []);
+  const token = useAuthStore((s) => s.token);
+  const { data: repoSuggestions } = useGetUserRepos(isMultiRepo ? token : null);
   const updateColumnTitle = useLayoutStore((s) => s.updateColumnTitle);
   const updateColumnQuery = useLayoutStore((s) => s.updateColumnQuery);
   const updateColumnRepos = useLayoutStore((s) => s.updateColumnRepos);
@@ -43,7 +47,7 @@ export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalP
       onClose={onClose}
       onBackdropClick={onClose}
     >
-      <form onSubmit={handleSave}>
+      <form key={String(open)} onSubmit={handleSave}>
         <ModalBody>
           <div className={styles.field}>
             <label htmlFor="col-settings-title">Title</label>
@@ -61,7 +65,9 @@ export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalP
             <div className={styles.field}>
               <label>Repositories</label>
               <RepoChipList
+                key={String(open)}
                 repos={repos}
+                suggestions={repoSuggestions}
                 onAdd={(r) => setRepos((prev) => [...prev, r])}
                 onRemove={(r) => setRepos((prev) => prev.filter((x) => x !== r))}
               />

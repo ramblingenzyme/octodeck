@@ -2,13 +2,20 @@ import { useId, useRef } from "preact/hooks";
 import styles from "./Tooltip.module.css";
 
 interface TooltipProps {
-  text: string;
+  text: React.ReactNode;
   children: React.ReactNode;
   position?: "above" | "below";
+  align?: "center" | "end";
   className?: string;
 }
 
-export const Tooltip = ({ text, children, position = "above", className }: TooltipProps) => {
+export const Tooltip = ({
+  text,
+  children,
+  position = "above",
+  align = "center",
+  className,
+}: TooltipProps) => {
   const id = useId();
   const popoverRef = useRef<HTMLSpanElement>(null);
   const anchorName = `--tooltip-${id.replace(/:/g, "")}`;
@@ -32,7 +39,7 @@ export const Tooltip = ({ text, children, position = "above", className }: Toolt
         role="tooltip"
         id={id}
         popover="hint"
-        className={styles[position]}
+        className={[styles[position], align === "end" ? styles.end : ""].filter(Boolean).join(" ")}
         style={{ positionAnchor: anchorName } as React.CSSProperties}
       >
         {text}

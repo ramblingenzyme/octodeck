@@ -15,6 +15,8 @@
   letter-spacing: 0.03em;
   font-family: var(--font-mono);
   display: inline-block;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: color-mix(in srgb, var(--ci-color, var(--text-muted)) 12%, transparent);
   color: var(--ci-color, var(--text-muted));
 }

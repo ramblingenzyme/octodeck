@@ -1,9 +1,3 @@
-.root {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .chipArea {
   display: flex;
   flex-wrap: wrap;
@@ -67,5 +61,47 @@
 
   &::placeholder {
     color: var(--text-muted);
+  }
+}
+
+.suggestions {
+  /* Reset popover defaults */
+  inset: auto;
+  margin: 4px 0 0;
+
+  /* Anchor positioning — below the input, aligned to its left edge */
+  top: anchor(bottom);
+  left: anchor(left);
+  width: anchor-size(width);
+
+  background: var(--bg-column);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  list-style: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.suggestion {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  white-space: normal;
+  word-break: break-word;
+  transition:
+    background 0.1s,
+    color 0.1s;
+
+  &:hover,
+  &:focus {
+    background: var(--border-mid);
+    color: var(--text-primary);
+    outline: none;
   }
 }

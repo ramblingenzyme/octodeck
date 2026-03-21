@@ -43,7 +43,7 @@
 .cardMeta {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   font-size: var(--text-md);
 }
 

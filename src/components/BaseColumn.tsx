@@ -12,6 +12,7 @@ import { InlineEdit } from "./ui/InlineEdit";
 import { ColumnHeader } from "./ColumnHeader";
 import { ColumnConfirmDelete } from "./ColumnConfirmDelete";
 import { ColumnSettingsModal } from "./ColumnSettingsModal";
+import { Tooltip } from "./ui/Tooltip";
 
 interface BaseColumnProps {
   col: ColumnConfig;
@@ -63,6 +64,21 @@ export const BaseColumn = ({ col, onRemove, renderCard, accentClass }: BaseColum
           placeholder="Add filter…"
           aria-label="Filter query"
         />
+        {col.repos && col.repos.length > 0 && (
+          <Tooltip
+            text={
+              <ul className={styles.repoList}>
+                {col.repos.map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            }
+            position="below"
+            align="end"
+          >
+            <span className={styles.repoCount}>{col.repos.length}</span>
+          </Tooltip>
+        )}
       </div>
 
       {confirming && (

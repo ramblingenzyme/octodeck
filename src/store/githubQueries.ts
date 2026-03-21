@@ -21,6 +21,7 @@ const DEPLOYMENT_STATE_MAP: Record<string, DeploymentStatus> = {
   queued: "pending",
 };
 import type {
+  GHRepo,
   GHUser,
   GHSearchResult,
   GHNotification,
@@ -215,6 +216,20 @@ export function useGetSecurityAlerts(repos: string[], token: string | null) {
       ).flat();
       raw.sort((a, b) => b.alert.created_at.localeCompare(a.alert.created_at));
       return raw.slice(0, 20).map(({ alert, repo }) => mapDependabotAlert(alert, repo));
+    },
+    { refreshInterval: POLL },
+  );
+}
+
+export function useGetUserRepos(token: string | null) {
+  return useSWR<string[]>(
+    token ? ["user-repos", token] : null,
+    async () => {
+      const raw = await githubFetch<GHRepo[]>(
+        "/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member",
+        token!,
+      );
+      return raw.map((r) => r.full_name);
     },
     { refreshInterval: POLL },
   );
