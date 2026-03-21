@@ -78,6 +78,13 @@ export const SEVERITY_ORDER: Record<AlertSeverity, number> = {
   low: 3,
 };
 
+export const MULTI_REPO_COLUMN_TYPES = new Set<ColumnType>([
+  "ci",
+  "releases",
+  "deployments",
+  "security",
+]);
+
 export const mkId = (): string => crypto.randomUUID();
 
 export const DEFAULT_COLUMNS: ColumnConfig[] = [

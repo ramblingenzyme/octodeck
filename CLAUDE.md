@@ -38,12 +38,27 @@ App.tsx (Redux + modal state)
 
 `Column.tsx` uses an exhaustive switch on `col.type` to render the correct card — TypeScript enforces this at compile time via the discriminated union.
 
+### Philosophy: HTML + CSS + Browser APIs first
+
+Prefer native platform capabilities over JS implementations. Reach for JS only when HTML, CSS, or a browser API cannot handle it.
+
+- **Semantic HTML**: use the element that matches the content — `<menu>`, `<output>`, `<dialog>`, `<details>`, `<time>`, etc. Do not replace semantic elements with `<div>` or `<span>`.
+- **Browser APIs**: use the Popover API for overlays/tooltips, `<dialog>` for modals, `FormData` for form reads, `popover="auto"` for light-dismiss — not JS re-implementations.
+- **Uncontrolled inputs**: prefer `defaultValue` + `FormData` over controlled `value` + `useState` where live validation or derived UI is not needed.
+- **CSS over JS for dynamic styling**: use CSS custom properties, `:has()`, `@container`, `data-*` attributes, and element/state selectors (`:checked`, `:open`, `:popover-open`) to drive visual state. Avoid computing styles in JS.
+- **Element selectors in CSS**: style by element type (`button`, `input`, `h2`) within a component scope rather than adding wrapper classes everywhere.
+- **`popover="hint"`**: fine to use. Firefox falls back to `popover="manual"` behaviour (no auto-dismiss when another popover opens), but this degrades gracefully. CSS anchor positioning is fine in all modern browsers.
+
 ### CSS
 
 - All design tokens in CSS custom properties on `:root` in `globals.css`
 - Each component has a companion `*.module.css` file
 - No CSS-in-JS, no inline styles
 - Per-column accent color set via `--color-accent` CSS variable
+
+### Module structure
+
+- No barrel files (`index.ts` that re-export other modules) — import directly by path.
 
 ### Path alias
 

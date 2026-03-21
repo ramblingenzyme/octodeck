@@ -1,7 +1,9 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import type { ColumnConfig } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
+import { MULTI_REPO_COLUMN_TYPES } from "@/constants";
 import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";
+import { RepoChipList } from "./ui/RepoChipList";
 import styles from "./ColumnSettingsModal.module.css";
 
 interface ColumnSettingsModalProps {
@@ -11,22 +13,25 @@ interface ColumnSettingsModalProps {
 }
 
 export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalProps) => {
-  const [title, setTitle] = useState(col.title);
-  const [query, setQuery] = useState(col.query ?? "");
+  const isMultiRepo = MULTI_REPO_COLUMN_TYPES.has(col.type);
+  const [repos, setRepos] = useState<string[]>(col.repos ?? []);
   const updateColumnTitle = useLayoutStore((s) => s.updateColumnTitle);
   const updateColumnQuery = useLayoutStore((s) => s.updateColumnQuery);
+  const updateColumnRepos = useLayoutStore((s) => s.updateColumnRepos);
 
-  // Sync local state when col changes (e.g. external update)
-  const handleOpen = () => {
-    setTitle(col.title);
-    setQuery(col.query ?? "");
-  };
+  useEffect(() => {
+    if (!open) return;
+    setRepos(col.repos ?? []);
+  }, [open]);
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const trimmedTitle = title.trim();
-    if (trimmedTitle) updateColumnTitle(col.id, trimmedTitle);
-    updateColumnQuery(col.id, query.trim());
+    const data = new FormData(e.currentTarget);
+    const title = (data.get("title") as string).trim();
+    const query = (data.get("query") as string).trim();
+    if (title) updateColumnTitle(col.id, title);
+    if (isMultiRepo) updateColumnRepos(col.id, repos);
+    updateColumnQuery(col.id, query);
     onClose();
   };
 
@@ -44,24 +49,35 @@ export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalP
             <label htmlFor="col-settings-title">Title</label>
             <input
               id="col-settings-title"
+              name="title"
               className={modalStyles.fieldInput}
               type="text"
-              value={title}
-              onFocus={handleOpen}
-              onChange={(e) => setTitle((e.target as HTMLInputElement).value)}
+              defaultValue={col.title}
               placeholder="Enter title…"
               required
             />
           </div>
+          {isMultiRepo && (
+            <div className={styles.field}>
+              <label>Repositories</label>
+              <RepoChipList
+                repos={repos}
+                onAdd={(r) => setRepos((prev) => [...prev, r])}
+                onRemove={(r) => setRepos((prev) => prev.filter((x) => x !== r))}
+              />
+            </div>
+          )}
           <div className={styles.field}>
             <label htmlFor="col-settings-query">Filter Query</label>
             <input
               id="col-settings-query"
+              name="query"
               className={modalStyles.fieldInput}
               type="text"
-              value={query}
-              onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
-              placeholder="repo:owner/repo label:bug is:open"
+              defaultValue={col.query ?? ""}
+              placeholder={
+                isMultiRepo ? "status:failure branch:main" : "repo:owner/repo label:bug is:open"
+              }
             />
           </div>
         </ModalBody>

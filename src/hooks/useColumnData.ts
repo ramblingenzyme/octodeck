@@ -78,7 +78,7 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const login = user?.login ?? "";
 
   const tokens = useMemo(() => parseQuery(col.query ?? ""), [col.query]);
-  const repos = useMemo(() => tokens.filter((t) => t.key === "repo").map((t) => t.value), [tokens]);
+  const repos = col.repos ?? [];
 
   const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : token);
   const issuesResult = useGetIssues(col.query ?? "", demo || col.type !== "issues" ? null : token);

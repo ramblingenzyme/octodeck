@@ -47,6 +47,7 @@ export interface ColumnConfig {
   id: string;
   type: ColumnType;
   title: string;
+  repos?: string[];
   query?: string;
 }
 

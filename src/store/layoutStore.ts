@@ -8,6 +8,7 @@ import {
   applyReorder,
   applyUpdateQuery,
   applyUpdateTitle,
+  applyUpdateRepos,
 } from "./layoutMutations";
 
 interface LayoutState {
@@ -17,6 +18,7 @@ interface LayoutState {
   reorder: (from: number, to: number) => void;
   updateColumnQuery: (id: string, query: string) => void;
   updateColumnTitle: (id: string, title: string) => void;
+  updateColumnRepos: (id: string, repos: string[]) => void;
 }
 
 export const useLayoutStore = create<LayoutState>((set, get) => {
@@ -41,6 +43,9 @@ export const useLayoutStore = create<LayoutState>((set, get) => {
     },
     updateColumnTitle(id, title) {
       mutate(applyUpdateTitle(get().columns, id, title));
+    },
+    updateColumnRepos(id, repos) {
+      mutate(applyUpdateRepos(get().columns, id, repos));
     },
   };
 });

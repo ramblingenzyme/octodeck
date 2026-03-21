@@ -29,3 +29,13 @@ export function applyUpdateQuery(cols: ColumnConfig[], id: string, query: string
 export function applyUpdateTitle(cols: ColumnConfig[], id: string, title: string): ColumnConfig[] {
   return cols.map((c) => (c.id === id ? { ...c, title } : c));
 }
+
+export function applyUpdateRepos(
+  cols: ColumnConfig[],
+  id: string,
+  repos: string[],
+): ColumnConfig[] {
+  return cols.map((c) =>
+    c.id === id ? { ...c, ...(repos.length ? { repos } : { repos: undefined }) } : c,
+  );
+}
