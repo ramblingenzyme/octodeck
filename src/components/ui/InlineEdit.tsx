@@ -1,4 +1,4 @@
-import { useRef, useState } from "preact/hooks";
+import { useLayoutEffect, useRef, useState } from "preact/hooks";
 import { PencilIcon } from "./PencilIcon";
 import { SvgIcon } from "./SvgIcon";
 import styles from "./InlineEdit.module.css";
@@ -37,11 +37,17 @@ export const InlineEdit = ({
     onCancel?.();
   };
 
+  useLayoutEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(-1, -1);
+    }
+  }, [editing]);
+
   if (editing) {
     return (
       <div className={styles.editRow}>
         <textarea
-          autoFocus
           ref={textareaRef}
           className={styles.textarea}
           defaultValue={value}
