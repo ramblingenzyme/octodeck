@@ -12,7 +12,7 @@ export const RefreshIcon = ({ className }: Props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path d="M1.5 4.5v4h4" />
-    <path d="M3.5 10a6 6 0 1 0 1.8-5.8" />
+    <path d="M 8 2.5 A 5.5 5.5 0 1 1 3.24 5.25" />
+    <path d="M 6 2.5 L 8 2.5 L 8 4.5" />
   </svg>
 );

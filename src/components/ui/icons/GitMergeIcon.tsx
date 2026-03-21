@@ -12,11 +12,10 @@ export const GitMergeIcon = ({ className }: Props) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <circle cx="5" cy="4" r="2" />
-    <circle cx="5" cy="12" r="2" />
-    <circle cx="12" cy="8" r="2" />
-    <line x1="5" y1="6" x2="5" y2="10" />
-    <path d="M6.7 3.3 C9 3.3 12 5.5 12 6" />
-    <path d="M6.7 12.7 C9 12.7 12 10.5 12 10" />
+    <circle cx="4" cy="4" r="1.75" />
+    <circle cx="4" cy="12" r="1.75" />
+    <circle cx="12" cy="4" r="1.75" />
+    <line x1="4" y1="5.75" x2="4" y2="10.25" />
+    <path d="M 4 10.25 C 4 7 12 8 12 5.75" />
   </svg>
 );
