@@ -1,6 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { getItemDisplayText } from "./getItemDisplayText";
-import type { PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
+import type {
+  PRItem,
+  IssueItem,
+  CIItem,
+  NotifItem,
+  ActivityItem,
+  ReleaseItem,
+  DeploymentItem,
+  SecurityItem,
+} from "@/types";
 
 const prItem: PRItem = {
   id: 1,
@@ -79,5 +88,45 @@ describe("getItemDisplayText", () => {
 
   it("returns text for ActivityItem", () => {
     expect(getItemDisplayText(activityItem)).toBe("alice pushed 2 commits to main");
+  });
+
+  it("returns tag for ReleaseItem", () => {
+    const releaseItem: ReleaseItem = {
+      id: 6,
+      repo: "org/repo",
+      tag: "v2.0.0",
+      name: "Version 2.0.0",
+      prerelease: false,
+      age: "1d",
+      url: "https://github.com/org/repo/releases/tag/v2.0.0",
+    };
+    expect(getItemDisplayText(releaseItem)).toBe("v2.0.0");
+  });
+
+  it("returns environment for DeploymentItem", () => {
+    const deploymentItem: DeploymentItem = {
+      id: 7,
+      repo: "org/repo",
+      environment: "production",
+      status: "success",
+      ref: "main",
+      creator: "alice",
+      age: "2h",
+      url: "https://github.com/org/repo/deployments",
+    };
+    expect(getItemDisplayText(deploymentItem)).toBe("production");
+  });
+
+  it("returns summary for SecurityItem", () => {
+    const securityItem: SecurityItem = {
+      id: 8,
+      repo: "org/repo",
+      package: "lodash",
+      severity: "high",
+      summary: "Prototype pollution",
+      age: "3d",
+      url: "https://github.com/org/repo/security/dependabot/8",
+    };
+    expect(getItemDisplayText(securityItem)).toBe("Prototype pollution");
   });
 });

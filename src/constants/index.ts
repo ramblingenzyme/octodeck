@@ -5,6 +5,8 @@ import type {
   ActivityType,
   ColumnConfig,
   IconName,
+  DeploymentStatus,
+  AlertSeverity,
 } from "@/types";
 
 export const CI_STATUS: Record<CIStatus, { label: string; icon: IconName }> = {
@@ -57,6 +59,23 @@ export const COLUMN_TYPES: Record<
     defaultQuery: "",
   },
   activity: { label: "My Activity", icon: "gitCommit", itemLabel: "event", defaultQuery: "" },
+  releases: { label: "Releases", icon: "tag", itemLabel: "release", defaultQuery: "" },
+  deployments: { label: "Deployments", icon: "deploy", itemLabel: "deployment", defaultQuery: "" },
+  security: { label: "Security Alerts", icon: "shield", itemLabel: "alert", defaultQuery: "" },
+};
+
+export const DEPLOYMENT_STATUS: Record<DeploymentStatus, { label: string; icon: IconName }> = {
+  success: { label: "SUCCESS", icon: "check" },
+  failure: { label: "FAILED", icon: "x" },
+  pending: { label: "PENDING", icon: "circleDot" },
+  in_progress: { label: "IN PROGRESS", icon: "refresh" },
+};
+
+export const SEVERITY_ORDER: Record<AlertSeverity, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
 };
 
 export const mkId = (): string => crypto.randomUUID();

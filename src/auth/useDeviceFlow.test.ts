@@ -1,31 +1,36 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/preact";
 import { useDeviceFlow } from "./useDeviceFlow";
+import type { AuthState, AuthStatus } from "@/store/authStore";
 
 const mockSetError = vi.fn();
 const mockDeviceCodeReceived = vi.fn();
 const mockTokenReceived = vi.fn();
 
-// Base store state
-let storeState = {
-  status: "idle" as string,
-  token: null as string | null,
-  userCode: null as string | null,
-  verificationUri: null as string | null,
-  expiresAt: null as number | null,
-  deviceCode: null as string | null,
-  interval: 5,
-  error: null as string | null,
-  setError: mockSetError,
-  deviceCodeReceived: mockDeviceCodeReceived,
-  tokenReceived: mockTokenReceived,
-  logOut: vi.fn(),
-  clearError: vi.fn(),
-};
+function makeState(overrides: Partial<AuthState> = {}): AuthState {
+  return {
+    status: "idle" as AuthStatus,
+    token: null,
+    userCode: null,
+    verificationUri: null,
+    expiresAt: null,
+    deviceCode: null,
+    interval: 5,
+    error: null,
+    setError: mockSetError,
+    deviceCodeReceived: mockDeviceCodeReceived,
+    tokenReceived: mockTokenReceived,
+    logOut: vi.fn(),
+    clearError: vi.fn(),
+    ...overrides,
+  };
+}
+
+let storeState: AuthState = makeState();
 
 vi.mock("@/store/authStore", () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  useAuthStore: vi.fn((selector?: (s: typeof storeState) => unknown) =>
+  useAuthStore: vi.fn((selector?: (s: AuthState) => unknown) =>
     selector ? selector(storeState) : storeState,
   ) as any,
 }));
@@ -43,37 +48,23 @@ vi.mock("@/env", () => ({
 import { useAuthStore } from "@/store/authStore";
 import { requestDeviceCode, pollForToken } from "./deviceFlow";
 
-function setStatus(status: string, extra: Partial<typeof storeState> = {}) {
-  storeState = { ...storeState, status, ...extra };
+function applyMock() {
   vi.mocked(useAuthStore).mockImplementation(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((selector?: (s: typeof storeState) => unknown) =>
+    ((selector?: (s: AuthState) => unknown) =>
       selector ? selector(storeState) : storeState) as any,
   );
 }
 
+function setStatus(status: AuthStatus, extra: Partial<AuthState> = {}) {
+  storeState = makeState({ ...storeState, status, ...extra });
+  applyMock();
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
-  storeState = {
-    status: "idle",
-    token: null,
-    userCode: null,
-    verificationUri: null,
-    expiresAt: null,
-    deviceCode: null,
-    interval: 5,
-    error: null,
-    setError: mockSetError,
-    deviceCodeReceived: mockDeviceCodeReceived,
-    tokenReceived: mockTokenReceived,
-    logOut: vi.fn(),
-    clearError: vi.fn(),
-  };
-  vi.mocked(useAuthStore).mockImplementation(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((selector?: (s: typeof storeState) => unknown) =>
-      selector ? selector(storeState) : storeState) as any,
-  );
+  storeState = makeState();
+  applyMock();
 });
 
 describe("useDeviceFlow — start()", () => {
@@ -81,9 +72,10 @@ describe("useDeviceFlow — start()", () => {
     vi.resetModules();
     vi.doMock("@/env", () => ({ GITHUB_CLIENT_ID: undefined, isDemoMode: false }));
     vi.doMock("@/store/authStore", () => ({
-      useAuthStore: vi.fn((selector?: (s: typeof storeState) => unknown) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      useAuthStore: vi.fn((selector?: (s: AuthState) => unknown) =>
         selector ? selector(storeState) : storeState,
-      ),
+      ) as any,
     }));
     vi.doMock("./deviceFlow", () => ({
       requestDeviceCode: vi.fn(),

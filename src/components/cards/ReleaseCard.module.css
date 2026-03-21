@@ -1,0 +1,5 @@
+.prereleaseBadge {
+  composes: cardBadge from './Card.module.css';
+  background: color-mix(in srgb, var(--ci-running) 12%, transparent);
+  color: var(--ci-running);
+}

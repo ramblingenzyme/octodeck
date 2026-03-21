@@ -1,5 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { GHUser, GHSearchItem, GHNotification, GHWorkflowRun, GHEvent } from "@/types/github";
+import type {
+  GHUser,
+  GHSearchItem,
+  GHNotification,
+  GHWorkflowRun,
+  GHEvent,
+  GHRelease,
+  GHDeployment,
+  GHDeploymentStatus,
+  GHDependabotAlert,
+} from "@/types/github";
 
 vi.mock("./githubClient", () => ({ githubFetch: vi.fn() }));
 
@@ -22,6 +32,9 @@ import {
   useGetNotifications,
   useGetCIRuns,
   useGetActivity,
+  useGetReleases,
+  useGetDeployments,
+  useGetSecurityAlerts,
 } from "./githubQueries";
 
 const mockFetch = vi.mocked(githubFetch);
@@ -241,5 +254,170 @@ describe("useGetActivity", () => {
     const result = (await capturedFetcher!()) as unknown[];
     // PullRequestEvent should produce an item; UnknownEventType should be filtered
     expect(result.length).toBeGreaterThanOrEqual(0); // at least doesn't throw
+  });
+});
+
+const makeRelease = (id: number, published_at = "2024-01-01T00:00:00Z"): GHRelease => ({
+  id,
+  tag_name: `v${id}.0.0`,
+  name: `Release ${id}`,
+  prerelease: false,
+  html_url: `https://github.com/owner/repo/releases/tag/v${id}.0.0`,
+  published_at,
+});
+
+describe("useGetReleases", () => {
+  it("key is null when token is null", () => {
+    useGetReleases(["owner/repo"], null);
+    expect(capturedKey).toBeNull();
+  });
+
+  it("key is null when repos is empty", () => {
+    useGetReleases([], "tok");
+    expect(capturedKey).toBeNull();
+  });
+
+  it("fetcher maps releases from all repos", async () => {
+    mockFetch.mockResolvedValueOnce([makeRelease(1)]).mockResolvedValueOnce([makeRelease(2)]);
+
+    useGetReleases(["owner/repo1", "owner/repo2"], "tok");
+    expect(capturedKey).toEqual(["releases", ["owner/repo1", "owner/repo2"], "tok"]);
+
+    const result = (await capturedFetcher!()) as Array<{ id: number }>;
+    expect(result).toHaveLength(2);
+  });
+
+  it("slices repos to 5", async () => {
+    mockFetch.mockResolvedValue([]);
+    useGetReleases(["r1", "r2", "r3", "r4", "r5", "r6"], "tok");
+    await capturedFetcher!();
+    expect(mockFetch).toHaveBeenCalledTimes(5);
+  });
+
+  it("isolates per-repo errors", async () => {
+    mockFetch
+      .mockResolvedValueOnce([makeRelease(1)])
+      .mockRejectedValueOnce(new Error("403 Forbidden"));
+
+    useGetReleases(["owner/repo1", "owner/repo2"], "tok");
+    const result = (await capturedFetcher!()) as unknown[];
+    expect(result).toHaveLength(1);
+  });
+
+  it("sorts by age and slices to 20", async () => {
+    const releases = Array.from({ length: 25 }, (_, i) =>
+      makeRelease(i, `2024-01-${String(i + 1).padStart(2, "0")}T00:00:00Z`),
+    );
+    mockFetch.mockResolvedValueOnce(releases);
+
+    useGetReleases(["owner/repo"], "tok");
+    const result = (await capturedFetcher!()) as unknown[];
+    expect(result).toHaveLength(20);
+  });
+});
+
+const makeDeployment = (id: number): GHDeployment => ({
+  id,
+  ref: "main",
+  environment: "production",
+  creator: { login: "alice" },
+  created_at: "2024-01-01T00:00:00Z",
+});
+
+const successStatus: GHDeploymentStatus = { state: "success" };
+
+describe("useGetDeployments", () => {
+  it("key is null when token is null", () => {
+    useGetDeployments(["owner/repo"], null);
+    expect(capturedKey).toBeNull();
+  });
+
+  it("key is null when repos is empty", () => {
+    useGetDeployments([], "tok");
+    expect(capturedKey).toBeNull();
+  });
+
+  it("fetches deployments then their statuses", async () => {
+    mockFetch
+      .mockResolvedValueOnce([makeDeployment(1)]) // deployments list
+      .mockResolvedValueOnce([successStatus]); // statuses for deployment 1
+
+    useGetDeployments(["owner/repo"], "tok");
+    const result = (await capturedFetcher!()) as Array<{ status: string }>;
+    expect(result).toHaveLength(1);
+    expect(result[0]!.status).toBe("success");
+  });
+
+  it("maps unknown status state to pending", async () => {
+    mockFetch
+      .mockResolvedValueOnce([makeDeployment(1)])
+      .mockResolvedValueOnce([{ state: "inactive" } as GHDeploymentStatus]);
+
+    useGetDeployments(["owner/repo"], "tok");
+    const result = (await capturedFetcher!()) as Array<{ status: string }>;
+    expect(result[0]!.status).toBe("pending");
+  });
+
+  it("falls back to pending when status fetch fails", async () => {
+    mockFetch.mockResolvedValueOnce([makeDeployment(1)]).mockRejectedValueOnce(new Error("404"));
+
+    useGetDeployments(["owner/repo"], "tok");
+    const result = (await capturedFetcher!()) as Array<{ status: string }>;
+    expect(result[0]!.status).toBe("pending");
+  });
+
+  it("isolates per-repo errors", async () => {
+    // Both deployment list fetches start in parallel (repo1 first, repo2 second),
+    // then status fetch for repo1's deployment runs third.
+    mockFetch
+      .mockResolvedValueOnce([makeDeployment(1)]) // repo1 deployments
+      .mockRejectedValueOnce(new Error("Network error")) // repo2 deployments (fails)
+      .mockResolvedValueOnce([successStatus]); // repo1 deployment 1 statuses
+
+    useGetDeployments(["owner/repo1", "owner/repo2"], "tok");
+    const result = (await capturedFetcher!()) as unknown[];
+    expect(result).toHaveLength(1);
+  });
+});
+
+const makeAlert = (num: number, severity = "high"): GHDependabotAlert => ({
+  number: num,
+  html_url: `https://github.com/owner/repo/security/dependabot/${num}`,
+  created_at: "2024-01-01T00:00:00Z",
+  security_advisory: { summary: "A vulnerability", severity },
+  dependency: { package: { name: "some-pkg" } },
+});
+
+describe("useGetSecurityAlerts", () => {
+  it("key is null when token is null", () => {
+    useGetSecurityAlerts(["owner/repo"], null);
+    expect(capturedKey).toBeNull();
+  });
+
+  it("key is null when repos is empty", () => {
+    useGetSecurityAlerts([], "tok");
+    expect(capturedKey).toBeNull();
+  });
+
+  it("fetcher maps alerts from all repos", async () => {
+    mockFetch
+      .mockResolvedValueOnce([makeAlert(1), makeAlert(2)])
+      .mockResolvedValueOnce([makeAlert(3)]);
+
+    useGetSecurityAlerts(["owner/repo1", "owner/repo2"], "tok");
+    expect(capturedKey).toEqual(["security", ["owner/repo1", "owner/repo2"], "tok"]);
+
+    const result = (await capturedFetcher!()) as unknown[];
+    expect(result).toHaveLength(3);
+  });
+
+  it("isolates per-repo errors", async () => {
+    mockFetch
+      .mockResolvedValueOnce([makeAlert(1)])
+      .mockRejectedValueOnce(new Error("403 Forbidden"));
+
+    useGetSecurityAlerts(["owner/repo1", "owner/repo2"], "tok");
+    const result = (await capturedFetcher!()) as unknown[];
+    expect(result).toHaveLength(1);
   });
 });

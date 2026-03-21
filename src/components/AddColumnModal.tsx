@@ -6,6 +6,9 @@ import issueStyles from "./columns/IssueColumn.module.css";
 import ciStyles from "./columns/CIColumn.module.css";
 import notifStyles from "./columns/NotifColumn.module.css";
 import activityStyles from "./columns/ActivityColumn.module.css";
+import releasesStyles from "./columns/ReleasesColumn.module.css";
+import deploymentsStyles from "./columns/DeploymentsColumn.module.css";
+import securityStyles from "./columns/SecurityColumn.module.css";
 
 const ACCENT_CLASS: Record<ColumnType, string | undefined> = {
   prs: prStyles.accent,
@@ -13,6 +16,9 @@ const ACCENT_CLASS: Record<ColumnType, string | undefined> = {
   ci: ciStyles.accent,
   notifications: notifStyles.accent,
   activity: activityStyles.accent,
+  releases: releasesStyles.accent,
+  deployments: deploymentsStyles.accent,
+  security: securityStyles.accent,
 };
 import { SvgIcon } from "./ui/SvgIcon";
 import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";

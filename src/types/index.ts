@@ -1,4 +1,12 @@
-export type ColumnType = "prs" | "issues" | "ci" | "notifications" | "activity";
+export type ColumnType =
+  | "prs"
+  | "issues"
+  | "ci"
+  | "notifications"
+  | "activity"
+  | "releases"
+  | "deployments"
+  | "security";
 export type IconName =
   | "check"
   | "x"
@@ -17,7 +25,9 @@ export type IconName =
   | "tag"
   | "gitBranch"
   | "gitFork"
-  | "star";
+  | "star"
+  | "deploy"
+  | "shield";
 export type CIStatus = "success" | "failure" | "running";
 export type IssueState = "open" | "closed";
 export type CITrigger = "push" | "pull_request" | "release";
@@ -104,7 +114,49 @@ export interface Label {
   color: string;
 }
 
-export type KnownItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;
+export type DeploymentStatus = "success" | "failure" | "pending" | "in_progress";
+export type AlertSeverity = "critical" | "high" | "medium" | "low";
+
+export interface ReleaseItem {
+  id: number;
+  repo: string;
+  tag: string;
+  name: string;
+  prerelease: boolean;
+  age: string;
+  url: string;
+}
+
+export interface DeploymentItem {
+  id: number;
+  repo: string;
+  environment: string;
+  status: DeploymentStatus;
+  ref: string;
+  creator: string;
+  age: string;
+  url: string;
+}
+
+export interface SecurityItem {
+  id: number;
+  repo: string;
+  package: string;
+  severity: AlertSeverity;
+  summary: string;
+  age: string;
+  url: string;
+}
+
+export type KnownItem =
+  | PRItem
+  | IssueItem
+  | CIItem
+  | NotifItem
+  | ActivityItem
+  | ReleaseItem
+  | DeploymentItem
+  | SecurityItem;
 export type AnyItem = KnownItem | FallbackItem;
 
 export interface FallbackItem {

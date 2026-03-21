@@ -1,6 +1,15 @@
 import { useCallback, useMemo } from "preact/hooks";
 import { isDemoMode } from "@/env";
-import { MOCK_PRS, MOCK_ISSUES, MOCK_CI, MOCK_NOTIFS, MOCK_ACTIVITY } from "@/test/fixtures/mock";
+import {
+  MOCK_PRS,
+  MOCK_ISSUES,
+  MOCK_CI,
+  MOCK_NOTIFS,
+  MOCK_ACTIVITY,
+  MOCK_RELEASES,
+  MOCK_DEPLOYMENTS,
+  MOCK_SECURITY,
+} from "@/test/fixtures/mock";
 import {
   useGetPRs,
   useGetIssues,
@@ -8,6 +17,9 @@ import {
   useGetCIRuns,
   useGetActivity,
   useGetUser,
+  useGetReleases,
+  useGetDeployments,
+  useGetSecurityAlerts,
 } from "@/store/githubQueries";
 import { useAuthStore } from "@/store/authStore";
 import type { ColumnConfig, KnownItem, AnyItem } from "@/types";
@@ -53,6 +65,9 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
   ci: MOCK_CI,
   notifications: MOCK_NOTIFS,
   activity: MOCK_ACTIVITY,
+  releases: MOCK_RELEASES,
+  deployments: MOCK_DEPLOYMENTS,
+  security: MOCK_SECURITY,
 };
 
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
@@ -72,6 +87,15 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const activityResult = useGetActivity(
     login,
     demo || col.type !== "activity" || !login ? null : token,
+  );
+  const releasesResult = useGetReleases(repos, demo || col.type !== "releases" ? null : token);
+  const deploymentsResult = useGetDeployments(
+    repos,
+    demo || col.type !== "deployments" ? null : token,
+  );
+  const securityResult = useGetSecurityAlerts(
+    repos,
+    demo || col.type !== "security" ? null : token,
   );
 
   const filter = useCallback(
@@ -103,6 +127,12 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
       return toResult(ciResult, "Failed to load CI runs", filter, true);
     case "activity":
       return toResult(activityResult, "Failed to load activity", filter, true);
+    case "releases":
+      return toResult(releasesResult, "Failed to load releases", filter, true);
+    case "deployments":
+      return toResult(deploymentsResult, "Failed to load deployments", filter, true);
+    case "security":
+      return toResult(securityResult, "Failed to load security alerts", filter, true);
     default:
       return { data: [], isLoading: false, isFetching: false, error: null, refetch: noop };
   }

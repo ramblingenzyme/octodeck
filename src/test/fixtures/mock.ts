@@ -1,4 +1,13 @@
-import type { PRItem, IssueItem, CIItem, NotifItem, ActivityItem } from "@/types";
+import type {
+  PRItem,
+  IssueItem,
+  CIItem,
+  NotifItem,
+  ActivityItem,
+  ReleaseItem,
+  DeploymentItem,
+  SecurityItem,
+} from "@/types";
 
 export const MOCK_PRS: PRItem[] = [
   {
@@ -269,6 +278,127 @@ export const MOCK_NOTIFS: NotifItem[] = [
     ref: "PR #419",
     age: "1d",
     url: "https://github.com/acme/api/pull/419",
+  },
+];
+
+export const MOCK_RELEASES: ReleaseItem[] = [
+  {
+    id: 1,
+    repo: "acme/api",
+    tag: "v2.4.1",
+    name: "v2.4.1 — Hotfix: rate limiter",
+    prerelease: false,
+    age: "1d",
+    url: "https://github.com/acme/api/releases/tag/v2.4.1",
+  },
+  {
+    id: 2,
+    repo: "acme/ml-core",
+    tag: "v1.9.0",
+    name: "v1.9.0 — Streaming support",
+    prerelease: false,
+    age: "3d",
+    url: "https://github.com/acme/ml-core/releases/tag/v1.9.0",
+  },
+  {
+    id: 3,
+    repo: "acme/frontend",
+    tag: "v3.0.0-rc.1",
+    name: "v3.0.0 Release Candidate 1",
+    prerelease: true,
+    age: "5h",
+    url: "https://github.com/acme/frontend/releases/tag/v3.0.0-rc.1",
+  },
+  {
+    id: 4,
+    repo: "acme/cli",
+    tag: "v0.12.0",
+    name: "v0.12.0 — Windows path fixes",
+    prerelease: false,
+    age: "1w",
+    url: "https://github.com/acme/cli/releases/tag/v0.12.0",
+  },
+];
+
+export const MOCK_DEPLOYMENTS: DeploymentItem[] = [
+  {
+    id: 1,
+    repo: "acme/api",
+    environment: "production",
+    status: "success",
+    ref: "v2.4.1",
+    creator: "priya_d",
+    age: "1d",
+    url: "https://github.com/acme/api/deployments",
+  },
+  {
+    id: 2,
+    repo: "acme/frontend",
+    environment: "staging",
+    status: "in_progress",
+    ref: "main",
+    creator: "jliu",
+    age: "12m",
+    url: "https://github.com/acme/frontend/deployments",
+  },
+  {
+    id: 3,
+    repo: "acme/worker",
+    environment: "production",
+    status: "failure",
+    ref: "v1.3.2",
+    creator: "themarcus",
+    age: "6h",
+    url: "https://github.com/acme/worker/deployments",
+  },
+  {
+    id: 4,
+    repo: "acme/ml-core",
+    environment: "staging",
+    status: "pending",
+    ref: "feat/streaming",
+    creator: "sarahk",
+    age: "2h",
+    url: "https://github.com/acme/ml-core/deployments",
+  },
+];
+
+export const MOCK_SECURITY: SecurityItem[] = [
+  {
+    id: 1,
+    repo: "acme/frontend",
+    package: "lodash",
+    severity: "high",
+    summary: "Prototype pollution via zipObjectDeep",
+    age: "2d",
+    url: "https://github.com/acme/frontend/security/dependabot/1",
+  },
+  {
+    id: 2,
+    repo: "acme/api",
+    package: "axios",
+    severity: "medium",
+    summary: "Server-side request forgery in redirect handling",
+    age: "5d",
+    url: "https://github.com/acme/api/security/dependabot/2",
+  },
+  {
+    id: 3,
+    repo: "acme/ml-core",
+    package: "numpy",
+    severity: "critical",
+    summary: "Buffer overflow in ndarray operations",
+    age: "1d",
+    url: "https://github.com/acme/ml-core/security/dependabot/3",
+  },
+  {
+    id: 4,
+    repo: "acme/worker",
+    package: "semver",
+    severity: "low",
+    summary: "Regular expression denial of service",
+    age: "1w",
+    url: "https://github.com/acme/worker/security/dependabot/4",
   },
 ];
 

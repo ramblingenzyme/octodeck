@@ -5,8 +5,19 @@ import {
   mapNotification,
   mapWorkflowRun,
   mapEvent,
+  mapRelease,
+  mapDeployment,
+  mapDependabotAlert,
 } from "./githubMappers";
-import type { GHSearchItem, GHNotification, GHWorkflowRun, GHEvent } from "@/types/github";
+import type {
+  GHSearchItem,
+  GHNotification,
+  GHWorkflowRun,
+  GHEvent,
+  GHRelease,
+  GHDeployment,
+  GHDependabotAlert,
+} from "@/types/github";
 
 const baseItem: GHSearchItem = {
   id: 1,
@@ -327,5 +338,102 @@ describe("mapEvent", () => {
     const item1 = mapEvent(e as GHEvent);
     const item2 = mapEvent(e as GHEvent);
     expect(item1!.id).toBe(item2!.id);
+  });
+});
+
+const baseRelease: GHRelease = {
+  id: 100,
+  tag_name: "v1.2.3",
+  name: "Version 1.2.3",
+  prerelease: false,
+  html_url: "https://github.com/owner/repo/releases/tag/v1.2.3",
+  published_at: "2024-01-01T00:00:00Z",
+};
+
+describe("mapRelease", () => {
+  it("maps basic fields", () => {
+    const r = mapRelease(baseRelease, "owner/repo");
+    expect(r.id).toBe(100);
+    expect(r.repo).toBe("owner/repo");
+    expect(r.tag).toBe("v1.2.3");
+    expect(r.name).toBe("Version 1.2.3");
+    expect(r.prerelease).toBe(false);
+    expect(r.url).toBe("https://github.com/owner/repo/releases/tag/v1.2.3");
+  });
+
+  it("falls back to tag_name when name is null", () => {
+    const r = mapRelease({ ...baseRelease, name: null }, "owner/repo");
+    expect(r.name).toBe("v1.2.3");
+  });
+
+  it("sets prerelease to true for pre-release", () => {
+    const r = mapRelease({ ...baseRelease, prerelease: true }, "owner/repo");
+    expect(r.prerelease).toBe(true);
+  });
+});
+
+const baseDeployment: GHDeployment = {
+  id: 200,
+  ref: "main",
+  environment: "production",
+  creator: { login: "alice" },
+  created_at: "2024-01-01T00:00:00Z",
+};
+
+describe("mapDeployment", () => {
+  it("maps basic fields", () => {
+    const d = mapDeployment(baseDeployment, "success", "owner/repo");
+    expect(d.id).toBe(200);
+    expect(d.repo).toBe("owner/repo");
+    expect(d.environment).toBe("production");
+    expect(d.status).toBe("success");
+    expect(d.ref).toBe("main");
+    expect(d.creator).toBe("alice");
+  });
+
+  it("passes through all status values", () => {
+    expect(mapDeployment(baseDeployment, "failure", "owner/repo").status).toBe("failure");
+    expect(mapDeployment(baseDeployment, "pending", "owner/repo").status).toBe("pending");
+    expect(mapDeployment(baseDeployment, "in_progress", "owner/repo").status).toBe("in_progress");
+  });
+
+  it("constructs a github deployments URL", () => {
+    const d = mapDeployment(baseDeployment, "success", "owner/repo");
+    expect(d.url).toBe("https://github.com/owner/repo/deployments");
+  });
+});
+
+const baseAlert: GHDependabotAlert = {
+  number: 42,
+  html_url: "https://github.com/owner/repo/security/dependabot/42",
+  created_at: "2024-01-01T00:00:00Z",
+  security_advisory: {
+    summary: "Prototype pollution in lodash",
+    severity: "high",
+  },
+  dependency: {
+    package: { name: "lodash" },
+  },
+};
+
+describe("mapDependabotAlert", () => {
+  it("maps basic fields", () => {
+    const s = mapDependabotAlert(baseAlert, "owner/repo");
+    expect(s.id).toBe(42);
+    expect(s.repo).toBe("owner/repo");
+    expect(s.package).toBe("lodash");
+    expect(s.severity).toBe("high");
+    expect(s.summary).toBe("Prototype pollution in lodash");
+    expect(s.url).toBe("https://github.com/owner/repo/security/dependabot/42");
+  });
+
+  it("maps all severity levels", () => {
+    for (const severity of ["critical", "high", "medium", "low"] as const) {
+      const s = mapDependabotAlert(
+        { ...baseAlert, security_advisory: { ...baseAlert.security_advisory, severity } },
+        "owner/repo",
+      );
+      expect(s.severity).toBe(severity);
+    }
   });
 });

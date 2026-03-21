@@ -62,6 +62,40 @@ export interface GHWorkflowRunsResult {
   workflow_runs: GHWorkflowRun[];
 }
 
+export interface GHRelease {
+  id: number;
+  tag_name: string;
+  name: string | null;
+  prerelease: boolean;
+  html_url: string;
+  published_at: string;
+}
+
+export interface GHDeployment {
+  id: number;
+  ref: string;
+  environment: string;
+  creator: { login: string };
+  created_at: string;
+}
+
+export interface GHDeploymentStatus {
+  state: string;
+}
+
+export interface GHDependabotAlert {
+  number: number;
+  html_url: string;
+  created_at: string;
+  security_advisory: {
+    summary: string;
+    severity: string;
+  };
+  dependency: {
+    package: { name: string };
+  };
+}
+
 export interface GHEvent {
   id: string;
   type: string;

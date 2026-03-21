@@ -1,0 +1,18 @@
+.success {
+  --deploy-color: var(--ci-success);
+}
+.failure {
+  --deploy-color: var(--ci-failure);
+}
+.pending {
+  --deploy-color: var(--text-muted);
+}
+.in_progress {
+  --deploy-color: var(--ci-running);
+}
+
+.deployBadge {
+  composes: cardBadge from './Card.module.css';
+  background: color-mix(in srgb, var(--deploy-color, var(--text-muted)) 12%, transparent);
+  color: var(--deploy-color, var(--text-muted));
+}

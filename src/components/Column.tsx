@@ -12,6 +12,15 @@ const NotifColumn = lazy(() =>
 const ActivityColumn = lazy(() =>
   import("./columns/ActivityColumn").then((m) => ({ default: m.ActivityColumn })),
 );
+const ReleasesColumn = lazy(() =>
+  import("./columns/ReleasesColumn").then((m) => ({ default: m.ReleasesColumn })),
+);
+const DeploymentsColumn = lazy(() =>
+  import("./columns/DeploymentsColumn").then((m) => ({ default: m.DeploymentsColumn })),
+);
+const SecurityColumn = lazy(() =>
+  import("./columns/SecurityColumn").then((m) => ({ default: m.SecurityColumn })),
+);
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -48,6 +57,24 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
       return (
         <Suspense fallback={null}>
           <ActivityColumn col={col} onRemove={onRemove} />
+        </Suspense>
+      );
+    case "releases":
+      return (
+        <Suspense fallback={null}>
+          <ReleasesColumn col={col} onRemove={onRemove} />
+        </Suspense>
+      );
+    case "deployments":
+      return (
+        <Suspense fallback={null}>
+          <DeploymentsColumn col={col} onRemove={onRemove} />
+        </Suspense>
+      );
+    case "security":
+      return (
+        <Suspense fallback={null}>
+          <SecurityColumn col={col} onRemove={onRemove} />
         </Suspense>
       );
   }

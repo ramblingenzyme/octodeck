@@ -6,8 +6,21 @@ import type {
   ActivityItem,
   NotifType,
   CIStatus,
+  ReleaseItem,
+  DeploymentItem,
+  DeploymentStatus,
+  SecurityItem,
+  AlertSeverity,
 } from "@/types";
-import type { GHSearchItem, GHNotification, GHWorkflowRun, GHEvent } from "@/types/github";
+import type {
+  GHSearchItem,
+  GHNotification,
+  GHWorkflowRun,
+  GHEvent,
+  GHRelease,
+  GHDeployment,
+  GHDependabotAlert,
+} from "@/types/github";
 import { formatAge } from "@/utils/relativeTime";
 
 function repoFromUrl(url: string): string {
@@ -111,6 +124,48 @@ export function mapWorkflowRun(run: GHWorkflowRun, repoFullName: string): CIItem
     age: formatAge(run.created_at),
     triggered: triggerMap[run.event] ?? "push",
     url: run.html_url,
+  };
+}
+
+export function mapRelease(r: GHRelease, repo: string): ReleaseItem {
+  return {
+    id: r.id,
+    repo,
+    tag: r.tag_name,
+    name: r.name ?? r.tag_name,
+    prerelease: r.prerelease,
+    age: formatAge(r.published_at),
+    url: r.html_url,
+  };
+}
+
+export function mapDeployment(
+  d: GHDeployment,
+  status: DeploymentStatus,
+  repo: string,
+): DeploymentItem {
+  return {
+    id: d.id,
+    repo,
+    environment: d.environment,
+    status,
+    ref: d.ref,
+    creator: d.creator.login,
+    age: formatAge(d.created_at),
+    url: `https://github.com/${repo}/deployments`,
+  };
+}
+
+export function mapDependabotAlert(a: GHDependabotAlert, repo: string): SecurityItem {
+  const severity = a.security_advisory.severity as AlertSeverity;
+  return {
+    id: a.number,
+    repo,
+    package: a.dependency.package.name,
+    severity,
+    summary: a.security_advisory.summary,
+    age: formatAge(a.created_at),
+    url: a.html_url,
   };
 }
 

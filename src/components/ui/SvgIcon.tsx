@@ -18,6 +18,8 @@ import { TagIcon } from "./icons/TagIcon";
 import { GitBranchIcon } from "./icons/GitBranchIcon";
 import { GitForkIcon } from "./icons/GitForkIcon";
 import { StarIcon } from "./icons/StarIcon";
+import { DeployIcon } from "./icons/DeployIcon";
+import { ShieldIcon } from "./icons/ShieldIcon";
 
 const ICON_MAP = {
   check: CheckIcon,
@@ -38,6 +40,8 @@ const ICON_MAP = {
   gitBranch: GitBranchIcon,
   gitFork: GitForkIcon,
   star: StarIcon,
+  deploy: DeployIcon,
+  shield: ShieldIcon,
 } as const;
 
 export const SvgIcon = ({ name, className }: { name: IconName; className?: string }) => {
