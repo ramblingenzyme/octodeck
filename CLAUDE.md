@@ -23,7 +23,7 @@ npm run test:watch  # Run tests in watch mode
 - `src/types/index.ts` — `ColumnType` discriminated union (`prs | issues | ci | notifications | activity`) and item types
 - `src/constants/index.ts` — `COLUMN_TYPES` config (labels/icons per type), `DEFAULT_COLUMNS`, `mkId()`
 - `src/store/configApi.ts` — RTK Query API for column layout mutations (add, remove, move); persists to `localStorage` via `layoutStorage.ts`
-- `src/test/fixtures/mock.ts` — Mock data arrays (`MOCK_PRS`, `MOCK_ISSUES`, etc.)
+- `test/fixtures/mock.ts` — Mock data arrays (`MOCK_PRS`, `MOCK_ISSUES`, etc.)
 
 ### Component tree
 
@@ -51,4 +51,21 @@ App.tsx (Redux + modal state)
 
 ## Plans
 
-Persist plans to `.claude/plans/YYYY-MM-DD-<description>.md` (see `AGENTS.md`).
+Persist plans to `.claude/plans/YYYY-MM-DD-<description>.md`.
+
+- Name example: `.claude/plans/2026-03-21-add-filter-tokens.md`
+- Start with a **Context** section (why the change is needed), then list files to modify, reusable utilities, and a verification section.
+
+## Tests
+
+Tests live in `test/` mirroring `src/` structure (e.g. `src/utils/foo.ts` → `test/utils/foo.test.ts`).
+
+- **Framework**: Vitest with `happy-dom` environment
+- **Component tests**: `@testing-library/preact` — always call `afterEach(cleanup)`
+- **Imports**: `describe`, `it`, `expect`, `vi` from `vitest`; `render`, `screen`, `userEvent` from `@testing-library/preact`
+- **Fixtures**: shared mock data in `test/fixtures/mock.ts` (`MOCK_PRS`, `MOCK_ISSUES`, etc.)
+- **Mocks**: `vi.fn()` for callbacks; prefer `vi.spyOn` over module-level mocks
+- **Assertions**: test via semantic roles (`role="article"`, `role="button"`) not implementation details
+- **Coverage**: `npm test -- --coverage`
+
+Run a single test file: `npm test -- test/utils/queryFilter.test.ts`
