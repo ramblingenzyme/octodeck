@@ -9,7 +9,7 @@ import {
   MOCK_RELEASES,
   MOCK_DEPLOYMENTS,
   MOCK_SECURITY,
-} from "@/test/fixtures/mock";
+} from "@/demo/mock";
 import {
   useGetPRs,
   useGetIssues,
