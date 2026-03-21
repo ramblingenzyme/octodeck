@@ -27,7 +27,7 @@ export function mapSearchItemToPR(item: GHSearchItem): PRItem {
     comments: item.comments,
     draft: item.draft ?? false,
     age: formatAge(item.updated_at),
-    labels: item.labels.map((l) => l.name),
+    labels: item.labels.map((l) => ({ name: l.name, color: l.color })),
     url: item.html_url,
   };
 }
@@ -38,7 +38,7 @@ export function mapSearchItemToIssue(item: GHSearchItem): IssueItem {
     title: item.title,
     repo: repoFromUrl(item.repository_url),
     number: item.number,
-    labels: item.labels.map((l) => l.name),
+    labels: item.labels.map((l) => ({ name: l.name, color: l.color })),
     assignee: item.assignees?.[0]?.login ?? null,
     comments: item.comments,
     age: formatAge(item.updated_at),

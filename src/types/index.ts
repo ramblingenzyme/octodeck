@@ -50,7 +50,7 @@ export interface PRItem {
   comments: number;
   draft: boolean;
   age: string;
-  labels: string[];
+  labels: Label[];
   url: string;
 }
 
@@ -59,7 +59,7 @@ export interface IssueItem {
   title: string;
   repo: string;
   number: number;
-  labels: string[];
+  labels: Label[];
   assignee: string | null;
   comments: number;
   age: string;
@@ -97,6 +97,11 @@ export interface ActivityItem {
   age: string;
   ref?: string;
   url: string;
+}
+
+export interface Label {
+  name: string;
+  color: string;
 }
 
 export type KnownItem = PRItem | IssueItem | CIItem | NotifItem | ActivityItem;

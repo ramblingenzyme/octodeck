@@ -13,7 +13,7 @@ export interface GHSearchItem {
   draft?: boolean;
   user: { login: string };
   repository_url: string;
-  labels: Array<{ name: string }>;
+  labels: Array<{ name: string; color: string }>;
   comments: number;
   created_at: string;
   updated_at: string;

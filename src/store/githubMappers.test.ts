@@ -16,7 +16,10 @@ const baseItem: GHSearchItem = {
   state: "open",
   user: { login: "alice" },
   repository_url: "https://api.github.com/repos/owner/repo",
-  labels: [{ name: "bug" }, { name: "urgent" }],
+  labels: [
+    { name: "bug", color: "d73a4a" },
+    { name: "urgent", color: "fca5a5" },
+  ],
   comments: 3,
   created_at: "2024-01-01T00:00:00Z",
   updated_at: "2024-01-02T00:00:00Z",
@@ -31,7 +34,10 @@ describe("mapSearchItemToPR", () => {
     expect(pr.author).toBe("alice");
     expect(pr.number).toBe(42);
     expect(pr.comments).toBe(3);
-    expect(pr.labels).toEqual(["bug", "urgent"]);
+    expect(pr.labels).toEqual([
+      { name: "bug", color: "d73a4a" },
+      { name: "urgent", color: "fca5a5" },
+    ]);
     expect(pr.url).toBe("https://github.com/owner/repo/pull/42");
   });
 

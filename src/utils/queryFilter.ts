@@ -34,7 +34,7 @@ export function matchesTokens(item: KnownItem, tokens: ReturnType<typeof parseQu
       case "label":
         return (
           "labels" in item &&
-          (item as PRItem | IssueItem).labels.some((l) => l.toLowerCase() === value)
+          (item as PRItem | IssueItem).labels.some((l) => l.name.toLowerCase() === value)
         );
       case "is":
         if (value === "draft") return "draft" in item && (item as PRItem).draft === true;

@@ -12,7 +12,10 @@ const basePR: PRItem = {
   comments: 2,
   draft: false,
   age: "1h",
-  labels: ["bug", "urgent"],
+  labels: [
+    { name: "bug", color: "d73a4a" },
+    { name: "urgent", color: "fca5a5" },
+  ],
   url: "https://github.com/acme/api/pull/42",
 };
 
@@ -21,7 +24,7 @@ const baseIssue: IssueItem = {
   title: "Fix crash",
   repo: "acme/web",
   number: 7,
-  labels: ["bug"],
+  labels: [{ name: "bug", color: "d73a4a" }],
   assignee: "bob",
   comments: 0,
   age: "2d",

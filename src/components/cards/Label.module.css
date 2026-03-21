@@ -13,44 +13,29 @@
   letter-spacing: 0.03em;
 }
 
+.colored {
+  --lightness-threshold: 0.6;
+  --perceived-lightness: calc(
+    (var(--label-r) * 0.2126 + var(--label-g) * 0.7152 + var(--label-b) * 0.0722) / 255
+  );
+  --lightness-switch: max(
+    0,
+    min(calc(1 / (var(--lightness-threshold) - var(--perceived-lightness))), 1)
+  );
+  --lighten-by: calc(
+    (var(--lightness-threshold) - var(--perceived-lightness)) * 100 * var(--lightness-switch)
+  );
+
+  color: hsl(
+    var(--label-h),
+    calc(var(--label-s) * 1%),
+    calc(var(--label-l) * 1% + var(--lighten-by) * 1%)
+  );
+  background-color: rgba(var(--label-r), var(--label-g), var(--label-b), 0.18);
+  border: 1px solid rgba(var(--label-r), var(--label-g), var(--label-b), 0.3);
+}
+
 .fallback {
   color: #9ca3af;
   background: color-mix(in srgb, #9ca3af 12%, transparent);
-}
-.bug {
-  color: var(--accent-issues);
-  background: color-mix(in srgb, var(--accent-issues) 12%, transparent);
-}
-.critical,
-.urgent {
-  color: #fca5a5;
-  background: color-mix(in srgb, #fca5a5 12%, transparent);
-}
-.enhancement {
-  color: var(--ci-success);
-  background: color-mix(in srgb, var(--ci-success) 12%, transparent);
-}
-.refactor {
-  color: var(--accent-prs);
-  background: color-mix(in srgb, var(--accent-prs) 12%, transparent);
-}
-.documentation {
-  color: #86efac;
-  background: color-mix(in srgb, #86efac 12%, transparent);
-}
-.dependencies {
-  color: #9ca3af;
-  background: color-mix(in srgb, #9ca3af 12%, transparent);
-}
-.perf {
-  color: #6ee7b7;
-  background: color-mix(in srgb, #6ee7b7 12%, transparent);
-}
-.platform {
-  color: #a5b4fc;
-  background: color-mix(in srgb, #a5b4fc 12%, transparent);
-}
-.observability {
-  color: var(--accent-activity);
-  background: color-mix(in srgb, var(--accent-activity) 12%, transparent);
 }
