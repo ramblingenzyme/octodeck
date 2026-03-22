@@ -1,6 +1,6 @@
 import type { ReleaseItem } from "@/types";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
-import cardStyles from "./Card.module.css";
+import cardStyles from "../ui/Card.module.css";
 import styles from "./ReleaseCard.module.css";
 
 interface ReleaseCardProps {

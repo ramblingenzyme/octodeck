@@ -2,7 +2,7 @@ import type { PRItem } from "@/types";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { LabelList } from "./LabelList";
 import { CardStat } from "./CardParts";
-import cardStyles from "./Card.module.css";
+import cardStyles from "../ui/Card.module.css";
 import styles from "./PRCard.module.css";
 
 interface PRCardProps {

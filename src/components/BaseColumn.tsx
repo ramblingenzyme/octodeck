@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import type { ReactNode } from "preact/compat";
 import type { ColumnConfig, AnyItem } from "@/types";
 import { useColumnData } from "@/hooks/useColumnData";
@@ -28,6 +28,14 @@ export const BaseColumn = ({ col, onRemove, renderCard, accentClass }: BaseColum
 
   const { data, isLoading, isFetching, error, warnings, refetch } = useColumnData(col);
   const [warnDismissed, setWarnDismissed] = useState(false);
+  const prevWarningsKey = useRef("");
+  useEffect(() => {
+    const key = warnings.join("\n");
+    if (key !== prevWarningsKey.current) {
+      prevWarningsKey.current = key;
+      setWarnDismissed(false);
+    }
+  }, [warnings]);
   const { spinning, lastUpdated, handleRefresh } = useRefreshSpinner(isFetching, refetch);
   const { ref, handleRef, isDragging, dropEdge } = useColumnDragDrop(col.id);
 

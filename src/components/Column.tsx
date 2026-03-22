@@ -77,5 +77,8 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
           <SecurityColumn col={col} onRemove={onRemove} />
         </Suspense>
       );
+    default:
+      col.type satisfies never;
+      return null;
   }
 };

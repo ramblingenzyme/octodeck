@@ -104,6 +104,9 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const tokens = useMemo(() => parseQuery(col.query ?? ""), [col.query]);
   const repos = col.repos ?? [];
 
+  // All query hooks are called unconditionally — React's rules of hooks forbid
+  // conditional hook calls. SWR skips fetching when the key (token) is null, so
+  // only the hook matching col.type will ever make a network request.
   const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : token);
   const issuesResult = useGetIssues(col.query ?? "", demo || col.type !== "issues" ? null : token);
   const notifsResult = useGetNotifications(demo || col.type !== "notifications" ? null : token);
@@ -130,6 +133,8 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
 
   if (demo) {
     const demoData = DEMO_DATA_MAP[col.type] ?? [];
+    // PRs and issues use the GitHub Search API, which applies the query server-side.
+    // All other column types fetch pre-built lists and need client-side filtering.
     const shouldFilter = col.type !== "prs" && col.type !== "issues";
     return {
       data: shouldFilter ? filter(demoData) : demoData,

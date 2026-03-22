@@ -20,8 +20,8 @@ export const Tooltip = ({
   const popoverRef = useRef<HTMLSpanElement>(null);
   const anchorName = `--tooltip-${id.replace(/:/g, "")}`;
 
-  const show = () => (popoverRef.current as any)?.showPopover?.();
-  const hide = () => (popoverRef.current as any)?.hidePopover?.();
+  const show = () => popoverRef.current?.showPopover?.();
+  const hide = () => popoverRef.current?.hidePopover?.();
 
   return (
     <span

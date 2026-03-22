@@ -14,17 +14,6 @@
   margin-bottom: 5px;
 }
 
-.cardRepo {
-  color: var(--text-ghost);
-  font-size: var(--text-sm);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-
-  & a {
-    color: inherit;
-  }
-}
-
 .card time {
   color: var(--text-ghost);
   font-size: var(--text-md);
@@ -67,23 +56,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.cardStat,
-.cardStatApproved,
-.cardStatPending {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.cardStat         { color: var(--text-muted); }
-.cardStatApproved { color: var(--ci-success); }
-.cardStatPending  { color: var(--ci-running); }
-
-.cardIcon {
-  color: var(--text-muted);
-  flex-shrink: 0;
 }
 
 .cardBadge {

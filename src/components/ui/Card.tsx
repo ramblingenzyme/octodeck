@@ -1,4 +1,4 @@
-import cardStyles from "../cards/Card.module.css";
+import cardStyles from "./Card.module.css";
 import { CardTop } from "../cards/CardParts";
 
 interface CardProps {

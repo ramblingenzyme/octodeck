@@ -2,7 +2,7 @@ import type { DeploymentItem } from "@/types";
 import { DEPLOYMENT_STATUS } from "@/constants";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { SvgIcon } from "../ui/SvgIcon";
-import cardStyles from "./Card.module.css";
+import cardStyles from "../ui/Card.module.css";
 import styles from "./DeploymentCard.module.css";
 
 interface DeploymentCardProps {

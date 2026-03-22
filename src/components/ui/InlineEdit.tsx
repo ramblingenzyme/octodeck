@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
-import { PencilIcon } from "./PencilIcon";
+import { PencilIcon } from "./icons/PencilIcon";
 import { SvgIcon } from "./SvgIcon";
 import styles from "./InlineEdit.module.css";
 

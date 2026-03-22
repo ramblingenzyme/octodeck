@@ -3,7 +3,7 @@ import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { SvgIcon } from "../ui/SvgIcon";
 import { LabelList } from "./LabelList";
 import { CardStat } from "./CardParts";
-import cardStyles from "./Card.module.css";
+import cardStyles from "../ui/Card.module.css";
 
 interface IssueCardProps {
   item: IssueItem;
