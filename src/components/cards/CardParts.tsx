@@ -11,7 +11,11 @@ interface CardTopProps {
 
 export const CardTop = ({ repo, age }: CardTopProps) => (
   <header>
-    <span className={styles.cardRepo}>{repo}</span>
+    <span className={styles.cardRepo}>
+      <a href={`https://github.com/${repo}`} target="_blank" rel="noreferrer">
+        {repo}
+      </a>
+    </span>
     <Tooltip text={new Date(age).toLocaleString()} position="below">
       <time dateTime={age}>{formatAge(age)}</time>
     </Tooltip>

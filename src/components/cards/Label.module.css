@@ -3,6 +3,7 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 7px;
+  margin-bottom: 7px;
   list-style: none;
 }
 
@@ -11,7 +12,6 @@
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   letter-spacing: 0.03em;
-
   &.colored {
     color: oklch(from var(--label-color) max(l, 0.82) c h);
     background-color: color-mix(in oklch, var(--label-color) 18%, transparent);

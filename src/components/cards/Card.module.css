@@ -19,6 +19,10 @@
   font-size: var(--text-sm);
   letter-spacing: 0.03em;
   text-transform: uppercase;
+
+  & a {
+    color: inherit;
+  }
 }
 
 .card time {
@@ -43,7 +47,7 @@
 .cardMeta {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
   font-size: var(--text-md);
 }
@@ -60,17 +64,22 @@
   align-items: center;
   gap: 4px;
   color: var(--text-muted);
+
+  & a {
+    color: inherit;
+  }
 }
 
 .cardStats {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
 }
 
 .cardStat {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   color: var(--text-muted);
 }
 
@@ -91,13 +100,13 @@
 .cardStatApproved {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   color: var(--ci-success);
 }
 
 .cardStatPending {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   color: var(--ci-running);
 }

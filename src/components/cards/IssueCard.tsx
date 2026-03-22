@@ -14,12 +14,15 @@ export const IssueCard = ({ item }: IssueCardProps) => {
       <CardTitle href={item.url} prefix={`#${item.number}`}>
         {item.title}
       </CardTitle>
+      <LabelList labels={item.labels} repo={item.repo} />
       <CardMeta>
         <span className={cardStyles.cardAuthor}>
           {item.assignee ? (
             <>
               <SvgIcon name="arrowRight" />
-              {item.assignee}
+              <a href={`https://github.com/${item.assignee}`} target="_blank" rel="noreferrer">
+                {item.assignee}
+              </a>
             </>
           ) : (
             "unassigned"
@@ -30,7 +33,6 @@ export const IssueCard = ({ item }: IssueCardProps) => {
           {item.comments}
         </span>
       </CardMeta>
-      <LabelList labels={item.labels} />
     </Card>
   );
 };

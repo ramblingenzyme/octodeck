@@ -16,7 +16,11 @@ export const ActivityCard = ({ item }: ActivityCardProps) => {
       <CardTitle href={item.url}>{item.text}</CardTitle>
       <CardFooter>
         <CardTypeIcon icon={icon} />
-        {item.ref && <span className={styles.activityRef}>{item.ref}</span>}
+        {item.ref && (
+          <a className={styles.activityRef} href={item.url} target="_blank" rel="noreferrer">
+            {item.ref}
+          </a>
+        )}
       </CardFooter>
     </Card>
   );
