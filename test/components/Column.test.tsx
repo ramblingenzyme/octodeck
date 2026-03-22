@@ -36,11 +36,6 @@ describe("Column card type switching", () => {
     expect((await screen.findAllByRole("article")).length).toBeGreaterThan(0);
   });
 
-  it("renders Notification cards for notifications type", async () => {
-    renderColumn(makeCol("notifications", "Notifs"));
-    expect((await screen.findAllByRole("article")).length).toBeGreaterThan(0);
-  });
-
   it("renders Activity cards for activity type", async () => {
     renderColumn(makeCol("activity", "Activity"));
     expect((await screen.findAllByRole("article")).length).toBeGreaterThan(0);

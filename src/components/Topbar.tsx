@@ -11,9 +11,9 @@ interface TopbarProps {
 }
 
 export const Topbar = ({ onAddColumn, onSignIn, onSignOut }: TopbarProps) => {
-  const token = useAuthStore((s) => s.token);
+  const sessionId = useAuthStore((s) => s.sessionId);
   const status = useAuthStore((s) => s.status);
-  const { data: user } = useGetUser(token);
+  const { data: user } = useGetUser(sessionId);
   const authed = status === "authed" && user;
 
   return (

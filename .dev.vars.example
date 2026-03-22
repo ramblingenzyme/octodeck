@@ -1,0 +1,5 @@
+# Wrangler local secrets for `npm run dev:api`
+# Copy to .dev.vars (gitignored) and fill in real values.
+GITHUB_CLIENT_ID=your_github_app_client_id_here
+GITHUB_CLIENT_SECRET=your_github_app_client_secret_here
+ALLOWED_ORIGIN=http://localhost:5173

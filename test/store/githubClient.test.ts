@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { githubFetch } from "@/store/githubClient";
+import { githubFetch, UnauthorizedError } from "@/store/githubClient";
 
 describe("githubFetch", () => {
   beforeEach(() => {
@@ -14,11 +14,10 @@ describe("githubFetch", () => {
     const mockResponse = { ok: true, json: () => Promise.resolve({}) } as Response;
     vi.mocked(fetch).mockResolvedValueOnce(mockResponse);
 
-    const result = await githubFetch("/user", "tok123");
+    const result = await githubFetch("/user");
     expect(result).toBe(mockResponse);
     expect(fetch).toHaveBeenCalledWith("https://api.github.com/user", {
       headers: {
-        Authorization: "Bearer tok123",
         Accept: "application/vnd.github+json",
       },
       signal: undefined,
@@ -29,7 +28,7 @@ describe("githubFetch", () => {
     const mockResponse = { ok: false, status: 404, statusText: "Not Found" } as Response;
     vi.mocked(fetch).mockResolvedValueOnce(mockResponse);
 
-    const result = await githubFetch("/user", "tok123");
+    const result = await githubFetch("/user");
     expect(result).toBe(mockResponse);
     expect(result.ok).toBe(false);
   });
@@ -41,11 +40,19 @@ describe("githubFetch", () => {
     } as Response);
 
     const controller = new AbortController();
-    await githubFetch("/user", "tok123", controller.signal);
+    await githubFetch("/user", controller.signal);
 
     expect(fetch).toHaveBeenCalledWith(
       "https://api.github.com/user",
       expect.objectContaining({ signal: controller.signal }),
     );
+  });
+});
+
+describe("UnauthorizedError", () => {
+  it("is an Error with name UnauthorizedError", () => {
+    const err = new UnauthorizedError();
+    expect(err).toBeInstanceOf(Error);
+    expect(err.name).toBe("UnauthorizedError");
   });
 });

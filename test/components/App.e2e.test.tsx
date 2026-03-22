@@ -14,6 +14,16 @@ import { loadLayout } from "@/store/layoutStorage";
 // Force demo mode so the auth modal does not open.
 vi.mock("@/env", () => ({ isDemoMode: true, GITHUB_CLIENT_ID: undefined }));
 
+// Stub navigator.serviceWorker (not available in happy-dom).
+vi.stubGlobal("navigator", {
+  serviceWorker: {
+    register: vi.fn().mockResolvedValue({ active: null, installing: null, waiting: null }),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    controller: null,
+  },
+});
+
 // Lazy-import App AFTER the mock is in place.
 const { App } = await import("@/components/App");
 
@@ -33,10 +43,9 @@ afterEach(cleanup);
 // ─── 1. Demo board loads ────────────────────────────────────────────────────
 
 describe("demo board loads", () => {
-  it("renders the five default columns", async () => {
+  it("renders the four default columns", async () => {
     renderApp();
 
-    await screen.findByRole("region", { name: "Inbox" });
     expect(await screen.findByRole("region", { name: "Open PRs" })).toBeTruthy();
     expect(await screen.findByRole("region", { name: "Issues" })).toBeTruthy();
     expect(await screen.findByRole("region", { name: "CI / CD" })).toBeTruthy();
@@ -46,9 +55,9 @@ describe("demo board loads", () => {
   it("each column contains at least one card", async () => {
     renderApp();
 
-    await screen.findByRole("region", { name: "Inbox" }); // wait for columns
+    await screen.findByRole("region", { name: "Open PRs" }); // wait for columns
 
-    for (const name of ["Inbox", "Open PRs", "Issues", "CI / CD", "Activity"]) {
+    for (const name of ["Open PRs", "Issues", "CI / CD", "Activity"]) {
       const col = screen.getByRole("region", { name });
       expect(within(col).getAllByRole("article").length).toBeGreaterThan(0);
     }
@@ -62,7 +71,7 @@ describe("add column flow", () => {
     const user = userEvent.setup();
     renderApp();
 
-    await screen.findByRole("region", { name: "Inbox" }); // wait for board
+    await screen.findByRole("region", { name: "Open PRs" }); // wait for board
 
     await user.click(screen.getByRole("button", { name: /add column/i }));
     expect(screen.getByRole("dialog")).toBeTruthy();
@@ -159,7 +168,7 @@ describe("remove column flow", () => {
     const user = userEvent.setup();
     renderApp();
 
-    await screen.findByRole("region", { name: "Inbox" }); // wait for board
+    await screen.findByRole("region", { name: "Open PRs" }); // wait for board
 
     // Target the "CI / CD" column.
     const ciCol = screen.getByRole("region", { name: "CI / CD" });

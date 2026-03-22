@@ -6,7 +6,7 @@ let cols: ColumnConfig[];
 
 beforeEach(() => {
   cols = [
-    { id: "a", type: "notifications", title: "Inbox" },
+    { id: "a", type: "activity", title: "Activity" },
     { id: "b", type: "prs", title: "PRs" },
     { id: "c", type: "ci", title: "CI" },
   ];
@@ -67,7 +67,7 @@ describe("applyReorder", () => {
   it("preserves column data", () => {
     const result = applyReorder(cols, 1, 0);
     expect(result[0]).toEqual({ id: "b", type: "prs", title: "PRs" });
-    expect(result[1]).toEqual({ id: "a", type: "notifications", title: "Inbox" });
+    expect(result[1]).toEqual({ id: "a", type: "activity", title: "Activity" });
   });
 
   it("produces no duplicate ids", () => {

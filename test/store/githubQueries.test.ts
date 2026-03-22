@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import type {
   GHUser,
   GHSearchItem,
-  GHNotification,
   GHWorkflowRun,
   GHEvent,
   GHRelease,
@@ -11,7 +10,10 @@ import type {
   GHDependabotAlert,
 } from "@/types/github";
 
-vi.mock("@/store/githubClient", () => ({ githubFetch: vi.fn() }));
+vi.mock("@/store/githubClient", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/store/githubClient")>();
+  return { ...actual, githubFetch: vi.fn() };
+});
 
 let capturedKey: unknown;
 let capturedFetcher: (() => Promise<unknown>) | null;
@@ -29,7 +31,6 @@ import {
   useGetUser,
   useGetPRs,
   useGetIssues,
-  useGetNotifications,
   useGetCIRuns,
   useGetActivity,
   useGetReleases,
@@ -116,35 +117,6 @@ describe("useGetIssues", () => {
     const result = (await capturedFetcher!()) as Array<{ id: number }>;
     expect(result).toHaveLength(1);
     expect(result[0]!.id).toBe(1);
-  });
-});
-
-describe("useGetNotifications", () => {
-  it("key is null when token is null", () => {
-    useGetNotifications(null);
-    expect(capturedKey).toBeNull();
-  });
-
-  it("fetcher maps notifications", async () => {
-    const raw: GHNotification = {
-      id: "42",
-      reason: "mention",
-      subject: {
-        title: "Bug report",
-        url: "https://api.github.com/repos/owner/repo/issues/1",
-        type: "Issue",
-      },
-      repository: { full_name: "owner/repo" },
-      updated_at: "2024-01-01T00:00:00Z",
-    };
-    mockFetch.mockResolvedValueOnce(mockOk([raw]));
-
-    useGetNotifications("tok");
-    expect(capturedKey).toEqual(["notifications", "tok"]);
-
-    const result = (await capturedFetcher!()) as Array<{ id: number }>;
-    expect(result).toHaveLength(1);
-    expect(result[0]!.id).toBe(42);
   });
 });
 

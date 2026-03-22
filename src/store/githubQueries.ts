@@ -1,9 +1,8 @@
 import useSWR from "swr";
-import { githubFetch } from "./githubClient";
+import { githubFetch, UnauthorizedError } from "./githubClient";
 import type {
   PRItem,
   IssueItem,
-  NotifItem,
   CIItem,
   ActivityItem,
   ReleaseItem,
@@ -24,7 +23,6 @@ import type {
   GHRepo,
   GHUser,
   GHSearchResult,
-  GHNotification,
   GHWorkflowRun,
   GHWorkflowRunsResult,
   GHEvent,
@@ -36,7 +34,6 @@ import type {
 import {
   mapSearchItemToPR,
   mapSearchItemToIssue,
-  mapNotification,
   mapWorkflowRun,
   mapEvent,
   mapRelease,
@@ -52,12 +49,17 @@ export interface AuthUser {
 
 const POLL = 5 * 60 * 1000;
 
-export function useGetUser(token: string | null) {
+function checkOk(res: Response): void {
+  if (res.status === 401) throw new UnauthorizedError();
+  if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+}
+
+export function useGetUser(sessionId: string | null) {
   return useSWR<AuthUser>(
-    token ? ["user", token] : null,
+    sessionId ? ["user", sessionId] : null,
     async () => {
-      const res = await githubFetch("/user", token!);
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      const res = await githubFetch("/user");
+      checkOk(res);
       const raw = (await res.json()) as GHUser;
       return { login: raw.login, avatarUrl: raw.avatar_url, name: raw.name };
     },
@@ -65,15 +67,14 @@ export function useGetUser(token: string | null) {
   );
 }
 
-export function useGetPRs(q: string, token: string | null) {
+export function useGetPRs(q: string, sessionId: string | null) {
   return useSWR<PRItem[]>(
-    token ? ["prs", q, token] : null,
+    sessionId ? ["prs", q, sessionId] : null,
     async () => {
       const res = await githubFetch(
         `/search/issues?q=${encodeURIComponent("is:pr " + q)}&sort=updated&per_page=30`,
-        token!,
       );
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      checkOk(res);
       const raw = (await res.json()) as GHSearchResult;
       return raw.items.map(mapSearchItemToPR);
     },
@@ -81,15 +82,14 @@ export function useGetPRs(q: string, token: string | null) {
   );
 }
 
-export function useGetIssues(q: string, token: string | null) {
+export function useGetIssues(q: string, sessionId: string | null) {
   return useSWR<IssueItem[]>(
-    token ? ["issues", q, token] : null,
+    sessionId ? ["issues", q, sessionId] : null,
     async () => {
       const res = await githubFetch(
         `/search/issues?q=${encodeURIComponent("is:issue " + q)}&sort=updated&per_page=30`,
-        token!,
       );
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      checkOk(res);
       const raw = (await res.json()) as GHSearchResult;
       return raw.items.map(mapSearchItemToIssue);
     },
@@ -97,22 +97,9 @@ export function useGetIssues(q: string, token: string | null) {
   );
 }
 
-export function useGetNotifications(token: string | null) {
-  return useSWR<NotifItem[]>(
-    token ? ["notifications", token] : null,
-    async () => {
-      const res = await githubFetch("/notifications?all=false&per_page=30", token!);
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
-      const raw = (await res.json()) as GHNotification[];
-      return raw.map(mapNotification);
-    },
-    { refreshInterval: POLL },
-  );
-}
-
 function repoFetchError(repo: string, res: Response): Error {
+  if (res.status === 401) return new UnauthorizedError();
   const hints: Partial<Record<number, string>> = {
-    401: "token may be invalid — try signing out and back in",
     403: "access denied — write access is required",
     404: "repo not found or feature not enabled",
     422: "invalid request",
@@ -134,19 +121,22 @@ async function fetchPerRepo<T>(
   const fetchErrors: string[] = [];
   for (const r of settled) {
     if (r.status === "fulfilled") raw.push(...r.value);
-    else fetchErrors.push(String(r.reason?.message ?? r.reason));
+    else {
+      if (r.reason instanceof UnauthorizedError) throw r.reason;
+      fetchErrors.push(String(r.reason?.message ?? r.reason));
+    }
   }
   return { raw, fetchErrors };
 }
 
-export function useGetCIRuns(repos: string[], token: string | null) {
+export function useGetCIRuns(repos: string[], sessionId: string | null) {
   return useSWR<{ items: CIItem[]; fetchErrors: string[] }>(
-    token && repos.length > 0 ? ["ci", repos, token] : null,
+    sessionId && repos.length > 0 ? ["ci", repos, sessionId] : null,
     async () => {
       const { raw, fetchErrors } = await fetchPerRepo<{ run: GHWorkflowRun; repo: string }>(
         repos,
         async (repo) => {
-          const res = await githubFetch(`/repos/${repo}/actions/runs?per_page=10`, token!);
+          const res = await githubFetch(`/repos/${repo}/actions/runs?per_page=10`);
           if (!res.ok) throw repoFetchError(repo, res);
           const data = (await res.json()) as GHWorkflowRunsResult;
           return (data.workflow_runs ?? []).map((run) => ({ run, repo }));
@@ -162,14 +152,14 @@ export function useGetCIRuns(repos: string[], token: string | null) {
   );
 }
 
-export function useGetReleases(repos: string[], token: string | null) {
+export function useGetReleases(repos: string[], sessionId: string | null) {
   return useSWR<{ items: ReleaseItem[]; fetchErrors: string[] }>(
-    token && repos.length > 0 ? ["releases", repos, token] : null,
+    sessionId && repos.length > 0 ? ["releases", repos, sessionId] : null,
     async () => {
       const { raw, fetchErrors } = await fetchPerRepo<{ release: GHRelease; repo: string }>(
         repos,
         async (repo) => {
-          const res = await githubFetch(`/repos/${repo}/releases?per_page=10`, token!);
+          const res = await githubFetch(`/repos/${repo}/releases?per_page=10`);
           if (!res.ok) throw repoFetchError(repo, res);
           const data = (await res.json()) as GHRelease[];
           return data.map((release) => ({ release, repo }));
@@ -185,14 +175,14 @@ export function useGetReleases(repos: string[], token: string | null) {
   );
 }
 
-export function useGetDeployments(repos: string[], token: string | null) {
+export function useGetDeployments(repos: string[], sessionId: string | null) {
   return useSWR<{ items: DeploymentItem[]; fetchErrors: string[] }>(
-    token && repos.length > 0 ? ["deployments", repos, token] : null,
+    sessionId && repos.length > 0 ? ["deployments", repos, sessionId] : null,
     async () => {
       const { raw, fetchErrors } = await fetchPerRepo<{ deployment: GHDeployment; repo: string }>(
         repos,
         async (repo) => {
-          const res = await githubFetch(`/repos/${repo}/deployments?per_page=10`, token!);
+          const res = await githubFetch(`/repos/${repo}/deployments?per_page=10`);
           if (!res.ok) throw repoFetchError(repo, res);
           const deployments = (await res.json()) as GHDeployment[];
           return deployments.map((deployment) => ({ deployment, repo }));
@@ -203,7 +193,6 @@ export function useGetDeployments(repos: string[], token: string | null) {
         raw.slice(0, 20).map(async ({ deployment, repo }) => {
           const res = await githubFetch(
             `/repos/${repo}/deployments/${deployment.id}/statuses?per_page=1`,
-            token!,
           );
           if (!res.ok) return mapDeployment(deployment, "unknown", repo);
           const statuses = (await res.json()) as GHDeploymentStatus[];
@@ -217,17 +206,14 @@ export function useGetDeployments(repos: string[], token: string | null) {
   );
 }
 
-export function useGetSecurityAlerts(repos: string[], token: string | null) {
+export function useGetSecurityAlerts(repos: string[], sessionId: string | null) {
   return useSWR<{ items: SecurityItem[]; fetchErrors: string[] }>(
-    token && repos.length > 0 ? ["security", repos, token] : null,
+    sessionId && repos.length > 0 ? ["security", repos, sessionId] : null,
     async () => {
       const { raw, fetchErrors } = await fetchPerRepo<{ alert: GHDependabotAlert; repo: string }>(
         repos,
         async (repo) => {
-          const res = await githubFetch(
-            `/repos/${repo}/dependabot/alerts?state=open&per_page=10`,
-            token!,
-          );
+          const res = await githubFetch(`/repos/${repo}/dependabot/alerts?state=open&per_page=10`);
           if (!res.ok) throw repoFetchError(repo, res);
           const alerts = (await res.json()) as GHDependabotAlert[];
           return alerts.map((alert) => ({ alert, repo }));
@@ -243,15 +229,14 @@ export function useGetSecurityAlerts(repos: string[], token: string | null) {
   );
 }
 
-export function useGetUserRepos(token: string | null) {
+export function useGetUserRepos(sessionId: string | null) {
   return useSWR<string[]>(
-    token ? ["user-repos", token] : null,
+    sessionId ? ["user-repos", sessionId] : null,
     async () => {
       const res = await githubFetch(
         "/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member",
-        token!,
       );
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      checkOk(res);
       const raw = (await res.json()) as GHRepo[];
       return raw.map((r) => r.full_name);
     },
@@ -259,12 +244,12 @@ export function useGetUserRepos(token: string | null) {
   );
 }
 
-export function useGetActivity(login: string, token: string | null) {
+export function useGetActivity(login: string, sessionId: string | null) {
   return useSWR<ActivityItem[]>(
-    token && login ? ["activity", login, token] : null,
+    sessionId && login ? ["activity", login, sessionId] : null,
     async () => {
-      const res = await githubFetch(`/users/${login}/events?per_page=30`, token!);
-      if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+      const res = await githubFetch(`/users/${login}/events?per_page=30`);
+      checkOk(res);
       const raw = (await res.json()) as GHEvent[];
       return raw.flatMap((e) => {
         const item = mapEvent(e);

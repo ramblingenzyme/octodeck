@@ -4,7 +4,6 @@ import {
   MOCK_PRS,
   MOCK_ISSUES,
   MOCK_CI,
-  MOCK_NOTIFS,
   MOCK_ACTIVITY,
   MOCK_RELEASES,
   MOCK_DEPLOYMENTS,
@@ -13,7 +12,6 @@ import {
 import {
   useGetPRs,
   useGetIssues,
-  useGetNotifications,
   useGetCIRuns,
   useGetActivity,
   useGetUser,
@@ -87,7 +85,6 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
   prs: MOCK_PRS,
   issues: MOCK_ISSUES,
   ci: MOCK_CI,
-  notifications: MOCK_NOTIFS,
   activity: MOCK_ACTIVITY,
   releases: MOCK_RELEASES,
   deployments: MOCK_DEPLOYMENTS,
@@ -95,34 +92,36 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
 };
 
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
-  const token = useAuthStore((s) => s.token);
-  const demo = isDemoMode || !token;
+  const sessionId = useAuthStore((s) => s.sessionId);
+  const demo = isDemoMode || !sessionId;
 
-  const { data: user } = useGetUser(demo ? null : token);
+  const { data: user } = useGetUser(demo ? null : sessionId);
   const login = user?.login ?? "";
 
   const tokens = useMemo(() => parseQuery(col.query ?? ""), [col.query]);
   const repos = col.repos ?? [];
 
   // All query hooks are called unconditionally — React's rules of hooks forbid
-  // conditional hook calls. SWR skips fetching when the key (token) is null, so
+  // conditional hook calls. SWR skips fetching when the key (sessionId) is null, so
   // only the hook matching col.type will ever make a network request.
-  const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : token);
-  const issuesResult = useGetIssues(col.query ?? "", demo || col.type !== "issues" ? null : token);
-  const notifsResult = useGetNotifications(demo || col.type !== "notifications" ? null : token);
-  const ciResult = useGetCIRuns(repos, demo || col.type !== "ci" ? null : token);
+  const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : sessionId);
+  const issuesResult = useGetIssues(
+    col.query ?? "",
+    demo || col.type !== "issues" ? null : sessionId,
+  );
+  const ciResult = useGetCIRuns(repos, demo || col.type !== "ci" ? null : sessionId);
   const activityResult = useGetActivity(
     login,
-    demo || col.type !== "activity" || !login ? null : token,
+    demo || col.type !== "activity" || !login ? null : sessionId,
   );
-  const releasesResult = useGetReleases(repos, demo || col.type !== "releases" ? null : token);
+  const releasesResult = useGetReleases(repos, demo || col.type !== "releases" ? null : sessionId);
   const deploymentsResult = useGetDeployments(
     repos,
-    demo || col.type !== "deployments" ? null : token,
+    demo || col.type !== "deployments" ? null : sessionId,
   );
   const securityResult = useGetSecurityAlerts(
     repos,
-    demo || col.type !== "security" ? null : token,
+    demo || col.type !== "security" ? null : sessionId,
   );
 
   const filter = useCallback(
@@ -151,8 +150,6 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
       return toResult(prsResult, "Failed to load PRs", filter);
     case "issues":
       return toResult(issuesResult, "Failed to load issues", filter);
-    case "notifications":
-      return toResult(notifsResult, "Failed to load notifications", filter, true);
     case "ci":
       return toMultiResult(ciResult, "Failed to load CI runs", filter);
     case "activity":

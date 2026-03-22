@@ -6,9 +6,6 @@ const IssueColumn = lazy(() =>
   import("./columns/IssueColumn").then((m) => ({ default: m.IssueColumn })),
 );
 const CIColumn = lazy(() => import("./columns/CIColumn").then((m) => ({ default: m.CIColumn })));
-const NotifColumn = lazy(() =>
-  import("./columns/NotifColumn").then((m) => ({ default: m.NotifColumn })),
-);
 const ActivityColumn = lazy(() =>
   import("./columns/ActivityColumn").then((m) => ({ default: m.ActivityColumn })),
 );
@@ -45,12 +42,6 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
       return (
         <Suspense fallback={null}>
           <CIColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
-    case "notifications":
-      return (
-        <Suspense fallback={null}>
-          <NotifColumn col={col} onRemove={onRemove} />
         </Suspense>
       );
     case "activity":

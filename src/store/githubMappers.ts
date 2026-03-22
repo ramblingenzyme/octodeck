@@ -1,10 +1,8 @@
 import type {
   PRItem,
   IssueItem,
-  NotifItem,
   CIItem,
   ActivityItem,
-  NotifType,
   CIStatus,
   ReleaseItem,
   DeploymentItem,
@@ -14,7 +12,6 @@ import type {
 } from "@/types";
 import type {
   GHSearchItem,
-  GHNotification,
   GHWorkflowRun,
   GHEvent,
   GHRelease,
@@ -56,35 +53,6 @@ export function mapSearchItemToIssue(item: GHSearchItem): IssueItem {
     age: item.updated_at,
     state: item.state as "open" | "closed",
     url: item.html_url,
-  };
-}
-
-const REASON_TO_NOTIF: Record<string, NotifType> = {
-  review_requested: "review_requested",
-  mention: "mention",
-  assign: "assigned",
-  approval: "approved",
-  comment: "comment",
-};
-
-function apiUrlToHtmlUrl(apiUrl: string): string {
-  // https://api.github.com/repos/owner/repo/pulls/123 → https://github.com/owner/repo/pull/123
-  // https://api.github.com/repos/owner/repo/issues/123 → https://github.com/owner/repo/issues/123
-  return apiUrl
-    .replace("https://api.github.com/repos/", "https://github.com/")
-    .replace(/\/pulls\/(\d+)$/, "/pull/$1");
-}
-
-export function mapNotification(n: GHNotification): NotifItem {
-  const type: NotifType = REASON_TO_NOTIF[n.reason] ?? "comment";
-  return {
-    id: parseInt(n.id, 10),
-    type,
-    text: n.subject.title,
-    repo: n.repository.full_name,
-    ref: n.subject.type,
-    age: n.updated_at,
-    url: apiUrlToHtmlUrl(n.subject.url),
   };
 }
 

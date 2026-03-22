@@ -2,7 +2,6 @@ export type ColumnType =
   | "prs"
   | "issues"
   | "ci"
-  | "notifications"
   | "activity"
   | "releases"
   | "deployments"
@@ -31,7 +30,6 @@ export type IconName =
 export type CIStatus = "success" | "failure" | "running";
 export type IssueState = "open" | "closed";
 export type CITrigger = "push" | "pull_request" | "release";
-export type NotifType = "review_requested" | "mention" | "assigned" | "approved" | "comment";
 export type ActivityType =
   | "commit"
   | "comment"
@@ -90,16 +88,6 @@ export interface CIItem {
   url: string;
 }
 
-export interface NotifItem {
-  id: number;
-  type: NotifType;
-  text: string;
-  repo: string;
-  ref: string;
-  age: string;
-  url: string;
-}
-
 export interface ActivityItem {
   id: number;
   type: ActivityType;
@@ -153,7 +141,6 @@ export type KnownItem =
   | PRItem
   | IssueItem
   | CIItem
-  | NotifItem
   | ActivityItem
   | ReleaseItem
   | DeploymentItem

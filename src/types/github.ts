@@ -31,18 +31,6 @@ export interface GHSearchResult {
   items: GHSearchItem[];
 }
 
-export interface GHNotification {
-  id: string;
-  reason: string;
-  subject: {
-    title: string;
-    url: string;
-    type: string;
-  };
-  repository: { full_name: string };
-  updated_at: string;
-}
-
 export interface GHRepo {
   full_name: string;
   owner: { login: string };

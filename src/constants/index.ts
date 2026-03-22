@@ -1,7 +1,6 @@
 import type {
   ColumnType,
   CIStatus,
-  NotifType,
   ActivityType,
   ColumnConfig,
   IconName,
@@ -13,14 +12,6 @@ export const CI_STATUS: Record<CIStatus, { label: string; icon: IconName }> = {
   success: { label: "PASS", icon: "check" },
   failure: { label: "FAIL", icon: "x" },
   running: { label: "RUN", icon: "circleDot" },
-};
-
-export const NOTIF_ICONS: Record<NotifType, IconName> = {
-  review_requested: "eye",
-  mention: "at",
-  assigned: "tag",
-  approved: "check",
-  comment: "comment",
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, IconName> = {
@@ -52,12 +43,6 @@ export const COLUMN_TYPES: Record<
     defaultQuery: "involves:@me is:open",
   },
   ci: { label: "CI / CD", icon: "play", itemLabel: "run", defaultQuery: "" },
-  notifications: {
-    label: "Inbox",
-    icon: "bell",
-    itemLabel: "notification",
-    defaultQuery: "",
-  },
   activity: { label: "Activity", icon: "gitCommit", itemLabel: "event", defaultQuery: "" },
   releases: { label: "Releases", icon: "tag", itemLabel: "release", defaultQuery: "" },
   deployments: { label: "Deployments", icon: "deploy", itemLabel: "deployment", defaultQuery: "" },
@@ -89,7 +74,6 @@ export const MULTI_REPO_COLUMN_TYPES = new Set<ColumnType>([
 export const mkId = (): string => crypto.randomUUID();
 
 export const DEFAULT_COLUMNS: ColumnConfig[] = [
-  { id: "col-notifications", type: "notifications", title: "Inbox" },
   { id: "col-prs", type: "prs", title: "Open PRs", query: "involves:@me is:open" },
   { id: "col-issues", type: "issues", title: "Issues", query: "involves:@me is:open" },
   { id: "col-ci", type: "ci", title: "CI / CD" },

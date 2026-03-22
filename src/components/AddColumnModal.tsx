@@ -4,7 +4,6 @@ import { COLUMN_TYPES } from "@/constants";
 import prStyles from "./columns/PRColumn.module.css";
 import issueStyles from "./columns/IssueColumn.module.css";
 import ciStyles from "./columns/CIColumn.module.css";
-import notifStyles from "./columns/NotifColumn.module.css";
 import activityStyles from "./columns/ActivityColumn.module.css";
 import releasesStyles from "./columns/ReleasesColumn.module.css";
 import deploymentsStyles from "./columns/DeploymentsColumn.module.css";
@@ -14,7 +13,6 @@ const ACCENT_CLASS: Record<ColumnType, string | undefined> = {
   prs: prStyles.accent,
   issues: issueStyles.accent,
   ci: ciStyles.accent,
-  notifications: notifStyles.accent,
   activity: activityStyles.accent,
   releases: releasesStyles.accent,
   deployments: deploymentsStyles.accent,

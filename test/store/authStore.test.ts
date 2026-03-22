@@ -1,25 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useAuthStore } from "@/store/authStore";
 
-vi.mock("@/store/tokenStorage", () => ({
-  loadToken: vi.fn(() => null),
-  saveToken: vi.fn(),
-  clearToken: vi.fn(),
-}));
-
-import { loadToken, saveToken, clearToken } from "@/store/tokenStorage";
+// Stub navigator.serviceWorker so logOut() doesn't throw in jsdom/happy-dom
+vi.stubGlobal("navigator", {
+  serviceWorker: { controller: null },
+});
 
 const resetStore = () =>
-  useAuthStore.setState({
-    status: "idle",
-    token: null,
-    deviceCode: null,
-    userCode: null,
-    verificationUri: null,
-    expiresAt: null,
-    interval: 5,
-    error: null,
-  });
+  useAuthStore.setState({ status: "idle", sessionId: null, error: null });
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -27,91 +15,46 @@ beforeEach(() => {
 });
 
 describe("initial state", () => {
-  it("status is idle and token is null when loadToken returns null", () => {
+  it("status is idle and sessionId is null", () => {
     const state = useAuthStore.getState();
     expect(state.status).toBe("idle");
-    expect(state.token).toBeNull();
-  });
-
-  it("status is authed and token is set when loadToken returns a value", () => {
-    vi.mocked(loadToken).mockReturnValueOnce("stored-token");
-    // Re-initialise the store's computed initial values by setting them directly
-    useAuthStore.setState({ status: "authed", token: "stored-token" });
-    const state = useAuthStore.getState();
-    expect(state.status).toBe("authed");
-    expect(state.token).toBe("stored-token");
-  });
-});
-
-describe("initial state — module re-import", () => {
-  it("status is 'authed' when loadToken returns a token", async () => {
-    vi.resetModules();
-    vi.doMock("@/store/tokenStorage", () => ({
-      loadToken: () => "stored",
-      saveToken: vi.fn(),
-      clearToken: vi.fn(),
-    }));
-    const { useAuthStore: freshStore } = await import("@/store/authStore");
-    expect(freshStore.getState().status).toBe("authed");
-    expect(freshStore.getState().token).toBe("stored");
-  });
-});
-
-describe("deviceCodeReceived", () => {
-  it("transitions to polling and sets device flow fields", () => {
-    const before = Date.now();
-    useAuthStore.getState().deviceCodeReceived({
-      deviceCode: "dev-code",
-      userCode: "USER-CODE",
-      verificationUri: "https://github.com/login/device",
-      expiresIn: 900,
-      interval: 5,
-    });
-    const state = useAuthStore.getState();
-    expect(state.status).toBe("polling");
-    expect(state.deviceCode).toBe("dev-code");
-    expect(state.userCode).toBe("USER-CODE");
-    expect(state.verificationUri).toBe("https://github.com/login/device");
-    expect(state.interval).toBe(5);
-    expect(state.expiresAt).toBeGreaterThanOrEqual(before + 900_000);
-    expect(state.expiresAt).toBeLessThanOrEqual(Date.now() + 900_000);
+    expect(state.sessionId).toBeNull();
     expect(state.error).toBeNull();
   });
 });
 
-describe("tokenReceived", () => {
-  it("calls saveToken, transitions to authed, and clears device flow fields", () => {
-    useAuthStore.setState({ status: "polling", deviceCode: "x", userCode: "y" });
-    useAuthStore.getState().tokenReceived("new-token");
+describe("authSuccess", () => {
+  it("transitions to authed and generates a sessionId", () => {
+    useAuthStore.getState().authSuccess();
     const state = useAuthStore.getState();
-    expect(saveToken).toHaveBeenCalledWith("new-token");
     expect(state.status).toBe("authed");
-    expect(state.token).toBe("new-token");
-    expect(state.deviceCode).toBeNull();
-    expect(state.userCode).toBeNull();
-    expect(state.verificationUri).toBeNull();
-    expect(state.expiresAt).toBeNull();
+    expect(state.sessionId).not.toBeNull();
+    expect(typeof state.sessionId).toBe("string");
+    expect(state.error).toBeNull();
+  });
+
+  it("each call generates a different sessionId", () => {
+    useAuthStore.getState().authSuccess();
+    const first = useAuthStore.getState().sessionId;
+    useAuthStore.getState().authSuccess();
+    const second = useAuthStore.getState().sessionId;
+    expect(first).not.toBe(second);
   });
 });
 
 describe("logOut", () => {
-  it("calls clearToken and resets all state to idle/null", () => {
-    useAuthStore.setState({ status: "authed", token: "t", deviceCode: "d" });
+  it("resets state to idle and clears sessionId", () => {
+    useAuthStore.getState().authSuccess();
     useAuthStore.getState().logOut();
     const state = useAuthStore.getState();
-    expect(clearToken).toHaveBeenCalled();
     expect(state.status).toBe("idle");
-    expect(state.token).toBeNull();
-    expect(state.deviceCode).toBeNull();
-    expect(state.userCode).toBeNull();
-    expect(state.verificationUri).toBeNull();
-    expect(state.expiresAt).toBeNull();
+    expect(state.sessionId).toBeNull();
     expect(state.error).toBeNull();
   });
 });
 
 describe("setError", () => {
-  it("transitions to error and sets error message", () => {
+  it("transitions to error and sets message", () => {
     useAuthStore.getState().setError("something went wrong");
     const state = useAuthStore.getState();
     expect(state.status).toBe("error");

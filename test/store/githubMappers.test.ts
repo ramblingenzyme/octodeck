@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   mapSearchItemToPR,
   mapSearchItemToIssue,
-  mapNotification,
   mapWorkflowRun,
   mapEvent,
   mapRelease,
@@ -11,7 +10,6 @@ import {
 } from "@/store/githubMappers";
 import type {
   GHSearchItem,
-  GHNotification,
   GHWorkflowRun,
   GHEvent,
   GHRelease,
@@ -98,48 +96,6 @@ describe("mapSearchItemToIssue", () => {
   });
 });
 
-const baseNotif: GHNotification = {
-  id: "12345",
-  reason: "review_requested",
-  subject: {
-    title: "Review this PR",
-    url: "https://api.github.com/repos/owner/repo/pulls/10",
-    type: "PullRequest",
-  },
-  repository: { full_name: "owner/repo" },
-  updated_at: "2024-01-02T00:00:00Z",
-};
-
-describe("mapNotification", () => {
-  it("maps known reason", () => {
-    const n = mapNotification(baseNotif);
-    expect(n.type).toBe("review_requested");
-    expect(n.text).toBe("Review this PR");
-    expect(n.repo).toBe("owner/repo");
-  });
-
-  it("falls back to comment for unknown reason", () => {
-    const n = mapNotification({ ...baseNotif, reason: "some_unknown_reason" });
-    expect(n.type).toBe("comment");
-  });
-
-  it("converts pulls API URL to html URL", () => {
-    const n = mapNotification(baseNotif);
-    expect(n.url).toBe("https://github.com/owner/repo/pull/10");
-  });
-
-  it("uses numeric id when parseable", () => {
-    const n = mapNotification(baseNotif);
-    expect(n.id).toBe(12345);
-  });
-
-  it("uses stable hash id for non-numeric id", () => {
-    const n1 = mapNotification({ ...baseNotif, id: "abc-def" });
-    const n2 = mapNotification({ ...baseNotif, id: "abc-def" });
-    expect(n1.id).toBe(n2.id);
-    expect(typeof n1.id).toBe("number");
-  });
-});
 
 const baseRun: GHWorkflowRun = {
   id: 999,

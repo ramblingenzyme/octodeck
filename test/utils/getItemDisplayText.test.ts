@@ -4,7 +4,6 @@ import type {
   PRItem,
   IssueItem,
   CIItem,
-  NotifItem,
   ActivityItem,
   ReleaseItem,
   DeploymentItem,
@@ -50,16 +49,6 @@ const ciItem: CIItem = {
   url: "https://github.com/org/repo/actions/runs/3",
 };
 
-const notifItem: NotifItem = {
-  id: 4,
-  type: "mention",
-  text: "You were mentioned in a comment",
-  repo: "org/repo",
-  ref: "PR #42",
-  age: "5m",
-  url: "https://github.com/org/repo/pull/42",
-};
-
 const activityItem: ActivityItem = {
   id: 5,
   type: "commit",
@@ -80,10 +69,6 @@ describe("getItemDisplayText", () => {
 
   it("returns name for CIItem (has name, no title)", () => {
     expect(getItemDisplayText(ciItem)).toBe("CI / build");
-  });
-
-  it("returns text for NotifItem", () => {
-    expect(getItemDisplayText(notifItem)).toBe("You were mentioned in a comment");
   });
 
   it("returns text for ActivityItem", () => {

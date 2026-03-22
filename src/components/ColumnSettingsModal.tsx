@@ -17,8 +17,8 @@ interface ColumnSettingsModalProps {
 export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalProps) => {
   const isMultiRepo = MULTI_REPO_COLUMN_TYPES.has(col.type);
   const [repos, setRepos] = useState<string[]>(col.repos ?? []);
-  const token = useAuthStore((s) => s.token);
-  const { data: repoSuggestions } = useGetUserRepos(isMultiRepo ? token : null);
+  const sessionId = useAuthStore((s) => s.sessionId);
+  const { data: repoSuggestions } = useGetUserRepos(isMultiRepo ? sessionId : null);
   const updateColumnTitle = useLayoutStore((s) => s.updateColumnTitle);
   const updateColumnQuery = useLayoutStore((s) => s.updateColumnQuery);
   const updateColumnRepos = useLayoutStore((s) => s.updateColumnRepos);
