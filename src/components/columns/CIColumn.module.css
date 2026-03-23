@@ -1,1 +1,3 @@
-.accent { --color-accent: oklch(0.83 0.16 90); }
+.accent {
+  --color-accent: oklch(0.83 0.16 90);
+}

@@ -20,6 +20,6 @@
 }
 
 .deployBadge {
-  composes: cardBadge from '../ui/Card.module.css';
+  composes: cardBadge from "../ui/Card.module.css";
   color: var(--deploy-color, var(--text-muted));
 }

@@ -17,9 +17,15 @@
   gap: 2px;
 }
 
-.cardStat         { color: var(--text-muted); }
-.cardStatApproved { color: var(--ci-success); }
-.cardStatPending  { color: var(--ci-running); }
+.cardStat {
+  color: var(--text-muted);
+}
+.cardStatApproved {
+  color: var(--ci-success);
+}
+.cardStatPending {
+  color: var(--ci-running);
+}
 
 .cardIcon {
   color: var(--text-muted);

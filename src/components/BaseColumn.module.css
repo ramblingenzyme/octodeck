@@ -62,7 +62,6 @@
   min-width: 0;
 }
 
-
 .colHeader output {
   background: var(--bg-card);
   color: var(--text-ghost);
@@ -132,7 +131,6 @@
     color: var(--text-primary);
     background: var(--border-mid);
   }
-
 }
 
 .btnIconActive {
