@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { clearToken } from "@/auth/token";
 
 export type AuthStatus = "idle" | "authed" | "error";
 
@@ -8,6 +9,7 @@ export interface AuthState {
   error: string | null;
   authSuccess: () => void;
   logOut: () => void;
+  authExpired: () => void;
   setError: (msg: string) => void;
   clearError: () => void;
 }
@@ -22,7 +24,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logOut() {
-    navigator.serviceWorker.controller?.postMessage({ type: "CLEAR_TOKENS" });
+    clearToken();
+    set({ status: "idle", sessionId: null, error: null });
+  },
+
+  authExpired() {
+    clearToken();
     set({ status: "idle", sessionId: null, error: null });
   },
 

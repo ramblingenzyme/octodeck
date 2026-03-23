@@ -1,10 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useAuthStore } from "@/store/authStore";
 
-// Stub navigator.serviceWorker so logOut() doesn't throw in jsdom/happy-dom
-vi.stubGlobal("navigator", {
-  serviceWorker: { controller: null },
-});
+vi.mock("@/auth/token", () => ({
+  clearToken: vi.fn(),
+}));
 
 const resetStore = () =>
   useAuthStore.setState({ status: "idle", sessionId: null, error: null });
@@ -64,7 +63,7 @@ describe("setError", () => {
 
 describe("clearError", () => {
   it("transitions back to idle and clears error", () => {
-    useAuthStore.setState({ status: "error", error: "oops" });
+    useAuthStore.setState({ status: "error", sessionId: null, error: "oops" });
     useAuthStore.getState().clearError();
     const state = useAuthStore.getState();
     expect(state.status).toBe("idle");

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { githubFetch, UnauthorizedError } from "@/store/githubClient";
+import { githubFetch, UnauthorizedError } from "@/auth/token";
 
 describe("githubFetch", () => {
   beforeEach(() => {

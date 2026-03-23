@@ -16,7 +16,7 @@ export const AuthModal = ({ open, onDemoMode, onClose }: AuthModalProps) => {
 
   const handleSignIn = () => {
     clearError();
-    redirectToGitHub(`${window.location.origin}/callback`);
+    redirectToGitHub();
   };
 
   return (

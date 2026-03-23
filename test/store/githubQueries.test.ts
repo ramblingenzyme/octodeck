@@ -10,8 +10,8 @@ import type {
   GHDependabotAlert,
 } from "@/types/github";
 
-vi.mock("@/store/githubClient", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/store/githubClient")>();
+vi.mock("@/auth/token", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/auth/token")>();
   return { ...actual, githubFetch: vi.fn() };
 });
 
@@ -26,7 +26,7 @@ vi.mock("swr", () => ({
   }),
 }));
 
-import { githubFetch } from "@/store/githubClient";
+import { githubFetch } from "@/auth/token";
 import {
   useGetUser,
   useGetPRs,

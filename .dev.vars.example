@@ -3,3 +3,5 @@
 GITHUB_CLIENT_ID=your_github_app_client_id_here
 GITHUB_CLIENT_SECRET=your_github_app_client_secret_here
 ALLOWED_ORIGIN=http://localhost:5173
+# Generate with: openssl rand -base64 32 | tr '+/' '-_' | tr -d '='
+SESSION_CRYPTO_KEY=your_32_byte_base64url_key_here

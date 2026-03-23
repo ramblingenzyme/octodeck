@@ -5,11 +5,11 @@ import { useModal } from "@/hooks/useModal";
 import type { ColumnType } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
 import { useAuthStore } from "@/store/authStore";
-import { UnauthorizedError } from "@/store/githubClient";
+import { UnauthorizedError, setToken } from "@/auth/token";
+import { fetchSession } from "@/auth/oauthFlow";
 import { isDemoMode } from "@/env";
 import { Topbar } from "./Topbar";
 import { Board } from "./Board";
-import { Callback } from "./Callback";
 
 const AddColumnModal = lazy(() =>
   import("./AddColumnModal").then((m) => ({ default: m.AddColumnModal })),
@@ -27,48 +27,23 @@ export const App = () => {
   const logOut = useAuthStore((s) => s.logOut);
   const authModal = useModal(!isDemoMode && authStatus === "idle");
 
-  // Register SW and check for existing session
+  // Bootstrap session from the HttpOnly session cookie on mount.
+  // Also fires after the /api/callback redirect lands on /?authed=1.
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
-
-    void navigator.serviceWorker.register("/sw.js", { type: "module" }).then((reg) => {
-      const sw = reg.active ?? reg.installing ?? reg.waiting;
-      if (!sw) return;
-
-      const checkStatus = (worker: ServiceWorker) => {
-        const onMessage = (e: MessageEvent<{ type: string; authed: boolean }>) => {
-          if (e.data.type === "AUTH_STATUS" && e.data.authed) {
-            authSuccess();
-          }
-        };
-        navigator.serviceWorker.addEventListener("message", onMessage, { once: true });
-        worker.postMessage({ type: "GET_STATUS" });
-      };
-
-      if (sw.state === "activated") {
-        checkStatus(sw);
-      } else {
-        sw.addEventListener("statechange", function onStateChange() {
-          if (sw.state === "activated") {
-            sw.removeEventListener("statechange", onStateChange);
-            checkStatus(sw);
-          }
-        });
-      }
-    });
+    if (isDemoMode) return;
+    // Clean up the ?authed=1 query param without a navigation.
+    if (new URLSearchParams(window.location.search).has("authed")) {
+      window.history.replaceState({}, "", "/");
+    }
+    fetchSession()
+      .then((t) => {
+        setToken(t.accessToken, t.expiresAt);
+        authSuccess();
+      })
+      .catch(() => {
+        // No active session — auth modal will show.
+      });
   }, [authSuccess]);
-
-  // Listen for AUTH_EXPIRED from SW
-  useEffect(() => {
-    const onMessage = (e: MessageEvent<{ type: string }>) => {
-      if (e.data.type === "AUTH_EXPIRED") {
-        logOut();
-        authModal.open();
-      }
-    };
-    navigator.serviceWorker.addEventListener("message", onMessage);
-    return () => navigator.serviceWorker.removeEventListener("message", onMessage);
-  }, [logOut, authModal]);
 
   const handleAddColumn = (type: ColumnType, title: string, query?: string) => {
     addColumn(type, title, query);
@@ -80,16 +55,14 @@ export const App = () => {
     authModal.open();
   };
 
-  // Handle OAuth callback
-  if (window.location.pathname === "/callback") {
-    return <Callback />;
-  }
-
   return (
     <SWRConfig
       value={{
         onError: (err: unknown) => {
-          if (err instanceof UnauthorizedError) logOut();
+          if (err instanceof UnauthorizedError) {
+            logOut();
+            authModal.open();
+          }
         },
       }}
     >

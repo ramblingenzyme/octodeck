@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { githubFetch, UnauthorizedError } from "./githubClient";
+import { githubFetch, UnauthorizedError } from "@/auth/token";
 import type {
   PRItem,
   IssueItem,

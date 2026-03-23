@@ -7,7 +7,7 @@ const mockRedirectToGitHub = vi.fn();
 const mockClearError = vi.fn();
 
 vi.mock("@/auth/oauthFlow", () => ({
-  redirectToGitHub: (uri: string) => mockRedirectToGitHub(uri),
+  redirectToGitHub: () => mockRedirectToGitHub(),
 }));
 
 vi.mock("@/store/authStore", () => ({
@@ -29,14 +29,11 @@ afterEach(() => {
 });
 
 describe("AuthModal — idle state", () => {
-  it("clicking 'Sign in with GitHub' calls redirectToGitHub with the callback URI", async () => {
+  it("clicking 'Sign in with GitHub' calls redirectToGitHub", async () => {
     const user = userEvent.setup();
     renderModal();
     await user.click(screen.getByText("Sign in with GitHub"));
     expect(mockRedirectToGitHub).toHaveBeenCalledOnce();
-    expect(mockRedirectToGitHub).toHaveBeenCalledWith(
-      expect.stringContaining("/callback"),
-    );
   });
 
   it("clicking 'Continue in Demo Mode' calls onDemoMode", async () => {

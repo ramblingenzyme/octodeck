@@ -1,0 +1,10 @@
+{
+  "name": "octodeck",
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2025-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Cloudflare Workers free tier CPU limit
+  "limits": {
+    "cpu_ms": 10
+  }
+}
