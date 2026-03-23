@@ -10,6 +10,7 @@ describe("checkCsrf", () => {
     const req = mockRequest("https://worker.example.com/api/session", {
       Origin: ALLOWED,
       "X-GitHub-App-CSRF": "1",
+      Cookie: "__Host-csrf=1",
     });
     expect(checkCsrf(req, env)).toBeNull();
   });
@@ -31,6 +32,7 @@ describe("checkCsrf", () => {
     // Browsers omit Origin on same-origin fetches — this must be allowed.
     const req = mockRequest("https://worker.example.com/api/session", {
       "X-GitHub-App-CSRF": "1",
+      Cookie: "__Host-csrf=1",
     });
     expect(checkCsrf(req, env)).toBeNull();
   });

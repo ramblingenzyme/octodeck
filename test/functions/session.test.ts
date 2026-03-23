@@ -39,6 +39,7 @@ describe("/api/session", () => {
     const req = mockRequest("https://worker.example.com/api/session", {
       Origin: ALLOWED,
       "X-GitHub-App-CSRF": "1",
+      Cookie: "__Host-csrf=1",
     });
     const res = await onRequestGet(
       makeCtx(req, { SESSION_CRYPTO_KEY: key, ALLOWED_ORIGIN: ALLOWED }),
@@ -52,7 +53,7 @@ describe("/api/session", () => {
     const req = mockRequest("https://worker.example.com/api/session", {
       Origin: ALLOWED,
       "X-GitHub-App-CSRF": "1",
-      Cookie: `__Host-session=${cookie}`,
+      Cookie: `__Host-session=${cookie};__Host-csrf=1`,
     });
     const res = await onRequestGet(
       makeCtx(req, { SESSION_CRYPTO_KEY: key, ALLOWED_ORIGIN: ALLOWED }),

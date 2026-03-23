@@ -8,10 +8,12 @@ export function redirectToGitHub(): void {
 }
 
 function getCSRFHeaderValue() {
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("__Host-csrf"))
-    ?.split("=")[1];
+  return (
+    document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("__Host-csrf"))
+      ?.split("=")[1] || ""
+  );
 }
 
 export async function fetchSession(): Promise<TokenSet> {
