@@ -2,6 +2,7 @@ import type { FallbackItem } from "@/types";
 import { Card, CardTitle } from "../ui/Card";
 import styles from "./FallbackCard.module.css";
 
+// TODO: wire this up
 export const FallbackCard = ({ item }: { item: FallbackItem }) => (
   <Card repo={item.repo} age={item.age}>
     <CardTitle href={item.url}>{item.title}</CardTitle>

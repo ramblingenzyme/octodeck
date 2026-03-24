@@ -57,13 +57,6 @@ export const DEPLOYMENT_STATUS: Record<DeploymentStatus, { label: string; icon: 
   unknown: { label: "UNKNOWN", icon: "circleDot" },
 };
 
-export const SEVERITY_ORDER: Record<AlertSeverity, number> = {
-  critical: 0,
-  high: 1,
-  medium: 2,
-  low: 3,
-};
-
 export const MULTI_REPO_COLUMN_TYPES = new Set<ColumnType>([
   "ci",
   "releases",

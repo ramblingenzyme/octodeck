@@ -1,7 +1,7 @@
 - [ ] Review code as a human
-- [ ] Fix label hover color
+- [x] Fix card link hover color
 - [ ] Fix "Find References" for imports via '@' in VSCode
-- [ ] Setup knip & investigate how to detect dead CSS styling
+- [x] Setup knip & investigate how to detect dead CSS styling
 - [ ] Review usage of opacity, particulary for hover styling, and determine if this is the right approach
 - [ ] Investigate/remove broken security alerts column
 - [ ] Check if review/comments on PR cards are implemented
