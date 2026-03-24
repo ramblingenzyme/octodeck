@@ -19,13 +19,6 @@
     align-items: center;
   }
 
-  & a {
-    &:hover {
-      text-decoration: underline;
-      color: var(--color-accent);
-    }
-  }
-
   & time {
     color: var(--text-ghost);
     font-size: var(--text-md);
@@ -37,6 +30,10 @@
   color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 6px;
+
+  & a:hover {
+    color: var(--color-accent);
+  }
 }
 
 .cardFooter {
