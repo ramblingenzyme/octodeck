@@ -1,23 +1,11 @@
-import { lazy, Suspense } from "preact/compat";
 import type { ColumnConfig } from "@/types";
-
-const PRColumn = lazy(() => import("./columns/PRColumn").then((m) => ({ default: m.PRColumn })));
-const IssueColumn = lazy(() =>
-  import("./columns/IssueColumn").then((m) => ({ default: m.IssueColumn })),
-);
-const CIColumn = lazy(() => import("./columns/CIColumn").then((m) => ({ default: m.CIColumn })));
-const ActivityColumn = lazy(() =>
-  import("./columns/ActivityColumn").then((m) => ({ default: m.ActivityColumn })),
-);
-const ReleasesColumn = lazy(() =>
-  import("./columns/ReleasesColumn").then((m) => ({ default: m.ReleasesColumn })),
-);
-const DeploymentsColumn = lazy(() =>
-  import("./columns/DeploymentsColumn").then((m) => ({ default: m.DeploymentsColumn })),
-);
-const SecurityColumn = lazy(() =>
-  import("./columns/SecurityColumn").then((m) => ({ default: m.SecurityColumn })),
-);
+import { ActivityColumn } from "./columns/ActivityColumn";
+import { CIColumn } from "./columns/CIColumn";
+import { DeploymentsColumn } from "./columns/DeploymentsColumn";
+import { IssueColumn } from "./columns/IssueColumn";
+import { PRColumn } from "./columns/PRColumn";
+import { ReleasesColumn } from "./columns/ReleasesColumn";
+import { SecurityColumn } from "./columns/SecurityColumn";
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -27,47 +15,19 @@ interface ColumnProps {
 export const Column = ({ col, onRemove }: ColumnProps) => {
   switch (col.type) {
     case "prs":
-      return (
-        <Suspense fallback={null}>
-          <PRColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <PRColumn col={col} onRemove={onRemove} />;
     case "issues":
-      return (
-        <Suspense fallback={null}>
-          <IssueColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <IssueColumn col={col} onRemove={onRemove} />;
     case "ci":
-      return (
-        <Suspense fallback={null}>
-          <CIColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <CIColumn col={col} onRemove={onRemove} />;
     case "activity":
-      return (
-        <Suspense fallback={null}>
-          <ActivityColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <ActivityColumn col={col} onRemove={onRemove} />;
     case "releases":
-      return (
-        <Suspense fallback={null}>
-          <ReleasesColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <ReleasesColumn col={col} onRemove={onRemove} />;
     case "deployments":
-      return (
-        <Suspense fallback={null}>
-          <DeploymentsColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <DeploymentsColumn col={col} onRemove={onRemove} />;
     case "security":
-      return (
-        <Suspense fallback={null}>
-          <SecurityColumn col={col} onRemove={onRemove} />
-        </Suspense>
-      );
+      return <SecurityColumn col={col} onRemove={onRemove} />;
     default:
       col.type satisfies never;
       return null;
