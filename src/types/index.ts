@@ -6,6 +6,8 @@ export type ColumnType =
   | "releases"
   | "deployments"
   | "security";
+
+// TODO: refactor to be defined in SvgIcon and derived from ICON_MAP
 export type IconName =
   | "check"
   | "x"
@@ -26,7 +28,8 @@ export type IconName =
   | "gitFork"
   | "star"
   | "deploy"
-  | "shield";
+  | "shield"
+  | "pencil";
 export type CIStatus = "success" | "failure" | "running";
 export type IssueState = "open" | "closed";
 export type CITrigger = "push" | "pull_request" | "release";

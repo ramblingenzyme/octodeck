@@ -3,3 +3,8 @@
   font-family: var(--font-mono);
   font-size: var(--text-md);
 }
+
+.activityFooter {
+  justify-content: flex-start;
+  gap: 2px;
+}

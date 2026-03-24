@@ -7,7 +7,7 @@ interface Env {
 }
 
 export const onRequestGet = async ({
-  request,
+  request: _request,
   env,
 }: {
   request: Request;

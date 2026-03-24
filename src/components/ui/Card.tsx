@@ -9,7 +9,7 @@ interface CardProps {
 }
 
 export const Card = ({ repo, age, className, children }: CardProps) => (
-  <article className={`${cardStyles.card}${className ? ` ${className}` : ""}`}>
+  <article className={`${cardStyles.card} ${className || ""}`}>
     <CardTop repo={repo} age={age} />
     {children}
   </article>
@@ -30,6 +30,12 @@ export const CardTitle = ({ href, prefix, children }: CardTitleProps) => (
   </p>
 );
 
-export const CardFooter = ({ children }: { children: React.ReactNode }) => (
-  <footer className={cardStyles.cardFooter}>{children}</footer>
-);
+export const CardFooter = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return <footer className={className || cardStyles.cardFooter}>{children}</footer>;
+};

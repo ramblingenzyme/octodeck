@@ -88,15 +88,10 @@ export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalP
           </div>
         </ModalBody>
         <ModalFooter>
-          <button type="button" className={modalStyles.btnModal} onClick={onClose}>
+          <button type="button" onClick={onClose}>
             Cancel
           </button>
-          <button
-            type="submit"
-            className={`${modalStyles.btnModal} ${modalStyles.btnModalPrimary}`}
-          >
-            Save
-          </button>
+          <button type="submit">Save</button>
         </ModalFooter>
       </form>
     </Modal>

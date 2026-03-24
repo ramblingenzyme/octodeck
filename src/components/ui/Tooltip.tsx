@@ -1,5 +1,6 @@
 import { useId, useRef } from "preact/hooks";
 import styles from "./Tooltip.module.css";
+import { cloneElement, toChildArray, VNode } from "preact";
 
 interface TooltipProps {
   text: React.ReactNode;
@@ -23,17 +24,43 @@ export const Tooltip = ({
   const show = () => popoverRef.current?.showPopover?.();
   const hide = () => popoverRef.current?.hidePopover?.();
 
+  const cloneWithHandlers = (node: VNode<HTMLElement>) => {
+    return cloneElement(node, {
+      style: { ...node.props.style, anchorName },
+      onMouseEnter: show,
+      onMouseLeave: hide,
+      onFocusIn: show,
+      onBlurCapture: hide,
+    });
+  };
+
+  const wrapWithSpan = (node: string | number) => {
+    return (
+      <span
+        className={`${styles.wrapper}${className ? ` ${className}` : ""}`}
+        aria-describedby={id}
+        style={{ anchorName } as React.CSSProperties}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocusIn={show}
+        onBlurCapture={hide}
+      >
+        {node}
+      </span>
+    );
+  };
+
+  const newChildren = toChildArray(children).map((child) => {
+    if (typeof child == "string" || typeof child == "number") {
+      return wrapWithSpan(child);
+    } else {
+      return cloneWithHandlers(child);
+    }
+  });
+
   return (
-    <span
-      className={`${styles.wrapper}${className ? ` ${className}` : ""}`}
-      aria-describedby={id}
-      style={{ anchorName } as React.CSSProperties}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocusIn={show}
-      onBlurCapture={hide}
-    >
-      {children}
+    <>
+      {newChildren}
       <span
         ref={popoverRef}
         role="tooltip"
@@ -44,6 +71,6 @@ export const Tooltip = ({
       >
         {text}
       </span>
-    </span>
+    </>
   );
 };

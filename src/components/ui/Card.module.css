@@ -5,18 +5,31 @@
   padding: 10px;
   cursor: default;
   transition: border-color 0.15s;
-}
 
-.card > header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
+  & header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
 
-.card time {
-  color: var(--text-ghost);
-  font-size: var(--text-md);
+  & footer {
+    display: flex;
+    font-size: var(--text-md);
+    align-items: center;
+  }
+
+  & a {
+    &:hover {
+      text-decoration: underline;
+      color: var(--color-accent);
+    }
+  }
+
+  & time {
+    color: var(--text-ghost);
+    font-size: var(--text-md);
+  }
 }
 
 .cardTitle {
@@ -26,19 +39,9 @@
   margin-bottom: 6px;
 }
 
-.cardTitle > a {
-  &:hover {
-    text-decoration: underline;
-    color: var(--color-accent);
-  }
-}
-
 .cardFooter {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 8px;
-  font-size: var(--text-md);
 }
 
 .cardAuthor {

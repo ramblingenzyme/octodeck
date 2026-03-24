@@ -1,3 +1,65 @@
+.colHeader {
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-topbar);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 13%, transparent);
+
+  &:hover .dragHandle {
+    opacity: 0.5;
+  }
+
+  & h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-md);
+    /* letter-spacing: 0.04em; */
+    text-transform: uppercase;
+    color: var(--color-accent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  & output {
+    background: var(--bg-card);
+    color: var(--text-ghost);
+    font-size: var(--text-sm);
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+    min-width: 20px;
+    text-align: center;
+    cursor: default;
+  }
+}
+
+.dragHandle {
+  cursor: grab;
+  color: var(--text-ghost);
+  opacity: 0.2;
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-right: 6px;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+
+  &:hover {
+    opacity: 1 !important;
+    color: var(--text-secondary);
+    background: var(--border-mid);
+  }
+}
+
 .dropMenu {
   position: absolute;
   top: anchor(bottom);
@@ -28,5 +90,40 @@
   &:hover {
     background: var(--border-mid);
     color: var(--text-primary);
+  }
+}
+
+.btnIcon {
+  color: var(--text-ghost);
+  font-size: var(--text-md);
+  padding: 3px 5px;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  transition:
+    color 0.15s,
+    background 0.15s;
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--border-mid);
+  }
+}
+
+.btnIconSpinning {
+  color: var(--color-accent);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+
+  & > * {
+    display: inline-block;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

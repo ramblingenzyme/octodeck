@@ -136,6 +136,7 @@ export function mapDependabotAlert(a: GHDependabotAlert, repo: string): Security
   };
 }
 
+// TODO: should each case branch call an individual mapper function?
 export function mapEvent(event: GHEvent): ActivityItem | null {
   const repo = event.repo.name;
   const age = event.created_at;

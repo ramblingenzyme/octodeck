@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
-import { PencilIcon } from "./icons/PencilIcon";
 import { SvgIcon } from "./SvgIcon";
 import styles from "./InlineEdit.module.css";
 
@@ -49,7 +48,6 @@ export const InlineEdit = ({
       <div className={styles.editRow}>
         <textarea
           ref={textareaRef}
-          className={styles.textarea}
           defaultValue={value}
           onKeyDown={(e) => {
             if (e.key === "Enter") commit();
@@ -60,10 +58,10 @@ export const InlineEdit = ({
           }}
           aria-label={ariaLabel}
         />
-        <button className={styles.confirm} onClick={commit} aria-label="Confirm">
+        <button onClick={commit} aria-label="Confirm">
           <SvgIcon name="check" />
         </button>
-        <button className={styles.cancel} onClick={cancel} aria-label="Cancel">
+        <button onClick={cancel} aria-label="Cancel">
           <SvgIcon name="x" />
         </button>
       </div>
@@ -79,7 +77,7 @@ export const InlineEdit = ({
       title={value}
     >
       {value || (placeholder && <span className={styles.placeholder}>{placeholder}</span>)}
-      <PencilIcon className={styles.pencil} />
+      <SvgIcon name="pencil" className={styles.pencil} />
     </button>
   );
 };

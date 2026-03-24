@@ -19,6 +19,7 @@ export function parseQuery(query: string): { key: string; value: string }[] {
     });
 }
 
+// TODO: provide some UI guidance on supported tokens in column queries that are filtered client side
 export function matchesTokens(item: KnownItem, tokens: ReturnType<typeof parseQuery>): boolean {
   return tokens.every(({ key, value }) => {
     if (!key) {

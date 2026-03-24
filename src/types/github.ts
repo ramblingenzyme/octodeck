@@ -89,6 +89,7 @@ export interface GHDependabotAlert {
   };
 }
 
+// TODO: refactor into a union of specific event types
 export interface GHEvent {
   id: string;
   type: string;

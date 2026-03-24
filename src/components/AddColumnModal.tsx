@@ -45,6 +45,22 @@ export const AddColumnModal = ({ open, onAdd, onClose }: AddColumnModalProps) =>
     onClose();
   };
 
+  const columnTypeButtons = (Object.keys(COLUMN_TYPES) as ColumnType[]).map((type) => {
+    const cfg = COLUMN_TYPES[type];
+    return (
+      <button
+        key={type}
+        type="button"
+        className={`${styles.typeBtn} ${ACCENT_CLASS[type]} ${selectedType === type ? styles.active : ""}`}
+        onClick={() => handleTypeChange(type)}
+        aria-pressed={selectedType === type}
+      >
+        <SvgIcon name={cfg.icon} className={styles.colIcon} />
+        <span>{cfg.label}</span>
+      </button>
+    );
+  });
+
   return (
     <Modal
       open={open}
@@ -55,23 +71,7 @@ export const AddColumnModal = ({ open, onAdd, onClose }: AddColumnModalProps) =>
     >
       <form onSubmit={handleSubmit}>
         <ModalBody>
-          <div className={styles.modalTypes}>
-            {(Object.keys(COLUMN_TYPES) as ColumnType[]).map((type) => {
-              const cfg = COLUMN_TYPES[type];
-              return (
-                <button
-                  key={type}
-                  type="button"
-                  className={`${styles.typeBtn} ${ACCENT_CLASS[type]} ${selectedType === type ? styles.active : ""}`}
-                  onClick={() => handleTypeChange(type)}
-                  aria-pressed={selectedType === type}
-                >
-                  <SvgIcon name={cfg.icon} className={styles.colIcon} />
-                  <span>{cfg.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          <div className={styles.modalTypes}>{columnTypeButtons}</div>
           <div className={styles.modalField}>
             <label htmlFor="column-title-input">Column Title</label>
             <input
@@ -96,15 +96,10 @@ export const AddColumnModal = ({ open, onAdd, onClose }: AddColumnModalProps) =>
           </div>
         </ModalBody>
         <ModalFooter>
-          <button type="button" className={modalStyles.btnModal} onClick={onClose}>
+          <button type="button" onClick={onClose}>
             Cancel
           </button>
-          <button
-            type="submit"
-            className={`${modalStyles.btnModal} ${modalStyles.btnModalPrimary}`}
-          >
-            Add Column
-          </button>
+          <button type="submit">Add Column</button>
         </ModalFooter>
       </form>
     </Modal>

@@ -93,6 +93,7 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
 
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const sessionId = useAuthStore((s) => s.sessionId);
+  // This lets the mock data render behind the auth modal
   const demo = isDemoMode || !sessionId;
 
   const { data: user } = useGetUser(demo ? null : sessionId);

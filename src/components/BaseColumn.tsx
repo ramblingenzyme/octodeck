@@ -52,81 +52,85 @@ export const BaseColumn = ({ col, onRemove, renderCard, accentClass }: BaseColum
     .join(" ");
 
   return (
-    <section ref={ref} className={columnClass} aria-label={col.title}>
-      <ColumnHeader
-        col={col}
-        handleRef={handleRef}
-        itemCount={data.length}
-        isFetching={isFetching}
-        spinning={spinning}
-        lastUpdated={lastUpdated}
-        onRefresh={handleRefresh}
-        onConfirmRemove={() => startConfirm()}
-        onOpenSettings={() => setSettingsOpen(true)}
-      />
+    <>
+      {/* TODO: determine if it's worth refactoring so ColumnSettingsModal doesn't get rendered for each column */}
       <ColumnSettingsModal open={settingsOpen} col={col} onClose={() => setSettingsOpen(false)} />
-
-      <div className={styles.colQuery}>
-        <InlineEdit
-          value={col.query ?? ""}
-          onCommit={(v) => updateColumnQuery(col.id, v)}
-          placeholder="Add filter…"
-          aria-label="Filter query"
-        />
-        {col.repos && col.repos.length > 0 && (
-          <Tooltip
-            text={
-              <ul className={styles.repoList}>
-                {col.repos.map((r) => (
-                  <li key={r}>{r}</li>
-                ))}
-              </ul>
-            }
-            position="below"
-            align="end"
-          >
-            <span className={styles.repoCount}>{col.repos.length}</span>
-          </Tooltip>
-        )}
-      </div>
-
-      {confirming && (
-        <ColumnConfirmDelete
+      <section ref={ref} className={columnClass} aria-label={col.title}>
+        <ColumnHeader
           col={col}
-          onCancel={() => cancelConfirm()}
-          onConfirm={() => onRemove(col.id)}
+          handleRef={handleRef}
+          itemCount={data.length}
+          isFetching={isFetching}
+          spinning={spinning}
+          lastUpdated={lastUpdated}
+          onRefresh={handleRefresh}
+          onConfirmRemove={() => startConfirm()}
+          onOpenSettings={() => setSettingsOpen(true)}
         />
-      )}
 
-      {warnings.length > 0 && !warnDismissed && (
-        <div className={styles.warningBanner} role="alert">
-          <span>
-            {warnings.length === 1 ? warnings[0] : `${warnings.length} repos failed to load`}
-          </span>
-          <button onClick={() => setWarnDismissed(true)} aria-label="Dismiss warning">
-            ×
-          </button>
+        <div className={styles.colQuery}>
+          <InlineEdit
+            value={col.query ?? ""}
+            onCommit={(v) => updateColumnQuery(col.id, v)}
+            placeholder="Add filter…"
+            aria-label="Filter query"
+          />
+          {col.repos && col.repos.length > 0 && (
+            <Tooltip
+              text={
+                <ul className={styles.repoList}>
+                  {col.repos.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+              }
+              position="below"
+              align="end"
+            >
+              <span className={styles.repoCount}>{col.repos.length}</span>
+            </Tooltip>
+          )}
         </div>
-      )}
 
-      <div className={styles.colBody}>
-        {isLoading && (
-          <div className={styles.skeletonWrapper} aria-busy="true">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={styles.skeletonCard} />
-            ))}
+        {confirming && (
+          <ColumnConfirmDelete
+            col={col}
+            onCancel={() => cancelConfirm()}
+            onConfirm={() => onRemove(col.id)}
+          />
+        )}
+
+        {warnings.length > 0 && !warnDismissed && (
+          <div className={styles.warningBanner} role="alert">
+            <span>
+              {warnings.length === 1 ? warnings[0] : `${warnings.length} repos failed to load`}
+            </span>
+            <button onClick={() => setWarnDismissed(true)} aria-label="Dismiss warning">
+              ×
+            </button>
           </div>
         )}
-        {error && !isLoading && (
-          <div className={styles.errorState} role="alert">
-            {error}
-          </div>
-        )}
-        {!isLoading && !error && data.length === 0 && (
-          <p className={styles.emptyState}>No results</p>
-        )}
-        {!isLoading && !error && data.length > 0 && data.map((item) => renderCard(item))}
-      </div>
-    </section>
+
+        <div className={styles.colBody}>
+          {/* TOOD: refactor so that all these renders are exclusive */}
+          {isLoading && (
+            <div className={styles.skeletonWrapper} aria-busy="true">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className={styles.skeletonCard} />
+              ))}
+            </div>
+          )}
+          {error && !isLoading && (
+            <div className={styles.errorState} role="alert">
+              {error}
+            </div>
+          )}
+          {!isLoading && !error && data.length === 0 && (
+            <p className={styles.emptyState}>No results</p>
+          )}
+          {!isLoading && !error && data.length > 0 && data.map((item) => renderCard(item))}
+        </div>
+      </section>
+    </>
   );
 };

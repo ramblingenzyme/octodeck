@@ -1,9 +1,10 @@
 import { useId, useState } from "preact/hooks";
-import type { RefObject } from "preact";
-import type { ColumnConfig } from "@/types";
+import type { CSSProperties, RefObject } from "preact";
+import type { ColumnConfig, IconName } from "@/types";
 import { COLUMN_TYPES } from "@/constants";
 import { SvgIcon } from "./ui/SvgIcon";
 import { Tooltip } from "./ui/Tooltip";
+// TODO: finish migration of column header specific CSS into ColumnHeader.module.css
 import styles from "./BaseColumn.module.css";
 import headerStyles from "./ColumnHeader.module.css";
 
@@ -19,12 +20,31 @@ interface ColumnHeaderProps {
   onOpenSettings: () => void;
 }
 
+// TODO: should this be replaced by utils/relativeTime?
 function formatAge(date: Date): string {
   const mins = Math.floor((Date.now() - date.getTime()) / 60_000);
   if (mins < 1) return "just now";
   if (mins === 1) return "1m ago";
   return `${mins}m ago`;
 }
+
+const IconButton = ({
+  iconName,
+  tooltip,
+  className,
+  onClick,
+}: {
+  iconName: IconName;
+  tooltip: string;
+  className?: string;
+  onClick: () => void;
+}) => (
+  <Tooltip text={tooltip} position="below">
+    <button className={`${styles.btnIcon} ${className}`} onClick={onClick} aria-label={tooltip}>
+      <SvgIcon name={iconName} />
+    </button>
+  </Tooltip>
+);
 
 export const ColumnHeader = ({
   col,
@@ -43,47 +63,29 @@ export const ColumnHeader = ({
   const menuId = useId();
   const anchorName = `--col-menu-${menuId.replace(/:/g, "")}`;
 
-  return (
-    <header className={styles.colHeader}>
-      {/* TODO: once Firefox fully supports popover="hint", the onToggle + menuOpen state
-          can be removed — the browser will auto-dismiss hint popovers when a popover="auto"
-          opens, making the conditional Tooltip unnecessary. */}
-      {menuOpen ? (
-        <button
-          ref={handleRef}
-          type="button"
-          className={styles.dragHandle}
-          aria-label="Column options"
-          aria-haspopup="menu"
-          aria-expanded={menuOpen}
-          popovertarget={menuId}
-          style={{ anchorName } as React.CSSProperties}
-        >
-          <SvgIcon name="grip" />
-        </button>
-      ) : (
-        <Tooltip text="Drag to reorder · Click for settings" position="below">
-          <button
-            ref={handleRef}
-            type="button"
-            className={styles.dragHandle}
-            aria-label="Column options"
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-            popovertarget={menuId}
-            style={{ anchorName } as React.CSSProperties}
-          >
-            <SvgIcon name="grip" />
-          </button>
-        </Tooltip>
-      )}
+  const dragButton = (
+    <button
+      ref={handleRef}
+      type="button"
+      className={headerStyles.dragHandle}
+      aria-label="Column options"
+      aria-haspopup="menu"
+      aria-expanded={menuOpen}
+      popovertarget={menuId}
+      style={{ anchorName } as CSSProperties}
+    >
+      <SvgIcon name="grip" />
+    </button>
+  );
 
+  return (
+    <>
       <menu
         id={menuId}
         popover="auto"
         onToggle={(e) => setMenuOpen((e as ToggleEvent).newState === "open")}
         className={headerStyles.dropMenu}
-        style={{ positionAnchor: anchorName } as React.CSSProperties}
+        style={{ positionAnchor: anchorName } as CSSProperties}
         role="menu"
       >
         <li role="none">
@@ -100,37 +102,42 @@ export const ColumnHeader = ({
           </button>
         </li>
       </menu>
-
-      <div className={styles.colHeaderLeft}>
-        <SvgIcon name={cfg.icon} className={styles.colIcon} />
-        <Tooltip text={col.title} position="below" className={styles.colTitleTooltip}>
-          <h2>{col.title}</h2>
-        </Tooltip>
-        <Tooltip text={`${itemCount} ${itemLabel}`} position="below">
-          <output aria-label={`${itemCount} ${itemLabel}`}>{itemCount}</output>
-        </Tooltip>
-      </div>
-      <div className={styles.colControls}>
-        {lastUpdated && (
-          <Tooltip text={lastUpdated.toLocaleTimeString()} position="below">
-            <span className={styles.lastUpdated}>{formatAge(lastUpdated)}</span>
+      <header className={headerStyles.colHeader}>
+        {/* TODO: once Firefox fully supports popover="hint", the onToggle + menuOpen state
+          can be removed — the browser will auto-dismiss hint popovers when a popover="auto"
+          opens, making the conditional Tooltip unnecessary. */}
+        {menuOpen ? (
+          dragButton
+        ) : (
+          <Tooltip text="Drag to reorder · Click for settings" position="below">
+            {dragButton}
           </Tooltip>
         )}
-        <Tooltip text="Refresh" position="below">
-          <button
-            className={`${styles.btnIcon} ${spinning || isFetching ? styles.btnIconSpinning : ""}`}
+
+        <div className={styles.colHeaderLeft}>
+          <SvgIcon name={cfg.icon} className={styles.colIcon} />
+          <Tooltip text={col.title} position="below">
+            <h2>{col.title}</h2>
+          </Tooltip>
+          <Tooltip text={`${itemCount} ${itemLabel}`} position="below">
+            <output aria-label={`${itemCount} ${itemLabel}`}>{itemCount}</output>
+          </Tooltip>
+        </div>
+        <section className={styles.colControls}>
+          {lastUpdated && (
+            <Tooltip text={lastUpdated.toLocaleTimeString()} position="below">
+              <span className={styles.lastUpdated}>{formatAge(lastUpdated)}</span>
+            </Tooltip>
+          )}
+          <IconButton
+            tooltip="Refresh"
             onClick={onRefresh}
-            aria-label="Refresh"
-          >
-            <SvgIcon name="refresh" />
-          </button>
-        </Tooltip>
-        <Tooltip text="Remove column" position="below">
-          <button className={styles.btnIcon} onClick={onConfirmRemove} aria-label="Remove column">
-            <SvgIcon name="x" />
-          </button>
-        </Tooltip>
-      </div>
-    </header>
+            className={spinning || isFetching ? styles.btnIconSpinning : ""}
+            iconName="refresh"
+          />
+          <IconButton tooltip="Remove column" onClick={onConfirmRemove} iconName="x" />
+        </section>
+      </header>
+    </>
   );
 };

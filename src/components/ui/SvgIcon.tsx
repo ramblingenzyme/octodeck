@@ -1,3 +1,4 @@
+// TODO: determine if there's a good way to make it so that users don't load icons that don't get used at runtime
 import type { IconName } from "@/types";
 import styles from "./SvgIcon.module.css";
 import { CheckIcon } from "./icons/CheckIcon";
@@ -20,6 +21,7 @@ import { GitForkIcon } from "./icons/GitForkIcon";
 import { StarIcon } from "./icons/StarIcon";
 import { DeployIcon } from "./icons/DeployIcon";
 import { ShieldIcon } from "./icons/ShieldIcon";
+import { PencilIcon } from "./icons/PencilIcon";
 
 const ICON_MAP = {
   check: CheckIcon,
@@ -42,6 +44,7 @@ const ICON_MAP = {
   star: StarIcon,
   deploy: DeployIcon,
   shield: ShieldIcon,
+  pencil: PencilIcon,
 } as const;
 
 export const SvgIcon = ({ name, className }: { name: IconName; className?: string }) => {

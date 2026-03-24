@@ -14,7 +14,7 @@ export const ActivityCard = ({ item }: ActivityCardProps) => {
   return (
     <Card repo={item.repo} age={item.age}>
       <CardTitle href={item.url}>{item.text}</CardTitle>
-      <CardFooter>
+      <CardFooter className={styles.activityFooter}>
         <CardTypeIcon icon={icon} />
         {item.ref && (
           <a className={styles.activityRef} href={item.url} target="_blank" rel="noreferrer">

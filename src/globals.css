@@ -1,4 +1,8 @@
 /* ── Design Tokens ────────────────────────────────────────────────────────── */
+/*
+  TODO: review usage of design tokens and whether they're always being used in a
+  semantic manner, e.g. are CI status tokens always used for CI status styling?
+*/
 :root {
   --bg-root: #13131a;
   --bg-topbar: #1a1f2e;
@@ -70,6 +74,7 @@ a {
   }
 }
 
+/* TODO: Should this be *:focus-visible? */
 :focus-visible {
   outline: 2px solid var(--accent-prs);
   outline-offset: 2px;

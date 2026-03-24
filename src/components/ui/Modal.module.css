@@ -48,49 +48,34 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-}
 
-.btnModal {
-  padding: 6px 14px;
-  border-radius: var(--radius-md);
-  font-size: var(--text-md);
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border-mid);
-  color: var(--text-muted);
-  transition:
-    border-color 0.15s,
-    color 0.15s;
+  & button {
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    font-size: var(--text-md);
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-mid);
+    color: var(--text-muted);
+    transition:
+      border-color 0.15s,
+      color 0.15s;
 
-  &:hover {
-    border-color: var(--text-muted);
-    color: var(--text-primary);
-  }
-}
+    &:hover {
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+    }
 
-.btnModalPrimary {
-  background: var(--accent-prs);
-  color: var(--text-on-light);
-  border-color: var(--accent-prs);
+    &[type="submit"],
+    &:last-of-type {
+      background: var(--accent-prs);
+      color: var(--text-on-light);
+      border-color: var(--accent-prs);
 
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.btnModalDanger {
-  color: var(--accent-issues, oklch(0.72 0.17 22));
-  border-color: var(--accent-issues, oklch(0.72 0.17 22));
-
-  &:hover {
-    background: color-mix(in srgb, var(--accent-issues, oklch(0.72 0.17 22)) 12%, transparent);
-    color: var(--accent-issues, oklch(0.72 0.17 22));
-    border-color: var(--accent-issues, oklch(0.72 0.17 22));
-  }
-
-  &:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 }
 
