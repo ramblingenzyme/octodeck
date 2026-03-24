@@ -21,10 +21,10 @@
   color: var(--text-muted);
 }
 .cardStatApproved {
-  color: var(--ci-success);
+  color: var(--status-success);
 }
 .cardStatPending {
-  color: var(--ci-running);
+  color: var(--status-warning);
 }
 
 .cardIcon {

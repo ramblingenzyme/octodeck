@@ -42,7 +42,6 @@
     color: var(--text-secondary);
     background: transparent;
     border: none;
-    outline: none;
     min-width: 0;
     padding: 0;
     resize: none;

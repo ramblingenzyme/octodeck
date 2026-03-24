@@ -1,8 +1,4 @@
 /* ── Design Tokens ────────────────────────────────────────────────────────── */
-/*
-  TODO: review usage of design tokens and whether they're always being used in a
-  semantic manner, e.g. are CI status tokens always used for CI status styling?
-*/
 :root {
   --bg-root: #13131a;
   --bg-topbar: #1a1f2e;
@@ -18,15 +14,11 @@
   --text-muted: #a8b8cb;
   --text-ghost: #93adc2;
 
-  --accent-notifications: oklch(0.8 0.16 142);
-  --accent-prs: oklch(0.7 0.16 265);
-  --accent-issues: oklch(0.72 0.17 22);
-  --accent-ci: oklch(0.83 0.16 90);
-  --accent-activity: oklch(0.78 0.13 308);
+  --accent-ui: oklch(0.7 0.16 265);
 
-  --ci-success: #4ade80;
-  --ci-failure: #f87171;
-  --ci-running: #fbbf24;
+  --status-success: #4ade80;
+  --status-danger: #f87171;
+  --status-warning: #fbbf24;
 
   --font-mono: "Space Grotesk", sans-serif;
   --font-display: "Outfit", sans-serif;
@@ -75,7 +67,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-prs);
+  outline: 2px solid var(--accent-ui);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }

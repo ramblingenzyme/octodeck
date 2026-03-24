@@ -18,7 +18,6 @@ interface ColumnHeaderProps {
   onOpenSettings: () => void;
 }
 
-// TODO: should this be replaced by utils/relativeTime?
 function formatAge(date: Date): string {
   const mins = Math.floor((Date.now() - date.getTime()) / 60_000);
   if (mins < 1) return "just now";

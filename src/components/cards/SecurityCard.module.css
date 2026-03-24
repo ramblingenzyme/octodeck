@@ -1,11 +1,11 @@
 .critical {
-  --severity-color: var(--ci-failure);
+  --severity-color: var(--status-danger);
 }
 .high {
-  --severity-color: var(--ci-failure);
+  --severity-color: var(--status-danger);
 }
 .medium {
-  --severity-color: var(--ci-running);
+  --severity-color: var(--status-warning);
 }
 .low {
   --severity-color: var(--text-muted);

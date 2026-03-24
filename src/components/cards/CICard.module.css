@@ -1,13 +1,13 @@
 .success {
-  --ci-color: var(--ci-success);
+  --ci-color: var(--status-success);
   border-left: 3px solid var(--ci-color);
 }
 .failure {
-  --ci-color: var(--ci-failure);
+  --ci-color: var(--status-danger);
   border-left: 3px solid var(--ci-color);
 }
 .running {
-  --ci-color: var(--ci-running);
+  --ci-color: var(--status-warning);
   border-left: 3px solid var(--ci-color);
 }
 

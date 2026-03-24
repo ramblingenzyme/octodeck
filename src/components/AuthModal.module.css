@@ -126,7 +126,7 @@
 
 .errorText {
   font-size: var(--text-md);
-  color: var(--ci-failure);
+  color: var(--status-danger);
   text-align: center;
 }
 

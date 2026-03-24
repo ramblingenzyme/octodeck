@@ -68,9 +68,9 @@
 
     &[type="submit"],
     &:last-of-type {
-      background: var(--accent-prs);
+      background: var(--accent-ui);
       color: var(--text-on-light);
-      border-color: var(--accent-prs);
+      border-color: var(--accent-ui);
 
       &:hover {
         opacity: 0.9;
@@ -91,6 +91,6 @@
   font-size: var(--text-md);
 
   &:focus {
-    border-color: var(--accent-prs);
+    border-color: var(--accent-ui);
   }
 }

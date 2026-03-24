@@ -1,9 +1,9 @@
 .success {
-  --deploy-color: var(--ci-success);
+  --deploy-color: var(--status-success);
   border-left: 3px solid var(--deploy-color);
 }
 .failure {
-  --deploy-color: var(--ci-failure);
+  --deploy-color: var(--status-danger);
   border-left: 3px solid var(--deploy-color);
 }
 .pending {
@@ -11,7 +11,7 @@
   border-left: 3px solid var(--deploy-color);
 }
 .in_progress {
-  --deploy-color: var(--ci-running);
+  --deploy-color: var(--status-warning);
   border-left: 3px solid var(--deploy-color);
 }
 .unknown {
