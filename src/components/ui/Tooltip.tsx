@@ -54,7 +54,7 @@ export const Tooltip = ({
     if (typeof child == "string" || typeof child == "number") {
       return wrapWithSpan(child);
     } else {
-      return cloneWithHandlers(child);
+      return cloneWithHandlers(child as VNode<HTMLElement>);
     }
   });
 
