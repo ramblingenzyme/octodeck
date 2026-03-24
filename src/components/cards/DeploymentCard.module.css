@@ -19,6 +19,12 @@
   border-left: 3px solid var(--deploy-color);
 }
 
+.deployMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .deployBadge {
   composes: cardBadge from "../ui/Card.module.css";
   color: var(--deploy-color, var(--text-muted));

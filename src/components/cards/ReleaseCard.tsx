@@ -1,6 +1,5 @@
 import type { ReleaseItem } from "@/types";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
-import cardStyles from "../ui/Card.module.css";
 import styles from "./ReleaseCard.module.css";
 
 interface ReleaseCardProps {
@@ -20,7 +19,7 @@ export const ReleaseCard = ({ item }: ReleaseCardProps) => {
     <Card repo={item.repo} age={item.age}>
       <CardTitle href={item.url}>{item.tag}</CardTitle>
       <CardFooter>
-        {hasSubtitle && <span className={cardStyles.cardAuthor}>{subtitle}</span>}
+        {hasSubtitle && <span className={styles.subtitle}>{subtitle}</span>}
         {item.prerelease && <span className={styles.prereleaseBadge}>pre-release</span>}
       </CardFooter>
     </Card>

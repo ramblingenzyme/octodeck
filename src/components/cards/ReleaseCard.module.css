@@ -1,3 +1,7 @@
+.subtitle {
+  color: var(--text-muted);
+}
+
 .prereleaseBadge {
   composes: cardBadge from "../ui/Card.module.css";
   background: color-mix(in srgb, var(--status-warning) 12%, transparent);

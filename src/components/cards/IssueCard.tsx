@@ -1,9 +1,10 @@
 import type { IssueItem } from "@/types";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { SvgIcon } from "../ui/SvgIcon";
+import { UserLink } from "../ui/UserLink";
 import { LabelList } from "./LabelList";
 import { CardStat } from "./CardParts";
-import cardStyles from "../ui/Card.module.css";
+import styles from "./IssueCard.module.css";
 
 interface IssueCardProps {
   item: IssueItem;
@@ -17,13 +18,11 @@ export const IssueCard = ({ item }: IssueCardProps) => {
       </CardTitle>
       <LabelList labels={item.labels} repo={item.repo} />
       <CardFooter>
-        <span className={cardStyles.cardAuthor}>
+        <span className={styles.assignee}>
           {item.assignee ? (
             <>
               <SvgIcon name="arrowRight" />
-              <a href={`https://github.com/${item.assignee}`} target="_blank" rel="noreferrer">
-                {item.assignee}
-              </a>
+              <UserLink username={item.assignee} />
             </>
           ) : (
             "unassigned"

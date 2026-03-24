@@ -1,12 +1,12 @@
-# My tasks
+# Human tasks
 
 - [ ] Review code as a human
 - [x] Fix card link hover color
 - [ ] Integrate TS check into lint-staged
-- [ ] Fix "Find References" for imports via '@' in VSCode
+- [x] Fix "Find References" for imports via '@' in VSCode
 - [x] Setup knip & investigate how to detect dead CSS styling
 - [ ] Integrate knip into lint-staged
-- [ ] Check if review/comments on PR cards are implemented
+- [x] Check if review/comments on PR cards are implemented
 - [x] Fix broken ref rendering in activity cards
 - [ ] Repo selector in add column modal when column supports it
 - [ ] Fix query multiline growing
@@ -17,12 +17,13 @@
 # Agent tasks
 
 - [ ] Review usage of opacity, particulary for hover styling, and determine if this is the right approach
+- [ ] Implement fetching of review counts for PR cards
 - [ ] Investigate/remove broken security alerts column
 - [ ] Empty state for columns that require repo selection
 - [ ] Fix auth modal flash on load when logged in
-- [ ] Extract user link for card footers
-- [ ] Fix deployments footer to link users & refs
-- [ ] Persistent focus border on edit query input
+- [x] Extract user link for card footers
+- [x] Fix deployments footer to link users & refs
+- [x] Persistent focus border on edit query input
 - [ ] Reassess filter queries for non issue/PR columns
 - [ ] Assess automatically detected accessibility issues from Firefox Devtools
 - [ ] Drag and Drop sometimes doesn't work?

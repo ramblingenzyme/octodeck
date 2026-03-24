@@ -2,6 +2,7 @@ import type { PRItem } from "@/types";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { LabelList } from "./LabelList";
 import { CardStat } from "./CardParts";
+import { UserLink } from "../ui/UserLink";
 import cardStyles from "../ui/Card.module.css";
 import styles from "./PRCard.module.css";
 
@@ -16,14 +17,7 @@ export const PRCard = ({ item }: PRCardProps) => {
         {item.title}
       </CardTitle>
       <CardFooter>
-        <a
-          className={cardStyles.cardAuthor}
-          href={`https://github.com/${item.author}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          @{item.author}
-        </a>
+        <UserLink username={item.author} />
         <div className={cardStyles.cardStats}>
           {item.draft && <span className={styles.draftBadge}>DRAFT</span>}
           <CardStat

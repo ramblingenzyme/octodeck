@@ -17,6 +17,10 @@
     display: flex;
     font-size: var(--text-md);
     align-items: center;
+
+    & a {
+      color: var(--text-muted);
+    }
   }
 
   & time {
@@ -39,17 +43,6 @@
 .cardFooter {
   justify-content: space-between;
   gap: 8px;
-}
-
-.cardAuthor {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-muted);
-
-  & a {
-    color: inherit;
-  }
 }
 
 .cardStats {

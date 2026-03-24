@@ -2,6 +2,7 @@ import type { CIItem } from "@/types";
 import { CI_STATUS } from "@/constants";
 import { Card, CardTitle, CardFooter } from "../ui/Card";
 import { SvgIcon } from "../ui/SvgIcon";
+import { RefLink } from "../ui/RefLink";
 import styles from "./CICard.module.css";
 
 interface CICardProps {
@@ -16,13 +17,7 @@ export const CICard = ({ item }: CICardProps) => {
       <CardTitle href={item.url}>{item.name}</CardTitle>
       <CardFooter>
         <span className={styles.ciBranchMeta}>
-          <a
-            href={`https://github.com/${item.repo}/tree/${item.branch}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {item.branch}
-          </a>
+          <RefLink repo={item.repo} gitRef={item.branch} />
           {" · "}
           {item.duration}
         </span>

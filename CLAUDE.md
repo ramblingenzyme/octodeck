@@ -44,6 +44,7 @@ Prefer native platform capabilities over JS implementations. Reach for JS only w
 
 - **Semantic HTML**: use the element that matches the content — `<menu>`, `<output>`, `<dialog>`, `<details>`, `<time>`, etc. Do not replace semantic elements with `<div>` or `<span>`.
 - **Browser APIs**: use the Popover API for overlays/tooltips, `<dialog>` for modals, `FormData` for form reads, `popover="auto"` for light-dismiss — not JS re-implementations.
+- **Reusable components**: prefer writing small reusable components when UI elements get repeated. Write them in their own file if they'll be used across multiple files, either now or in the future. Otherise, define them within the same file and do not export them.
 - **Uncontrolled inputs**: prefer `defaultValue` + `FormData` over controlled `value` + `useState` where live validation or derived UI is not needed.
 - **CSS over JS for dynamic styling**: use CSS custom properties, `:has()`, `@container`, `data-*` attributes, and element/state selectors (`:checked`, `:open`, `:popover-open`) to drive visual state. Avoid computing styles in JS.
 - **Element selectors in CSS**: style by element type (`button`, `input`, `h2`) within a component scope rather than adding wrapper classes everywhere.
