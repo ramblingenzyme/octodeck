@@ -1,11 +1,4 @@
-import type {
-  ColumnType,
-  CIStatus,
-  ActivityType,
-  ColumnConfig,
-  DeploymentStatus,
-  AlertSeverity,
-} from "@/types";
+import type { ColumnType, CIStatus, ActivityType, ColumnConfig, DeploymentStatus } from "@/types";
 import type { IconName } from "@/components/ui/SvgIcon";
 
 export const CI_STATUS: Record<CIStatus, { label: string; icon: IconName }> = {
