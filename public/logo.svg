@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3 2.5 26 26" fill="currentColor">
+  <mask id="eyes">
+    <circle cx="16" cy="11" r="8" fill="white"/>
+    <circle cx="13" cy="10" r="1.5" fill="black"/>
+    <circle cx="19" cy="10" r="1.5" fill="black"/>
+  </mask>
+  <!-- head with transparent eyes -->
+  <circle cx="16" cy="11" r="8" mask="url(#eyes)"/>
+  <!-- tentacles -->
+  <path d="M9 17 Q5 20 5 24 Q5.5 26 7.5 25 Q9.5 23 12 19 Z"/>
+  <path d="M13 19 Q11 23 10 27 Q10.5 28.5 12.5 28 Q14 27 15 22 Z"/>
+  <path d="M19 19 Q21 23 22 27 Q21.5 28.5 19.5 28 Q18 27 17 22 Z"/>
+  <path d="M23 17 Q27 20 27 24 Q26.5 26 24.5 25 Q22.5 23 20 19 Z"/>
+</svg>

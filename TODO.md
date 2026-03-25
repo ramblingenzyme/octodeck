@@ -31,8 +31,8 @@
 - [x] Assess automatically detected accessibility issues from Firefox Devtools
 - [ ] Reassess filter queries for non issue/PR columns
 - [ ] Drag and Drop sometimes doesn't work?
-- [ ] Create Github App icon
-- [ ] Polish up SVG icon
+- [x] Create Github App icon
+- [x] Polish up SVG icon
 - [ ] Refactor demo out as a separate page
 - [ ] Landing page
 - [ ] Polish README.md

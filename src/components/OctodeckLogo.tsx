@@ -16,34 +16,10 @@ export const OctodeckLogo = ({ size = 28 }: OctodeckLogoProps) => (
     {/* Eyes */}
     <circle cx="13" cy="12" r="1.5" fill="var(--bg-topbar)" />
     <circle cx="19" cy="12" r="1.5" fill="var(--bg-topbar)" />
-    {/* Tentacles — 4 curling legs */}
-    <path
-      d="M10 20 Q8 24 6 23 Q5 22.5 6 21"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      fill="none"
-    />
-    <path
-      d="M13 21 Q12 25 10 25 Q9 24.5 10 23"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      fill="none"
-    />
-    <path
-      d="M19 21 Q20 25 22 25 Q23 24.5 22 23"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      fill="none"
-    />
-    <path
-      d="M22 20 Q24 24 26 23 Q27 22.5 26 21"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      fill="none"
-    />
+    {/* Tentacles — 4 filled legs */}
+    <path d="M9 19 Q5 22 5 26 Q5.5 28 7.5 27 Q9.5 25 12 21 Z" fill="currentColor" />
+    <path d="M13 21 Q11 25 10 29 Q10.5 30.5 12.5 30 Q14 29 15 24 Z" fill="currentColor" />
+    <path d="M19 21 Q21 25 22 29 Q21.5 30.5 19.5 30 Q18 29 17 24 Z" fill="currentColor" />
+    <path d="M23 19 Q27 22 27 26 Q26.5 28 24.5 27 Q22.5 25 20 21 Z" fill="currentColor" />
   </svg>
 );
