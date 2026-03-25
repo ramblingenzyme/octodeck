@@ -14,9 +14,12 @@ import { ColumnConfirmDelete } from "./ColumnConfirmDelete";
 import { ColumnSettingsModal } from "./ColumnSettingsModal";
 import { Tooltip } from "./ui/Tooltip";
 
-interface BaseColumnProps {
+export interface ColumnProps {
   col: ColumnConfig;
   onRemove: (id: string) => void;
+}
+
+interface BaseColumnProps extends ColumnProps {
   renderCard: (item: AnyItem) => ReactNode;
   accentClass?: string;
   emptyState?: (onOpenSettings: () => void) => ReactNode;

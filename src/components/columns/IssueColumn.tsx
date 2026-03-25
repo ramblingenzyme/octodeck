@@ -1,12 +1,7 @@
-import type { ColumnConfig, IssueItem } from "@/types";
-import { BaseColumn } from "@/components/BaseColumn";
+import type { IssueItem } from "@/types";
+import { BaseColumn, type ColumnProps } from "@/components/BaseColumn";
 import { IssueCard } from "@/components/cards/IssueCard";
 import styles from "./IssueColumn.module.css";
-
-interface ColumnProps {
-  col: ColumnConfig;
-  onRemove: (id: string) => void;
-}
 
 export const IssueColumn = ({ col, onRemove }: ColumnProps) => (
   <BaseColumn

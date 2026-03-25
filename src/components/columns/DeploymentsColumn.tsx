@@ -1,13 +1,8 @@
-import type { ColumnConfig, DeploymentItem } from "@/types";
-import { BaseColumn } from "@/components/BaseColumn";
+import type { DeploymentItem } from "@/types";
+import { BaseColumn, type ColumnProps } from "@/components/BaseColumn";
 import { DeploymentCard } from "@/components/cards/DeploymentCard";
 import { RepoRequiredEmptyState } from "@/components/RepoRequiredEmptyState";
 import styles from "./DeploymentsColumn.module.css";
-
-interface ColumnProps {
-  col: ColumnConfig;
-  onRemove: (id: string) => void;
-}
 
 export const DeploymentsColumn = ({ col, onRemove }: ColumnProps) => (
   <BaseColumn

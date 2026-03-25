@@ -61,20 +61,3 @@
   align-items: center;
   gap: 6px;
 }
-
-.cardBadge {
-  font-size: var(--text-md);
-  padding-left: 6px;
-
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.03em;
-  font-family: var(--font-mono);
-
-  white-space: nowrap;
-  flex-shrink: 0;
-
-  align-self: flex-end;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}

@@ -1,13 +1,8 @@
-import type { ColumnConfig, ActivityItem, FallbackItem } from "@/types";
-import { BaseColumn } from "@/components/BaseColumn";
+import type { ActivityItem, FallbackItem } from "@/types";
+import { BaseColumn, type ColumnProps } from "@/components/BaseColumn";
 import { ActivityCard } from "@/components/cards/ActivityCard";
 import { FallbackCard } from "@/components/cards/FallbackCard";
 import styles from "./ActivityColumn.module.css";
-
-interface ColumnProps {
-  col: ColumnConfig;
-  onRemove: (id: string) => void;
-}
 
 export const ActivityColumn = ({ col, onRemove }: ColumnProps) => (
   <BaseColumn

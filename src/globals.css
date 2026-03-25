@@ -39,7 +39,7 @@
 }
 
 ::selection {
-  background-color: oklch(0.7 0.16 265 / 0.35);
+  background-color: oklch(from var(--accent-ui) l c h / 0.35);
   color: var(--text-primary);
 }
 

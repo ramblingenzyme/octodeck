@@ -27,8 +27,3 @@
 .cardStatPending {
   color: var(--status-warning);
 }
-
-.cardIcon {
-  color: var(--text-muted);
-  flex-shrink: 0;
-}

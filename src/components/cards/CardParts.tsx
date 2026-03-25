@@ -44,11 +44,3 @@ export const CardTop = ({ repo, age }: CardTopProps) => (
     </Tooltip>
   </header>
 );
-
-interface CardTypeIconProps {
-  icon: IconName;
-}
-
-export const CardTypeIcon = ({ icon }: CardTypeIconProps) => (
-  <SvgIcon name={icon} className={styles.cardIcon} />
-);
