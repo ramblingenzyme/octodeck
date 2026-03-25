@@ -1,14 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getItemDisplayText } from "@/utils/getItemDisplayText";
-import type {
-  PRItem,
-  IssueItem,
-  CIItem,
-  ActivityItem,
-  ReleaseItem,
-  DeploymentItem,
-  SecurityItem,
-} from "@/types";
+import type { PRItem, IssueItem, CIItem, ActivityItem, ReleaseItem, DeploymentItem } from "@/types";
 
 const prItem: PRItem = {
   id: 1,
@@ -100,18 +92,5 @@ describe("getItemDisplayText", () => {
       url: "https://github.com/org/repo/deployments",
     };
     expect(getItemDisplayText(deploymentItem)).toBe("production");
-  });
-
-  it("returns summary for SecurityItem", () => {
-    const securityItem: SecurityItem = {
-      id: 8,
-      repo: "org/repo",
-      package: "lodash",
-      severity: "high",
-      summary: "Prototype pollution",
-      age: "3d",
-      url: "https://github.com/org/repo/security/dependabot/8",
-    };
-    expect(getItemDisplayText(securityItem)).toBe("Prototype pollution");
   });
 });

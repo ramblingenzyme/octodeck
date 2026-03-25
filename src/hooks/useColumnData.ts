@@ -7,7 +7,6 @@ import {
   MOCK_ACTIVITY,
   MOCK_RELEASES,
   MOCK_DEPLOYMENTS,
-  MOCK_SECURITY,
 } from "@/demo/mock";
 import {
   useGetPRs,
@@ -17,7 +16,6 @@ import {
   useGetUser,
   useGetReleases,
   useGetDeployments,
-  useGetSecurityAlerts,
 } from "@/store/githubQueries";
 import { useAuthStore } from "@/store/authStore";
 import type { ColumnConfig, KnownItem, AnyItem } from "@/types";
@@ -88,7 +86,6 @@ const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
   activity: MOCK_ACTIVITY,
   releases: MOCK_RELEASES,
   deployments: MOCK_DEPLOYMENTS,
-  security: MOCK_SECURITY,
 };
 
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
@@ -120,11 +117,6 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
     repos,
     demo || col.type !== "deployments" ? null : sessionId,
   );
-  const securityResult = useGetSecurityAlerts(
-    repos,
-    demo || col.type !== "security" ? null : sessionId,
-  );
-
   const filter = useCallback(
     (items: ColumnData) =>
       tokens.length ? items.filter((item) => matchesTokens(item as KnownItem, tokens)) : items,
@@ -159,8 +151,6 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
       return toMultiResult(releasesResult, "Failed to load releases", filter);
     case "deployments":
       return toMultiResult(deploymentsResult, "Failed to load deployments", filter);
-    case "security":
-      return toMultiResult(securityResult, "Failed to load security alerts", filter);
     default:
       return {
         data: [],

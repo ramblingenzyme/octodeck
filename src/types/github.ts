@@ -76,19 +76,6 @@ export interface GHDeploymentStatus {
   state: string;
 }
 
-export interface GHDependabotAlert {
-  number: number;
-  html_url: string;
-  created_at: string;
-  security_advisory: {
-    summary: string;
-    severity: string;
-  };
-  dependency: {
-    package: { name: string };
-  };
-}
-
 export interface GHPRReview {
   id: number;
   state: string;

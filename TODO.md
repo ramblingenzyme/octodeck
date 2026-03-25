@@ -16,7 +16,7 @@
 
 - [x] Review usage of opacity, particulary for hover styling, and determine if this is the right approach
 - [x] Implement fetching of review counts for PR cards
-- [ ] Investigate/remove broken security alerts column
+- [x] Investigate/remove broken security alerts column
 - [x] Empty state for columns that require repo selection
 - [x] Repo selector in add column modal when column supports it
 - [ ] Fix query multiline growing

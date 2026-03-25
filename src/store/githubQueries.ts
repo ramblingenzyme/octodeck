@@ -8,7 +8,6 @@ import {
   type FallbackItem,
   type ReleaseItem,
   type DeploymentItem,
-  type SecurityItem,
   type DeploymentStatus,
   type ReviewCount,
   REVIEW_COUNT_UNKNOWN,
@@ -33,7 +32,6 @@ import type {
   GHRelease,
   GHDeployment,
   GHDeploymentStatus,
-  GHDependabotAlert,
   GHPRReview,
   GHPRRequestedReviewers,
 } from "@/types/github";
@@ -44,7 +42,6 @@ import {
   mapEvent,
   mapRelease,
   mapDeployment,
-  mapDependabotAlert,
 } from "./githubMappers";
 
 export interface AuthUser {
@@ -230,29 +227,6 @@ export function useGetDeployments(repos: string[], sessionId: string | null) {
         }),
       );
       return { items, fetchErrors };
-    },
-    { refreshInterval: POLL },
-  );
-}
-
-export function useGetSecurityAlerts(repos: string[], sessionId: string | null) {
-  return useSWR<{ items: SecurityItem[]; fetchErrors: string[] }>(
-    sessionId && repos.length > 0 ? ["security", repos, sessionId] : null,
-    async () => {
-      const { raw, fetchErrors } = await fetchPerRepo<{ alert: GHDependabotAlert; repo: string }>(
-        repos,
-        async (repo) => {
-          const res = await githubFetch(`/repos/${repo}/dependabot/alerts?state=open&per_page=10`);
-          if (!res.ok) throw repoFetchError(repo, res);
-          const alerts = (await res.json()) as GHDependabotAlert[];
-          return alerts.map((alert) => ({ alert, repo }));
-        },
-      );
-      raw.sort((a, b) => b.alert.created_at.localeCompare(a.alert.created_at));
-      return {
-        items: raw.slice(0, 20).map(({ alert, repo }) => mapDependabotAlert(alert, repo)),
-        fetchErrors,
-      };
     },
     { refreshInterval: POLL },
   );

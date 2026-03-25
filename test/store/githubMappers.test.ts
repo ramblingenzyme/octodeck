@@ -7,16 +7,8 @@ import {
   mapEvent,
   mapRelease,
   mapDeployment,
-  mapDependabotAlert,
 } from "@/store/githubMappers";
-import type {
-  GHSearchItem,
-  GHWorkflowRun,
-  GHEvent,
-  GHRelease,
-  GHDeployment,
-  GHDependabotAlert,
-} from "@/types/github";
+import type { GHSearchItem, GHWorkflowRun, GHEvent, GHRelease, GHDeployment } from "@/types/github";
 
 const baseItem: GHSearchItem = {
   id: 1,
@@ -367,40 +359,5 @@ describe("mapDeployment", () => {
   it("constructs a github deployments URL", () => {
     const d = mapDeployment(baseDeployment, "success", "owner/repo");
     expect(d.url).toBe("https://github.com/owner/repo/deployments");
-  });
-});
-
-const baseAlert: GHDependabotAlert = {
-  number: 42,
-  html_url: "https://github.com/owner/repo/security/dependabot/42",
-  created_at: "2024-01-01T00:00:00Z",
-  security_advisory: {
-    summary: "Prototype pollution in lodash",
-    severity: "high",
-  },
-  dependency: {
-    package: { name: "lodash" },
-  },
-};
-
-describe("mapDependabotAlert", () => {
-  it("maps basic fields", () => {
-    const s = mapDependabotAlert(baseAlert, "owner/repo");
-    expect(s.id).toBe(42);
-    expect(s.repo).toBe("owner/repo");
-    expect(s.package).toBe("lodash");
-    expect(s.severity).toBe("high");
-    expect(s.summary).toBe("Prototype pollution in lodash");
-    expect(s.url).toBe("https://github.com/owner/repo/security/dependabot/42");
-  });
-
-  it("maps all severity levels", () => {
-    for (const severity of ["critical", "high", "medium", "low"] as const) {
-      const s = mapDependabotAlert(
-        { ...baseAlert, security_advisory: { ...baseAlert.security_advisory, severity } },
-        "owner/repo",
-      );
-      expect(s.severity).toBe(severity);
-    }
   });
 });

@@ -1,11 +1,4 @@
-export type ColumnType =
-  | "prs"
-  | "issues"
-  | "ci"
-  | "activity"
-  | "releases"
-  | "deployments"
-  | "security";
+export type ColumnType = "prs" | "issues" | "ci" | "activity" | "releases" | "deployments";
 
 export type CIStatus = "success" | "failure" | "running";
 export type IssueState = "open" | "closed";
@@ -87,7 +80,6 @@ export interface Label {
 }
 
 export type DeploymentStatus = "success" | "failure" | "pending" | "in_progress" | "unknown";
-export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 export interface ReleaseItem {
   id: number;
@@ -110,24 +102,7 @@ export interface DeploymentItem {
   url: string;
 }
 
-export interface SecurityItem {
-  id: number;
-  repo: string;
-  package: string;
-  severity: AlertSeverity;
-  summary: string;
-  age: string;
-  url: string;
-}
-
-export type KnownItem =
-  | PRItem
-  | IssueItem
-  | CIItem
-  | ActivityItem
-  | ReleaseItem
-  | DeploymentItem
-  | SecurityItem;
+export type KnownItem = PRItem | IssueItem | CIItem | ActivityItem | ReleaseItem | DeploymentItem;
 
 export type AnyItem = KnownItem | FallbackItem;
 

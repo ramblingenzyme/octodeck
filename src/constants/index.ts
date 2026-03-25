@@ -46,7 +46,6 @@ export const COLUMN_TYPES: Record<
   activity: { label: "Activity", icon: "gitCommit", itemLabel: "event", defaultQuery: "" },
   releases: { label: "Releases", icon: "tag", itemLabel: "release", defaultQuery: "" },
   deployments: { label: "Deployments", icon: "deploy", itemLabel: "deployment", defaultQuery: "" },
-  security: { label: "Security Alerts", icon: "shield", itemLabel: "alert", defaultQuery: "" },
 };
 
 export const DEPLOYMENT_STATUS: Record<DeploymentStatus, { label: string; icon: IconName }> = {
@@ -57,12 +56,7 @@ export const DEPLOYMENT_STATUS: Record<DeploymentStatus, { label: string; icon: 
   unknown: { label: "UNKNOWN", icon: "circleDot" },
 };
 
-export const MULTI_REPO_COLUMN_TYPES = new Set<ColumnType>([
-  "ci",
-  "releases",
-  "deployments",
-  "security",
-]);
+export const MULTI_REPO_COLUMN_TYPES = new Set<ColumnType>(["ci", "releases", "deployments"]);
 
 export const mkId = (): string => crypto.randomUUID();
 

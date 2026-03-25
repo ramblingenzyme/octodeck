@@ -5,7 +5,6 @@ import { DeploymentsColumn } from "./columns/DeploymentsColumn";
 import { IssueColumn } from "./columns/IssueColumn";
 import { PRColumn } from "./columns/PRColumn";
 import { ReleasesColumn } from "./columns/ReleasesColumn";
-import { SecurityColumn } from "./columns/SecurityColumn";
 
 interface ColumnProps {
   col: ColumnConfig;
@@ -26,8 +25,6 @@ export const Column = ({ col, onRemove }: ColumnProps) => {
       return <ReleasesColumn col={col} onRemove={onRemove} />;
     case "deployments":
       return <DeploymentsColumn col={col} onRemove={onRemove} />;
-    case "security":
-      return <SecurityColumn col={col} onRemove={onRemove} />;
     default:
       col.type satisfies never;
       return null;

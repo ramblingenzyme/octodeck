@@ -8,7 +8,6 @@ import type {
   GHRelease,
   GHDeployment,
   GHDeploymentStatus,
-  GHDependabotAlert,
   GHPRReview,
   GHPRRequestedReviewers,
 } from "@/types/github";
@@ -38,7 +37,6 @@ import {
   useGetActivity,
   useGetReleases,
   useGetDeployments,
-  useGetSecurityAlerts,
 } from "@/store/githubQueries";
 
 const mockFetch = vi.mocked(githubFetch);
@@ -432,48 +430,5 @@ describe("useGetDeployments", () => {
     const result = (await capturedFetcher!()) as { items: unknown[]; fetchErrors: string[] };
     expect(result.fetchErrors).toHaveLength(1);
     expect(result.fetchErrors[0]).toContain("Network error");
-  });
-});
-
-const makeAlert = (num: number, severity = "high"): GHDependabotAlert => ({
-  number: num,
-  html_url: `https://github.com/owner/repo/security/dependabot/${num}`,
-  created_at: "2024-01-01T00:00:00Z",
-  security_advisory: { summary: "A vulnerability", severity },
-  dependency: { package: { name: "some-pkg" } },
-});
-
-describe("useGetSecurityAlerts", () => {
-  it("key is null when token is null", () => {
-    useGetSecurityAlerts(["owner/repo"], null);
-    expect(capturedKey).toBeNull();
-  });
-
-  it("key is null when repos is empty", () => {
-    useGetSecurityAlerts([], "tok");
-    expect(capturedKey).toBeNull();
-  });
-
-  it("fetcher maps alerts from all repos", async () => {
-    mockFetch
-      .mockResolvedValueOnce(mockOk([makeAlert(1), makeAlert(2)]))
-      .mockResolvedValueOnce(mockOk([makeAlert(3)]));
-
-    useGetSecurityAlerts(["owner/repo1", "owner/repo2"], "tok");
-    expect(capturedKey).toEqual(["security", ["owner/repo1", "owner/repo2"], "tok"]);
-
-    const result = (await capturedFetcher!()) as { items: unknown[]; fetchErrors: string[] };
-    expect(result.items).toHaveLength(3);
-  });
-
-  it("isolates fetch failure to fetchErrors", async () => {
-    mockFetch
-      .mockResolvedValueOnce(mockOk([makeAlert(1)]))
-      .mockRejectedValueOnce(new Error("403 Forbidden"));
-
-    useGetSecurityAlerts(["owner/repo1", "owner/repo2"], "tok");
-    const result = (await capturedFetcher!()) as { items: unknown[]; fetchErrors: string[] };
-    expect(result.fetchErrors).toHaveLength(1);
-    expect(result.fetchErrors[0]).toContain("403 Forbidden");
   });
 });

@@ -8,8 +8,6 @@ import {
   type ReleaseItem,
   type DeploymentItem,
   type DeploymentStatus,
-  type SecurityItem,
-  type AlertSeverity,
   REVIEW_COUNT_UNKNOWN,
 } from "@/types";
 import type {
@@ -27,7 +25,6 @@ import type {
   GHWatchEvent,
   GHRelease,
   GHDeployment,
-  GHDependabotAlert,
 } from "@/types/github";
 
 function repoFromUrl(url: string): string {
@@ -131,19 +128,6 @@ export function mapDeployment(
     creator: d.creator.login,
     age: d.created_at,
     url: `https://github.com/${repo}/deployments`,
-  };
-}
-
-export function mapDependabotAlert(a: GHDependabotAlert, repo: string): SecurityItem {
-  const severity = a.security_advisory.severity as AlertSeverity;
-  return {
-    id: a.number,
-    repo,
-    package: a.dependency.package.name,
-    severity,
-    summary: a.security_advisory.summary,
-    age: a.created_at,
-    url: a.html_url,
   };
 }
 

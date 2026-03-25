@@ -1,12 +1,4 @@
-import type {
-  PRItem,
-  IssueItem,
-  CIItem,
-  ActivityItem,
-  ReleaseItem,
-  DeploymentItem,
-  SecurityItem,
-} from "@/types";
+import type { PRItem, IssueItem, CIItem, ActivityItem, ReleaseItem, DeploymentItem } from "@/types";
 
 const h = (n: number) => new Date(Date.now() - n * 3_600_000).toISOString();
 const d = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString();
@@ -306,45 +298,6 @@ export const MOCK_DEPLOYMENTS: DeploymentItem[] = [
     creator: "sarahk",
     age: h(2),
     url: "https://github.com/acme/ml-core/deployments",
-  },
-];
-
-export const MOCK_SECURITY: SecurityItem[] = [
-  {
-    id: 1,
-    repo: "acme/frontend",
-    package: "lodash",
-    severity: "high",
-    summary: "Prototype pollution via zipObjectDeep",
-    age: d(2),
-    url: "https://github.com/acme/frontend/security/dependabot/1",
-  },
-  {
-    id: 2,
-    repo: "acme/api",
-    package: "axios",
-    severity: "medium",
-    summary: "Server-side request forgery in redirect handling",
-    age: d(5),
-    url: "https://github.com/acme/api/security/dependabot/2",
-  },
-  {
-    id: 3,
-    repo: "acme/ml-core",
-    package: "numpy",
-    severity: "critical",
-    summary: "Buffer overflow in ndarray operations",
-    age: d(1),
-    url: "https://github.com/acme/ml-core/security/dependabot/3",
-  },
-  {
-    id: 4,
-    repo: "acme/worker",
-    package: "semver",
-    severity: "low",
-    summary: "Regular expression denial of service",
-    age: d(7),
-    url: "https://github.com/acme/worker/security/dependabot/4",
   },
 ];
 
