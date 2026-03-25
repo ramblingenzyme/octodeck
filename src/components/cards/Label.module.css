@@ -15,8 +15,8 @@
   letter-spacing: 0.03em;
   &.colored {
     color: oklch(from var(--label-color) max(l, 0.82) c h);
-    background-color: color-mix(in oklch, var(--label-color) 18%, transparent);
-    border: 1px solid color-mix(in oklch, var(--label-color) 30%, transparent);
+    background-color: oklch(from var(--label-color) 0.18 calc(c * 0.6) h);
+    border: 1px solid oklch(from var(--label-color) 0.32 calc(c * 0.7) h);
   }
 
   &.fallback {

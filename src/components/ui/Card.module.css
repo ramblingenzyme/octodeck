@@ -39,7 +39,7 @@
 
   & a:hover {
     color: var(--color-accent);
-    text-decoration-color: var(--border-mid);
+    text-decoration-color: var(--text-primary);
   }
 }
 
