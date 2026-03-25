@@ -24,6 +24,13 @@ export async function fetchSession(): Promise<TokenSet> {
   return res.json() as Promise<TokenSet>;
 }
 
+export function logoutSession(): Promise<Response> {
+  return fetch("/api/logout", {
+    method: "POST",
+    headers: { "X-GitHub-App-CSRF": getCSRFHeaderValue() },
+  });
+}
+
 export async function refreshSession(): Promise<TokenSet> {
   const res = await fetch("/api/refresh", {
     method: "POST",

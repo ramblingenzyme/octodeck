@@ -3,16 +3,39 @@
  *
  * These render <App> end-to-end and interact through the live UI using
  * userEvent — no mocked child components.  isDemoMode is forced to true so
- * the auth modal never blocks the board.
+ * the auth modal never blocks the board, except in the auth flow section
+ * which sets it to false to test login/logout behaviour.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, cleanup, within } from "@testing-library/preact";
 import userEvent from "@testing-library/user-event";
 import { useLayoutStore } from "@/store/layoutStore";
+import { useAuthStore } from "@/store/authStore";
 import { loadLayout } from "@/store/layoutStorage";
 
-// Force demo mode so the auth modal does not open.
-vi.mock("@/env", () => ({ isDemoMode: true, GITHUB_CLIENT_ID: undefined }));
+// envConfig is mutated by the auth-flow section to toggle isDemoMode.
+const { envConfig, mockFetchSession, mockLogoutSession, mockRedirectToGitHub } = vi.hoisted(() => ({
+  envConfig: { isDemoMode: true, GITHUB_CLIENT_ID: undefined as string | undefined },
+  mockFetchSession: vi.fn(),
+  mockLogoutSession: vi.fn(),
+  mockRedirectToGitHub: vi.fn(),
+}));
+
+vi.mock("@/env", () => ({
+  get isDemoMode() {
+    return envConfig.isDemoMode;
+  },
+  get GITHUB_CLIENT_ID() {
+    return envConfig.GITHUB_CLIENT_ID;
+  },
+}));
+
+vi.mock("@/auth/oauthFlow", () => ({
+  fetchSession: mockFetchSession,
+  logoutSession: mockLogoutSession,
+  redirectToGitHub: mockRedirectToGitHub,
+  refreshSession: vi.fn(),
+}));
 
 // Stub navigator.serviceWorker (not available in happy-dom).
 vi.stubGlobal("navigator", {
@@ -36,6 +59,16 @@ beforeEach(() => {
   localStorage.clear();
   // Reset Zustand layout store so the fresh localStorage is re-read.
   useLayoutStore.setState({ columns: loadLayout() });
+  // Reset auth store to its initial loading state.
+  useAuthStore.setState({ status: "loading", sessionId: null, error: null });
+  // happy-dom doesn't implement showModal/close; stub them so that setting
+  // open=true/false on <dialog> is reflected in the DOM (enables findByRole).
+  HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+    this.setAttribute("open", "");
+  });
+  HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+    this.removeAttribute("open");
+  });
 });
 
 afterEach(cleanup);
@@ -181,5 +214,81 @@ describe("remove column flow", () => {
     await user.click(confirmBtn);
 
     expect(screen.queryByRole("region", { name: "CI / CD" })).toBeNull();
+  });
+});
+
+// ─── 5. Auth flow ────────────────────────────────────────────────────────────
+
+describe("auth flow", () => {
+  beforeEach(() => {
+    envConfig.isDemoMode = false;
+    vi.clearAllMocks();
+    // Stub globalThis.fetch so githubFetch (used by useGetUser) resolves with
+    // a fake user without hitting the network.
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      const url = typeof input === "string" ? input : (input as Request).url;
+      if (url.startsWith("https://api.github.com/user")) {
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              login: "octocat",
+              avatar_url: "https://github.com/octocat.png",
+              name: null,
+            }),
+            { headers: { "Content-Type": "application/json" } },
+          ),
+        );
+      }
+      return Promise.resolve(new Response(null, { status: 404 }));
+    });
+  });
+
+  afterEach(() => {
+    envConfig.isDemoMode = true;
+    vi.restoreAllMocks();
+  });
+
+  it("shows a loading state while the session check is in flight", async () => {
+    // fetchSession never resolves — keeps the app in the "loading" status.
+    mockFetchSession.mockReturnValue(new Promise(() => {}));
+    render(<App />);
+    expect(await screen.findByText("Connecting…")).toBeTruthy();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("login modal appears when there is no active session", async () => {
+    mockFetchSession.mockRejectedValue(new Error("401"));
+    render(<App />);
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+  });
+
+  it("'Sign in with GitHub' initiates the OAuth redirect", async () => {
+    mockFetchSession.mockRejectedValue(new Error("401"));
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByRole("dialog");
+    await user.click(screen.getByRole("button", { name: /sign in with github/i }));
+    expect(mockRedirectToGitHub).toHaveBeenCalledOnce();
+  });
+
+  it("'Continue in Demo Mode' closes the modal", async () => {
+    mockFetchSession.mockRejectedValue(new Error("401"));
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByRole("dialog");
+    await user.click(screen.getByRole("button", { name: /continue in demo mode/i }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("signing out calls logoutSession and shows the login modal", async () => {
+    mockFetchSession.mockResolvedValue({ accessToken: "tok", expiresAt: Date.now() + 3_600_000 });
+    mockLogoutSession.mockResolvedValue(new Response(null, { status: 204 }));
+    const user = userEvent.setup();
+    render(<App />);
+    // Wait for the user avatar to appear — only shown when authed + user data loaded.
+    const signOutBtn = await screen.findByRole("button", { name: /sign out/i });
+    await user.click(signOutBtn);
+    expect(mockLogoutSession).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("dialog")).toBeTruthy();
   });
 });

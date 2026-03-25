@@ -2,7 +2,7 @@ import { useEffect } from "preact/hooks";
 import { useModal } from "@/hooks/useModal";
 import { useAuthStore } from "@/store/authStore";
 import { UnauthorizedError, setToken } from "@/auth/token";
-import { fetchSession } from "@/auth/oauthFlow";
+import { fetchSession, logoutSession } from "@/auth/oauthFlow";
 import { isDemoMode } from "@/env";
 
 export const useAuth = () => {
@@ -30,10 +30,12 @@ export const useAuth = () => {
       })
       .catch(() => {
         authFailed();
+        modal.open();
       });
   }, [authSuccess, authFailed]);
 
   const handleSignOut = () => {
+    void logoutSession();
     logOut();
     modal.open();
   };
