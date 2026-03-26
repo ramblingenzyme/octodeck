@@ -17,7 +17,8 @@
   background: var(--bg-column);
   border: 1px solid var(--border-mid);
   border-radius: var(--radius-lg);
-  min-width: 380px;
+  width: 380px;
+  max-width: calc(100vw - 32px);
   overflow: hidden;
 }
 
