@@ -1,3 +1,1 @@
-export const isDemoMode: boolean =
-  import.meta.env.VITE_DEMO_MODE === "true" ||
-  new URLSearchParams(window.location.search).has("demo");
+export const isDemo: boolean = window.location.pathname === "/demo";

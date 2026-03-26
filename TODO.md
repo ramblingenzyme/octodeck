@@ -33,6 +33,6 @@
 - [ ] Drag and Drop sometimes doesn't work?
 - [x] Create Github App icon
 - [x] Polish up SVG icon
-- [ ] Refactor demo out as a separate page
+- [x] Refactor demo out as a separate page
 - [ ] Landing page
 - [ ] Polish README.md

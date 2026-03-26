@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/preact";
 afterEach(cleanup);
 import userEvent from "@testing-library/user-event";
-import { Column } from "@/components/Column";
+import { DemoColumn } from "@/demo/DemoColumn";
 import type { ColumnConfig } from "@/types";
 
 const noop = () => {};
@@ -17,7 +17,7 @@ function renderColumn(
     onRemove: (id: string) => void;
   }> = {},
 ) {
-  return render(<Column col={col} onRemove={overrides.onRemove ?? noop} />);
+  return render(<DemoColumn col={col} onRemove={overrides.onRemove ?? noop} />);
 }
 
 describe("Column card type switching", () => {

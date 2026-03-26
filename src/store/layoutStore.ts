@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import type { ColumnConfig, ColumnType } from "@/types";
 import { mkId } from "@/constants";
-import { loadLayout, saveLayout } from "./layoutStorage";
 import {
   applyAdd,
   applyRemove,
@@ -21,31 +20,24 @@ interface LayoutState {
   updateColumnRepos: (id: string, repos: string[]) => void;
 }
 
-export const useLayoutStore = create<LayoutState>((set, get) => {
-  const mutate = (next: ColumnConfig[]) => {
-    saveLayout(next);
-    set({ columns: next });
-  };
-
-  return {
-    columns: loadLayout(),
-    addColumn(type, title, query, repos) {
-      mutate(applyAdd(get().columns, mkId(), type, title, query, repos));
-    },
-    removeColumn(id) {
-      mutate(applyRemove(get().columns, id));
-    },
-    reorder(from, to) {
-      mutate(applyReorder(get().columns, from, to));
-    },
-    updateColumnQuery(id, query) {
-      mutate(applyUpdateQuery(get().columns, id, query));
-    },
-    updateColumnTitle(id, title) {
-      mutate(applyUpdateTitle(get().columns, id, title));
-    },
-    updateColumnRepos(id, repos) {
-      mutate(applyUpdateRepos(get().columns, id, repos));
-    },
-  };
-});
+export const useLayoutStore = create<LayoutState>((set) => ({
+  columns: [],
+  addColumn(type, title, query, repos) {
+    set((s) => ({ columns: applyAdd(s.columns, mkId(), type, title, query, repos) }));
+  },
+  removeColumn(id) {
+    set((s) => ({ columns: applyRemove(s.columns, id) }));
+  },
+  reorder(from, to) {
+    set((s) => ({ columns: applyReorder(s.columns, from, to) }));
+  },
+  updateColumnQuery(id, query) {
+    set((s) => ({ columns: applyUpdateQuery(s.columns, id, query) }));
+  },
+  updateColumnTitle(id, title) {
+    set((s) => ({ columns: applyUpdateTitle(s.columns, id, title) }));
+  },
+  updateColumnRepos(id, repos) {
+    set((s) => ({ columns: applyUpdateRepos(s.columns, id, repos) }));
+  },
+}));

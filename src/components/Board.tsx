@@ -1,18 +1,27 @@
 import { useEffect } from "preact/hooks";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import type { ComponentType } from "preact";
 import type { ColumnConfig } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
 import { Column } from "./Column";
+import type { ColumnProps } from "./BaseColumn";
 import styles from "./Board.module.css";
 
-interface BoardProps {
+export interface BoardProps {
   columns: ColumnConfig[];
   onAddColumn: () => void;
   onRemove: (id: string) => void;
   loading?: boolean;
+  columnComponent?: ComponentType<ColumnProps>;
 }
 
-export const Board = ({ columns, onAddColumn, onRemove, loading }: BoardProps) => {
+export const Board = ({
+  columns,
+  onAddColumn,
+  onRemove,
+  loading,
+  columnComponent: ColumnComponent = Column,
+}: BoardProps) => {
   const reorder = useLayoutStore((s) => s.reorder);
 
   useEffect(() => {
@@ -57,7 +66,7 @@ export const Board = ({ columns, onAddColumn, onRemove, loading }: BoardProps) =
   return (
     <main className={styles.board} tabIndex={-1}>
       {columns.map((col) => (
-        <Column key={col.id} col={col} onRemove={onRemove} />
+        <ColumnComponent key={col.id} col={col} onRemove={onRemove} />
       ))}
     </main>
   );

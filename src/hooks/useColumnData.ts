@@ -1,13 +1,4 @@
 import { useCallback, useMemo } from "preact/hooks";
-import { isDemoMode } from "@/env";
-import {
-  MOCK_PRS,
-  MOCK_ISSUES,
-  MOCK_CI,
-  MOCK_ACTIVITY,
-  MOCK_RELEASES,
-  MOCK_DEPLOYMENTS,
-} from "@/demo/mock";
 import {
   useGetPRs,
   useGetIssues,
@@ -23,7 +14,7 @@ import { parseQuery, matchesTokens } from "@/utils/queryFilter";
 
 type ColumnData = AnyItem[];
 
-interface UseColumnDataResult {
+export interface UseColumnDataResult {
   data: ColumnData;
   isLoading: boolean;
   isFetching: boolean;
@@ -79,21 +70,10 @@ function toMultiResult(
   };
 }
 
-const DEMO_DATA_MAP: Partial<Record<ColumnConfig["type"], ColumnData>> = {
-  prs: MOCK_PRS,
-  issues: MOCK_ISSUES,
-  ci: MOCK_CI,
-  activity: MOCK_ACTIVITY,
-  releases: MOCK_RELEASES,
-  deployments: MOCK_DEPLOYMENTS,
-};
-
 export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   const sessionId = useAuthStore((s) => s.sessionId);
-  // This lets the mock data render behind the auth modal
-  const demo = isDemoMode || !sessionId;
 
-  const { data: user } = useGetUser(demo ? null : sessionId);
+  const { data: user } = useGetUser(sessionId);
   const login = user?.login ?? "";
 
   const tokens = useMemo(() => parseQuery(col.query ?? ""), [col.query]);
@@ -102,42 +82,23 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
   // All query hooks are called unconditionally — React's rules of hooks forbid
   // conditional hook calls. SWR skips fetching when the key (sessionId) is null, so
   // only the hook matching col.type will ever make a network request.
-  const prsResult = useGetPRs(col.query ?? "", demo || col.type !== "prs" ? null : sessionId);
-  const issuesResult = useGetIssues(
-    col.query ?? "",
-    demo || col.type !== "issues" ? null : sessionId,
-  );
-  const ciResult = useGetCIRuns(repos, demo || col.type !== "ci" ? null : sessionId);
+  const prsResult = useGetPRs(col.query ?? "", col.type !== "prs" ? null : sessionId);
+  const issuesResult = useGetIssues(col.query ?? "", col.type !== "issues" ? null : sessionId);
+  const ciResult = useGetCIRuns(repos, col.type !== "ci" ? null : sessionId);
   const activityResult = useGetActivity(
     login,
-    demo || col.type !== "activity" || !login ? null : sessionId,
+    col.type !== "activity" || !login ? null : sessionId,
   );
-  const releasesResult = useGetReleases(repos, demo || col.type !== "releases" ? null : sessionId);
-  const deploymentsResult = useGetDeployments(
-    repos,
-    demo || col.type !== "deployments" ? null : sessionId,
-  );
+  const releasesResult = useGetReleases(repos, col.type !== "releases" ? null : sessionId);
+  const deploymentsResult = useGetDeployments(repos, col.type !== "deployments" ? null : sessionId);
   const filter = useCallback(
     (items: ColumnData) =>
       tokens.length ? items.filter((item) => matchesTokens(item as KnownItem, tokens)) : items,
     [tokens],
   );
 
-  if (demo) {
-    const demoData = DEMO_DATA_MAP[col.type] ?? [];
-    // PRs and issues use the GitHub Search API, which applies the query server-side.
-    // All other column types fetch pre-built lists and need client-side filtering.
-    const shouldFilter = col.type !== "prs" && col.type !== "issues";
-    return {
-      data: shouldFilter ? filter(demoData) : demoData,
-      isLoading: false,
-      isFetching: false,
-      error: null,
-      warnings: [],
-      refetch: noop,
-    };
-  }
-
+  // PRs and issues use the GitHub Search API, which applies the query server-side.
+  // All other column types fetch pre-built lists and need client-side filtering.
   switch (col.type) {
     case "prs":
       return toResult(prsResult, "Failed to load PRs", filter);

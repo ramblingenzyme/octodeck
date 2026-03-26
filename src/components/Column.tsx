@@ -1,4 +1,4 @@
-import type { ColumnConfig } from "@/types";
+import type { ColumnProps } from "./BaseColumn";
 import { ActivityColumn } from "./columns/ActivityColumn";
 import { CIColumn } from "./columns/CIColumn";
 import { DeploymentsColumn } from "./columns/DeploymentsColumn";
@@ -6,27 +6,22 @@ import { IssueColumn } from "./columns/IssueColumn";
 import { PRColumn } from "./columns/PRColumn";
 import { ReleasesColumn } from "./columns/ReleasesColumn";
 
-interface ColumnProps {
-  col: ColumnConfig;
-  onRemove: (id: string) => void;
-}
-
-export const Column = ({ col, onRemove }: ColumnProps) => {
-  switch (col.type) {
+export const Column = (props: ColumnProps) => {
+  switch (props.col.type) {
     case "prs":
-      return <PRColumn col={col} onRemove={onRemove} />;
+      return <PRColumn {...props} />;
     case "issues":
-      return <IssueColumn col={col} onRemove={onRemove} />;
+      return <IssueColumn {...props} />;
     case "ci":
-      return <CIColumn col={col} onRemove={onRemove} />;
+      return <CIColumn {...props} />;
     case "activity":
-      return <ActivityColumn col={col} onRemove={onRemove} />;
+      return <ActivityColumn {...props} />;
     case "releases":
-      return <ReleasesColumn col={col} onRemove={onRemove} />;
+      return <ReleasesColumn {...props} />;
     case "deployments":
-      return <DeploymentsColumn col={col} onRemove={onRemove} />;
+      return <DeploymentsColumn {...props} />;
     default:
-      col.type satisfies never;
+      props.col.type satisfies never;
       return null;
   }
 };

@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 import { useGetUser } from "@/store/githubQueries";
-import { isDemoMode } from "@/env";
+import { isDemo } from "@/env";
 import { OctodeckLogo } from "./OctodeckLogo";
 import styles from "./Topbar.module.css";
 
@@ -48,12 +48,12 @@ export const Topbar = ({ onAddColumn, onSignIn, onSignOut }: TopbarProps) => {
               </button>
             </div>
           </>
-        ) : isDemoMode ? (
+        ) : isDemo ? (
           <>
             <span className={styles.demoBadge}>Demo</span>
-            <button className={styles.btnSignIn} onClick={onSignIn}>
+            <a className={styles.btnSignIn} href="/">
               Sign in
-            </button>
+            </a>
           </>
         ) : null}
       </div>

@@ -3,19 +3,19 @@ import { useModal } from "@/hooks/useModal";
 import { useAuthStore } from "@/store/authStore";
 import { UnauthorizedError, setToken } from "@/auth/token";
 import { fetchSession, logoutSession } from "@/auth/oauthFlow";
-import { isDemoMode } from "@/env";
+import { isDemo } from "@/env";
 
 export const useAuth = () => {
   const authStatus = useAuthStore((s) => s.status);
   const authSuccess = useAuthStore((s) => s.authSuccess);
   const authFailed = useAuthStore((s) => s.authFailed);
   const logOut = useAuthStore((s) => s.logOut);
-  const modal = useModal(!isDemoMode && authStatus === "idle");
+  const modal = useModal(!isDemo && authStatus === "idle");
 
   // Bootstrap session from the HttpOnly session cookie on mount.
   // Also fires after the /api/callback redirect lands on /?authed=1.
   useEffect(() => {
-    if (isDemoMode) {
+    if (isDemo) {
       authFailed();
       return;
     }
@@ -52,7 +52,9 @@ export const useAuth = () => {
     modalOpen: modal.isOpen && authStatus !== "authed",
     onSignIn: modal.open,
     onSignOut: handleSignOut,
-    onDemoMode: modal.close,
+    onDemoMode: () => {
+      window.location.href = "/demo";
+    },
     onModalClose: modal.close,
     onSWRError,
   };

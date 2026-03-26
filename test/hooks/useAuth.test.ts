@@ -9,7 +9,7 @@ const { mockFetchSession, mockLogoutSession } = vi.hoisted(() => ({
   mockLogoutSession: vi.fn(),
 }));
 
-vi.mock("@/env", () => ({ isDemoMode: false }));
+vi.mock("@/env", () => ({ isDemo: false }));
 
 vi.mock("@/auth/token", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/auth/token")>();

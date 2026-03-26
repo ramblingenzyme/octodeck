@@ -79,3 +79,12 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = [
   { id: "col-ci", type: "ci", title: "CI / CD" },
   { id: "col-activity", type: "activity", title: "Activity" },
 ];
+
+export const DEMO_COLUMNS: ColumnConfig[] = [
+  { id: "demo-prs", type: "prs", title: "Pull Requests", query: "is:open" },
+  { id: "demo-issues", type: "issues", title: "Issues", query: "is:open" },
+  { id: "demo-ci", type: "ci", title: "CI / CD", query: "" },
+  { id: "demo-activity", type: "activity", title: "Activity", query: "" },
+  { id: "demo-releases", type: "releases", title: "Releases", query: "" },
+  { id: "demo-deployments", type: "deployments", title: "Deployments", query: "" },
+];

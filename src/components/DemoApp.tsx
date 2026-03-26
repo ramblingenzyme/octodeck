@@ -1,27 +1,22 @@
 import { useEffect } from "preact/hooks";
-import { SWRConfig } from "swr";
 import { useModal } from "@/hooks/useModal";
-import { useAuth } from "@/hooks/useAuth";
 import type { ColumnType } from "@/types";
 import { useLayoutStore } from "@/store/layoutStore";
-import { loadLayout, saveLayout } from "@/store/layoutStorage";
+import { DEMO_COLUMNS } from "@/constants";
 import { Topbar } from "./Topbar";
 import { Board } from "./Board";
 import { AddColumnModal } from "./AddColumnModal";
-import { AuthModal } from "./AuthModal";
+import { DemoColumn } from "@/demo/DemoColumn";
 
-export const App = () => {
+export const DemoApp = () => {
+  useEffect(() => {
+    useLayoutStore.setState({ columns: DEMO_COLUMNS });
+  }, []);
+
   const columns = useLayoutStore((s) => s.columns);
   const addColumn = useLayoutStore((s) => s.addColumn);
   const removeColumn = useLayoutStore((s) => s.removeColumn);
   const addColumnModal = useModal();
-
-  useEffect(() => {
-    useLayoutStore.setState({ columns: loadLayout() });
-    return useLayoutStore.subscribe((s) => saveLayout(s.columns));
-  }, []);
-
-  const auth = useAuth();
 
   const handleAddColumn = (type: ColumnType, title: string, query?: string, repos?: string[]) => {
     addColumn(type, title, query, repos);
@@ -29,24 +24,27 @@ export const App = () => {
   };
 
   return (
-    <SWRConfig value={{ onError: auth.onSWRError }}>
+    <>
       <Topbar
         onAddColumn={() => addColumnModal.open()}
-        onSignIn={auth.onSignIn}
-        onSignOut={auth.onSignOut}
+        onSignIn={() => {
+          window.location.href = "/";
+        }}
+        onSignOut={() => {
+          window.location.href = "/";
+        }}
       />
       <Board
         columns={columns}
         onAddColumn={() => addColumnModal.open()}
         onRemove={(id) => removeColumn(id)}
-        loading={auth.isLoading}
+        columnComponent={DemoColumn}
       />
       <AddColumnModal
         open={addColumnModal.isOpen}
         onAdd={handleAddColumn}
         onClose={() => addColumnModal.close()}
       />
-      <AuthModal open={auth.modalOpen} onDemoMode={auth.onDemoMode} onClose={auth.onModalClose} />
-    </SWRConfig>
+    </>
   );
 };
