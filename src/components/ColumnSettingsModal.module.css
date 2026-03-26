@@ -3,3 +3,9 @@
   flex-direction: column;
   gap: 6px;
 }
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

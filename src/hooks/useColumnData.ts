@@ -9,8 +9,9 @@ import {
   useGetDeployments,
 } from "@/store/githubQueries";
 import { useAuthStore } from "@/store/authStore";
-import type { ColumnConfig, KnownItem, AnyItem } from "@/types";
-import { parseQuery, matchesTokens } from "@/utils/queryFilter";
+import type { ColumnConfig, ColumnType, KnownItem, AnyItem } from "@/types";
+import { parseQuery, matchesTokens, COLUMN_FILTERS } from "@/utils/queryFilter";
+import type { Tokens } from "@/utils/queryFilter";
 
 type ColumnData = AnyItem[];
 
@@ -24,6 +25,16 @@ export interface UseColumnDataResult {
 }
 
 const noop = () => {};
+
+function negatedApiFilterWarning(type: ColumnType, tokens: Tokens): string | null {
+  const filterMap = COLUMN_FILTERS[type];
+  if ("serverFiltered" in filterMap) return null;
+  const negated = tokens
+    .filter(({ key, negate }) => negate && filterMap.filters[key]?.scope === "server")
+    .map(({ key, value }) => `-${key}:${value}`);
+  if (negated.length === 0) return null;
+  return `Negation ignored for API filters: ${negated.join(", ")}`;
+}
 
 function toResult(
   result: {
@@ -101,6 +112,11 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
     [tokens],
   );
 
+  const apiFilterWarning = negatedApiFilterWarning(col.type, tokens);
+
+  const withWarning = (result: UseColumnDataResult): UseColumnDataResult =>
+    apiFilterWarning ? { ...result, warnings: [apiFilterWarning, ...result.warnings] } : result;
+
   // PRs and issues use the GitHub Search API, which applies the query server-side.
   // All other column types fetch pre-built lists and need client-side filtering.
   switch (col.type) {
@@ -109,13 +125,13 @@ export function useColumnData(col: ColumnConfig): UseColumnDataResult {
     case "issues":
       return toResult(issuesResult, "Failed to load issues", filter);
     case "ci":
-      return toMultiResult(ciResult, "Failed to load CI runs", filter);
+      return withWarning(toMultiResult(ciResult, "Failed to load CI runs", filter));
     case "activity":
       return toResult(activityResult, "Failed to load activity", filter, true);
     case "releases":
-      return toMultiResult(releasesResult, "Failed to load releases", filter);
+      return withWarning(toMultiResult(releasesResult, "Failed to load releases", filter));
     case "deployments":
-      return toMultiResult(deploymentsResult, "Failed to load deployments", filter);
+      return withWarning(toMultiResult(deploymentsResult, "Failed to load deployments", filter));
     default:
       return {
         data: [],

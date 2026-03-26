@@ -6,6 +6,7 @@ import { useGetUserRepos } from "@/store/githubQueries";
 import { MULTI_REPO_COLUMN_TYPES } from "@/constants";
 import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";
 import { RepoChipList } from "./ui/RepoChipList";
+import { FilterHelpPopover } from "./ui/FilterHelpPopover";
 import styles from "./ColumnSettingsModal.module.css";
 
 interface ColumnSettingsModalProps {
@@ -62,7 +63,10 @@ export const ColumnSettingsModal = ({ open, col, onClose }: ColumnSettingsModalP
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="col-settings-query">Filter Query</label>
+            <div className={styles.labelRow}>
+              <label htmlFor="col-settings-query">Filter Query</label>
+              <FilterHelpPopover columnType={col.type} />
+            </div>
             <input
               id="col-settings-query"
               name="query"

@@ -21,6 +21,7 @@ const ACCENT_CLASS: Record<ColumnType, string | undefined> = {
 import { SvgIcon } from "./ui/SvgIcon";
 import { Modal, ModalBody, ModalFooter, modalStyles } from "./ui/Modal";
 import { RepoChipList } from "./ui/RepoChipList";
+import { FilterHelpPopover } from "./ui/FilterHelpPopover";
 import styles from "./AddColumnModal.module.css";
 
 interface AddColumnModalProps {
@@ -97,7 +98,10 @@ export const AddColumnModal = ({ open, onAdd, onClose }: AddColumnModalProps) =>
                 />
               </div>
               <div className={styles.modalField}>
-                <label htmlFor="column-query-input">Filter Query</label>
+                <div className={styles.labelRow}>
+                  <label htmlFor="column-query-input">Filter Query</label>
+                  <FilterHelpPopover columnType={selectedType} />
+                </div>
                 <input
                   id="column-query-input"
                   className={modalStyles.fieldInput}

@@ -141,9 +141,9 @@ function repoFetchError(repo: string, res: Response): Error {
 
 function buildParams(tokens: Tokens, keyMap: Record<string, string>): URLSearchParams {
   const params = new URLSearchParams();
-  for (const { key, value } of tokens) {
+  for (const { key, value, negate } of tokens) {
     const apiKey = keyMap[key];
-    if (apiKey) params.set(apiKey, value);
+    if (apiKey && !negate) params.set(apiKey, value);
   }
   return params;
 }

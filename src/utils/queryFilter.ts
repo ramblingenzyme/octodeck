@@ -56,11 +56,26 @@ export type FilterDef<T> =
   | { description: string; scope: "server" }
   | { description: string; scope: "client"; strategy: MatchStrategy<T> };
 
-export interface FilterMap<T> {
+export interface ServerFilteredInfo {
+  readonly docsUrl: string;
+  readonly examples: readonly { readonly key: string; readonly description: string }[];
+}
+
+export type ClientFilterMap<T> = {
+  readonly name: string;
   readonly filters: Readonly<Record<string, FilterDef<T>>>;
+  /** Human-readable names of the fields searched by bare text tokens (for documentation). */
+  readonly textSearchFields: readonly string[];
   /** Returns fields to search across when the query has no key (bare text). */
   readonly textSearch: (item: T) => (string | null | undefined)[];
-}
+};
+
+export type ServerFilteredMap = {
+  readonly name: string;
+  readonly serverFiltered: ServerFilteredInfo;
+};
+
+export type FilterMap<T> = ServerFilteredMap | ClientFilterMap<T>;
 
 function runMatch<T>(item: T, strategy: MatchStrategy<T>, value: string): boolean {
   switch (strategy.kind) {
@@ -78,7 +93,7 @@ function runMatch<T>(item: T, strategy: MatchStrategy<T>, value: string): boolea
   }
 }
 
-function applyFilters<T>(item: T, filterMap: FilterMap<T>, tokens: Tokens): boolean {
+function applyFilters<T>(item: T, filterMap: ClientFilterMap<T>, tokens: Tokens): boolean {
   return tokens.every(({ key, value, negate }) => {
     let result: boolean;
     if (!key) {
@@ -97,7 +112,7 @@ function applyFilters<T>(item: T, filterMap: FilterMap<T>, tokens: Tokens): bool
 
 function splitTokens<T>(
   tokens: Tokens,
-  filterMap: FilterMap<T>,
+  filterMap: ClientFilterMap<T>,
 ): { server: Tokens; client: Tokens } {
   return {
     server: tokens.filter((t) => t.key && filterMap.filters[t.key]?.scope === "server"),
@@ -106,10 +121,48 @@ function splitTokens<T>(
 }
 
 /**
+ * PR columns use the GitHub Search API for all filtering — no client-side filters.
+ */
+const GITHUB_SEARCH_INFO: ServerFilteredInfo = {
+  docsUrl:
+    "https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests",
+  examples: [
+    { key: "involves:@me", description: "PRs/issues involving you" },
+    { key: "is:open", description: "Open items" },
+    { key: "is:closed", description: "Closed items" },
+    { key: "author:", description: "Author username" },
+    { key: "label:", description: "Label name" },
+    { key: "repo:", description: "Repository (owner/name)" },
+    { key: "milestone:", description: "Milestone title" },
+  ],
+};
+
+export const PR_FILTERS: FilterMap<PRItem> = {
+  name: "Pull Requests",
+  textSearchFields: [],
+  textSearch: () => [],
+  filters: {},
+  serverFiltered: GITHUB_SEARCH_INFO,
+};
+
+/**
+ * Issue columns use the GitHub Search API for all filtering — no client-side filters.
+ */
+export const ISSUE_FILTERS: FilterMap<IssueItem> = {
+  name: "Issues",
+  textSearchFields: [],
+  textSearch: () => [],
+  filters: {},
+  serverFiltered: GITHUB_SEARCH_INFO,
+};
+
+/**
  * Client-side strategies for filtering PR items in demo mode.
  * Only use via matchesDemoTokens — not for production code.
  */
 export const DEMO_PR_FILTERS: FilterMap<PRItem> = {
+  name: "Pull Requests",
+  textSearchFields: ["title", "repo", "author", "assignee"],
   textSearch: (item) => [item.title, item.repo, item.author, item.assignee],
   filters: {
     repo: {
@@ -150,6 +203,8 @@ export const DEMO_PR_FILTERS: FilterMap<PRItem> = {
  * Only use via matchesDemoTokens — not for production code.
  */
 export const DEMO_ISSUE_FILTERS: FilterMap<IssueItem> = {
+  name: "Issues",
+  textSearchFields: ["title", "repo", "assignee"],
   textSearch: (item) => [item.title, item.repo, item.assignee],
   filters: {
     repo: {
@@ -181,6 +236,8 @@ export const DEMO_ISSUE_FILTERS: FilterMap<IssueItem> = {
 };
 
 export const CI_FILTERS: FilterMap<CIItem> = {
+  name: "CI / CD",
+  textSearchFields: ["name", "repo", "branch", "status", "triggered"],
   textSearch: (item) => [item.name, item.repo, item.branch, item.status, item.triggered],
   filters: {
     repo: {
@@ -200,6 +257,8 @@ export const CI_FILTERS: FilterMap<CIItem> = {
 };
 
 export const ACTIVITY_FILTERS: FilterMap<ActivityItem> = {
+  name: "Activity",
+  textSearchFields: ["text", "repo", "kind", "ref"],
   textSearch: (item) => [item.text, item.repo, item.kind, item.ref],
   filters: {
     repo: {
@@ -221,6 +280,8 @@ export const ACTIVITY_FILTERS: FilterMap<ActivityItem> = {
 };
 
 export const RELEASE_FILTERS: FilterMap<ReleaseItem> = {
+  name: "Releases",
+  textSearchFields: ["name", "tag", "repo"],
   textSearch: (item) => [item.name, item.tag, item.repo],
   filters: {
     repo: {
@@ -246,6 +307,8 @@ export const RELEASE_FILTERS: FilterMap<ReleaseItem> = {
 };
 
 export const DEPLOYMENT_FILTERS: FilterMap<DeploymentItem> = {
+  name: "Deployments",
+  textSearchFields: ["environment", "repo", "status", "creator", "ref"],
   textSearch: (item) => [item.environment, item.repo, item.status, item.creator, item.ref],
   filters: {
     repo: {
@@ -274,12 +337,14 @@ export const DEPLOYMENT_FILTERS: FilterMap<DeploymentItem> = {
  * Per-column-type filter maps for generating query syntax documentation.
  * PR and Issue columns use the GitHub Search API (open-ended syntax), so they are not included.
  */
-export const COLUMN_FILTERS = {
+export const COLUMN_FILTERS: Record<ColumnType, FilterMap<any>> = {
+  prs: PR_FILTERS,
+  issues: ISSUE_FILTERS,
   ci: CI_FILTERS,
   activity: ACTIVITY_FILTERS,
-  release: RELEASE_FILTERS,
-  deployment: DEPLOYMENT_FILTERS,
-} as const;
+  releases: RELEASE_FILTERS,
+  deployments: DEPLOYMENT_FILTERS,
+};
 
 export function ciTokens(tokens: Tokens): { server: Tokens; client: Tokens } {
   return splitTokens(tokens, CI_FILTERS);

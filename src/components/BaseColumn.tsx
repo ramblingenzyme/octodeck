@@ -13,6 +13,7 @@ import { ColumnHeader } from "./ColumnHeader";
 import { ColumnConfirmDelete } from "./ColumnConfirmDelete";
 import { ColumnSettingsModal } from "./ColumnSettingsModal";
 import { Tooltip } from "./ui/Tooltip";
+import { FilterHelpPopover } from "./ui/FilterHelpPopover";
 
 export interface ColumnProps {
   col: ColumnConfig;
@@ -85,6 +86,7 @@ export const BaseColumn = ({
             placeholder="Add filter…"
             aria-label="Filter query"
           />
+          <FilterHelpPopover columnType={col.type} />
           {col.repos && col.repos.length > 0 && (
             <Tooltip
               text={
