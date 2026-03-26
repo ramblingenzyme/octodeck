@@ -35,9 +35,7 @@
 .commit,
 .branch_created,
 .fork {
-  --card-border-left: var(--activity-color);
   --card-title-icon-color: var(--activity-color);
-  border-left-width: 3px;
 }
 
 .activityRef {

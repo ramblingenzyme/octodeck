@@ -7,9 +7,7 @@
 
 .open,
 .closed {
-  --card-border-left: var(--issue-color);
   --card-title-icon-color: var(--issue-color);
-  border-left-width: 3px;
 }
 
 .assignee {

@@ -15,7 +15,5 @@
 .draft,
 .merged,
 .closed {
-  --card-border-left: var(--pr-color);
   --card-title-icon-color: var(--pr-color);
-  border-left-width: 3px;
 }

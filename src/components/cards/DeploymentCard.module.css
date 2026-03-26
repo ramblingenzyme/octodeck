@@ -19,9 +19,7 @@
 .pending,
 .in_progress,
 .unknown {
-  --card-border-left: var(--deploy-color);
   --card-title-icon-color: var(--deploy-color);
-  border-left-width: 3px;
 }
 
 .deployMeta {

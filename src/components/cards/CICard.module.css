@@ -11,9 +11,7 @@
 .success,
 .failure,
 .running {
-  --card-border-left: var(--ci-color);
   --card-title-icon-color: var(--ci-color);
-  border-left-width: 3px;
 }
 
 .ciBranchMeta {
